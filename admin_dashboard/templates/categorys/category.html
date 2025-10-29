@@ -38,9 +38,10 @@
                 </tr>
             </thead>
             <tbody>
+                {% for category in  categorys%}
                 <tr>
-                    <td>Electronics</td>
-                    <td>Devices, gadgets, and accessories.</td>
+                    <td>{{category.name}}</td>
+                    <td>{{category.description}}</td>
                     <td>
                         <span class="status-badge status-active">Active</span>
                     </td>
@@ -50,32 +51,13 @@
                         <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
                     </td>
                 </tr>
+                {% empty %}
+                <tr>
+                    <td>No Data</td>
+                </tr>
+                {% endfor %}
                 
-                <tr>
-                    <td>Men's Clothing</td>
-                    <td>All apparel for men.</td>
-                    <td>
-                        <span class="status-badge status-active">Active</span>
-                    </td>
-                    <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>Summer Sale (Old)</td>
-                    <td>Seasonal items from last year.</td>
-                    <td>
-                        <span class="status-badge status-blocked">Blocked</span>
-                    </td>
-                    <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-edit" title="Unblock"><i class="fa-solid fa-check"></i></a>
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
-                    </td>
-                </tr>
+                
 
             </tbody>
         </table>

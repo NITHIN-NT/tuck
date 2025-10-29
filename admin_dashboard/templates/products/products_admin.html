@@ -57,20 +57,20 @@
             </thead>
             <tbody>
                 {% for product in products %}
-                <tr>
-                    <td>
-                        <img src="{{product.image}}" alt="Product" class="product-table-image">
-                    </td>
-                    <td>{{product.name}}</td>
-                    <td>{{product.category}}</td>
-                    <td>₹{{product.price}}</td>
-                    <td>
-                        <span class="status-badge status-active">In Stock</span>
-                    </td>
-                    <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
-                    </td>
+                    <tr>
+                        <td>
+                            <img src="{{product.image}}" alt="Product" class="product-table-image">
+                        </td>
+                        <td>{{product.name}}</td>
+                        <td>{{product.category}}</td>
+                        <td>₹{{product.price}}</td>
+                        <td>
+                            <span class="status-badge status-active">In Stock</span>
+                        </td>
+                        <td class="action-buttons">
+                            <a href="#" class="btn-action btn-edit" title="Edit" onclick="event.stopPropagation();"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="#" class="btn-action btn-delete" title="Delete" onclick="event.stopPropagation();"><i class="fa-solid fa-trash-can"></i></a>
+                        </td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -80,42 +80,41 @@
             </tbody>
         </table>
     </div>
-        <section class='pagination-container'>
-            <div class="pagination">
+    <section class='pagination-container'>
+        <div class="pagination">
+            
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+            {% else %}
+                <span class="disabled">&lt;</span>
+            {% endif %}
+
+            {% for i in custom_page_range %}
+                {% if page_obj.number == i %}
+                    <span class="current">{{ i }}</span>
+                {% else %}
+                    <a href="?page={{ i }}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+            {% else %}
+                <span class="disabled">&gt;</span>
+            {% endif %}
                 
-                {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
-                {% else %}
-                    <span class="disabled">&lt;</span>
-                {% endif %}
+        </div>
+    </section>
 
-                {% for i in custom_page_range %}
-                    {% if page_obj.number == i %}
-                        <span class="current">{{ i }}</span>
-                    {% else %}
-                        <a href="?page={{ i }}">{{ i }}</a>
-                    {% endif %}
-                {% endfor %}
-
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
-                {% else %}
-                    <span class="disabled">&gt;</span>
-                {% endif %}
-                    
-            </div>
-        </section>
-</div>
 {% endblock content %}
 {% block extraJs %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     
+    // --- Clear Search Button Logic ---
     const searchInput = document.getElementById('search-input');
     const clearBtn = document.getElementById('clear-search-btn');
 
-    // Function to show or hide the clear button
-    // This part remains the same.
     function toggleClearButton() {
         if (searchInput.value.length > 0) {
             clearBtn.style.display = 'block';
@@ -124,24 +123,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- Event Listeners ---
-
-    // 1. Show/hide button when user types
-    // This part remains the same.
     searchInput.addEventListener('input', toggleClearButton);
 
-    // 2. Clear input AND RESET FILTERS when 'x' button is clicked
-    // --- THIS BLOCK IS CHANGED ---
     clearBtn.addEventListener('click', function() {
-        // Redirect to the base page URL. This clears all
-        // GET parameters like ?search=, ?category=, etc.
         window.location.href = "{% url 'admin_products' %}";
     });
 
-    // 3. Check on page load (in case of pre-filled value from Django)
-    // This part remains the same and is still important.
-    toggleClearButton(); 
-
-});
+    toggleClearButton();
+}); // Check on page load
 </script>
 {% endblock extraJs %}

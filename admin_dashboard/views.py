@@ -22,7 +22,9 @@ class AdminProductsView(ListView):
     model = Product
     template_name = 'products/products_admin.html'
     context_object_name = 'products'
+    ordering = ['-created_at']
     paginate_by = 10 
+
 
     def get_queryset(self):
         queryset =  super().get_queryset()
