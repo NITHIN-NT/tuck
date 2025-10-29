@@ -1,0 +1,84 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/category/category.css' %}">
+{% endblock extra_css %}
+
+
+{% block content %}
+    
+    <div class="page-header-container">
+        <div class="page-header">
+            <h1>Category Management</h1>
+            <p>Organize your products into categories</p>
+        </div>
+        <a href="#" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i>
+            Add Category
+        </a>
+    </div>
+
+    <div class="data-table-card">
+        
+        <div class="table-toolbar">
+            <div class="search-bar">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" name="search" placeholder="Search categories...">
+            </div>
+            </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Category Name</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Electronics</td>
+                    <td>Devices, gadgets, and accessories.</td>
+                    <td>
+                        <span class="status-badge status-active">Active</span>
+                    </td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Men's Clothing</td>
+                    <td>All apparel for men.</td>
+                    <td>
+                        <span class="status-badge status-active">Active</span>
+                    </td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Summer Sale (Old)</td>
+                    <td>Seasonal items from last year.</td>
+                    <td>
+                        <span class="status-badge status-blocked">Blocked</span>
+                    </td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-edit" title="Unblock"><i class="fa-solid fa-check"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock content %}

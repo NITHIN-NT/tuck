@@ -1,0 +1,104 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/user/user.css' %}">
+{% endblock extra_css %}
+
+
+{% block content %}
+    
+    <div class="page-header-container">
+        <div class="page-header">
+            <h1>User Management</h1>
+        </div>
+        <a href="{% url "admin_user_add" %}" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> Add User
+        </a>
+    </div>
+
+    <div class="card users-table-card">
+        
+        <div class="table-toolbar">
+            <div class="search-bar">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" placeholder="Search users...">
+            </div>
+            <div class="filters">
+                <select class="filter-dropdown">
+                    <option value="">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                    <option value="manager">Manager</option>
+                </select>
+                <select class="filter-dropdown">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="blocked">Blocked</option>
+                </select>
+            </div>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Smith</td>
+                    <td>john@example.com</td>
+                    <td>Admin</td>
+                    <td><span class="status-badge status-active">Active</span></td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Sarah Johnson</td>
+                    <td>sarah@example.com</td>
+                    <td>User</td>
+                    <td><span class="status-badge status-active">Active</span></td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Mike Wilson</td>
+                    <td>mike@example.com</td>
+                    <td>User</td>
+                    <td><span class="status-badge status-blocked">Blocked</span></td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Emily Brown</td>
+                    <td>emily@example.com</td>
+                    <td>Manager</td>
+                    <td><span class="status-badge status-active">Active</span></td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+{% endblock content %}

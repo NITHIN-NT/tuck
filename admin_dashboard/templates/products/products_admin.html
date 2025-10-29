@@ -1,0 +1,131 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/products/admin_products.css' %}">
+{% endblock extra_css %}
+
+
+{% block content %}
+    
+    <div class="page-header-container">
+        <div class="page-header">
+            <h1>Products</h1>
+            <p>Manage your store products</p>
+        </div>
+        <a href="#" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> Add Product
+        </a>
+    </div>
+
+    <div class="data-table-card">
+        
+        <form action="" method="get">
+            <div class="table-toolbar">
+                <div class="search-bar">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" name="search" placeholder="Search products...">
+                </div>
+                <div class="filters">
+                    <select name="category" class="filter-dropdown">
+                        <option value="">All Categories</option>
+                        <option value="men">Men</option>
+                        <option value="women">Women</option>
+                    </select>
+                    <select name="status" class="filter-dropdown">
+                        <option value="">All Status</option>
+                        <option value="in_stock">In Stock</option>
+                        <option value="out_of_stock">Out of Stock</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Sales</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <img src="https://via.placeholder.com/50x50.png?text=Shirt" alt="Product" class="product-table-image">
+                    </td>
+                    <td>Plain White Shirt</td>
+                    <td>Men</td>
+                    <td>₹799.99</td>
+                    <td>45</td>
+                    <td>
+                        <span class="status-badge status-active">In Stock</span>
+                    </td>
+                    <td>120</td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="https://via.placeholder.com/50x50.png?text=Shoe" alt="Product" class="product-table-image">
+                    </td>
+                    <td>Hand leather</td>
+                    <td>Accessories</td>
+                    <td>₹799.99</td>
+                    <td>20</td>
+                    <td>
+                        <span class="status-badge status-active">In Stock</span>
+                    </td>
+                    <td>210</td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="https://via.placeholder.com/50x50.png?text=Shoe" alt="Product" class="product-table-image">
+                    </td>
+                    <td>Running Shoes</td>
+                    <td>Sportswear</td>
+                    <td>₹799.99</td>
+                    <td>65</td>
+                    <td>
+                        <span class="status-badge status-blocked">Out of Stock</span>
+                    </td>
+                    <td>75</td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="https://via.placeholder.com/50x50.png?text=Watch" alt="Product" class="product-table-image">
+                    </td>
+                    <td>dial Watch</td>
+                    <td>Watches</td>
+                    <td>₹769.99</td>
+                    <td>30</td>
+                    <td>
+                        <span class="status-badge status-active">In Stock</span>
+                    </td>
+                    <td>150</td>
+                    <td class="action-buttons">
+                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock content %}

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     # Local apps
     'userFolder.userprofile',
     'userFolder.products',
+    'admin_dashboard'
 ]
 
 
@@ -70,6 +71,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.request',  
                 'django.contrib.messages.context_processors.messages',
                 'dynamic_breadcrumbs.context_processors.breadcrumbs',
             ],
