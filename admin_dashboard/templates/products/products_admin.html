@@ -19,23 +19,26 @@
 
     <div class="data-table-card">
         
-        <form action="" method="get">
+        <form action="" method="GET">
             <div class="table-toolbar">
                 <div class="search-bar">
                     <i class="fa-solid fa-search"></i>
-                    <input type="text" name="search" placeholder="Search products...">
+                    <input type="text" id='search-input' name="search" placeholder="Search products..." value="{{ search_query }}">
+                    <i class="fa-solid fa-xmark clear-icon" id="clear-search-btn"></i>  
                 </div>
+
                 <div class="filters">
                     <select name="category" class="filter-dropdown">
                         <option value="">All Categories</option>
-                        <option value="men">Men</option>
-                        <option value="women">Women</option>
+                        {% for category in categorys %}
+                        <option value="{{category.name}}" {% if category.name == category_filter %}Selected{% endif %}>{{category.name}}</option>
+                        {% endfor %}
                     </select>
-                    <select name="status" class="filter-dropdown">
+                    {% comment %} <select name="status" class="filter-dropdown">
                         <option value="">All Status</option>
                         <option value="in_stock">In Stock</option>
                         <option value="out_of_stock">Out of Stock</option>
-                    </select>
+                    </select> {% endcomment %}
                     <button type="submit" class="btn btn-primary">Filter</button>
                 </div>
             </div>
@@ -48,84 +51,97 @@
                     <th>Product Name</th>
                     <th>Category</th>
                     <th>Price</th>
-                    <th>Stock</th>
                     <th>Status</th>
-                    <th>Sales</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
+                {% for product in products %}
                 <tr>
                     <td>
-                        <img src="https://via.placeholder.com/50x50.png?text=Shirt" alt="Product" class="product-table-image">
+                        <img src="{{product.image}}" alt="Product" class="product-table-image">
                     </td>
-                    <td>Plain White Shirt</td>
-                    <td>Men</td>
-                    <td>₹799.99</td>
-                    <td>45</td>
+                    <td>{{product.name}}</td>
+                    <td>{{product.category}}</td>
+                    <td>₹{{product.price}}</td>
                     <td>
                         <span class="status-badge status-active">In Stock</span>
                     </td>
-                    <td>120</td>
                     <td class="action-buttons">
                         <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
                         <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
                     </td>
                 </tr>
+                {% empty %}
                 <tr>
-                    <td>
-                        <img src="https://via.placeholder.com/50x50.png?text=Shoe" alt="Product" class="product-table-image">
-                    </td>
-                    <td>Hand leather</td>
-                    <td>Accessories</td>
-                    <td>₹799.99</td>
-                    <td>20</td>
-                    <td>
-                        <span class="status-badge status-active">In Stock</span>
-                    </td>
-                    <td>210</td>
-                    <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
-                    </td>
+                    <td>No Data</td>
                 </tr>
-                <tr>
-                    <td>
-                        <img src="https://via.placeholder.com/50x50.png?text=Shoe" alt="Product" class="product-table-image">
-                    </td>
-                    <td>Running Shoes</td>
-                    <td>Sportswear</td>
-                    <td>₹799.99</td>
-                    <td>65</td>
-                    <td>
-                        <span class="status-badge status-blocked">Out of Stock</span>
-                    </td>
-                    <td>75</td>
-                    <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://via.placeholder.com/50x50.png?text=Watch" alt="Product" class="product-table-image">
-                    </td>
-                    <td>dial Watch</td>
-                    <td>Watches</td>
-                    <td>₹769.99</td>
-                    <td>30</td>
-                    <td>
-                        <span class="status-badge status-active">In Stock</span>
-                    </td>
-                    <td>150</td>
-                    <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
-                    </td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
+        <section class='pagination-container'>
+            <div class="pagination">
+                
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+                {% else %}
+                    <span class="disabled">&lt;</span>
+                {% endif %}
 
+                {% for i in custom_page_range %}
+                    {% if page_obj.number == i %}
+                        <span class="current">{{ i }}</span>
+                    {% else %}
+                        <a href="?page={{ i }}">{{ i }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                {% else %}
+                    <span class="disabled">&gt;</span>
+                {% endif %}
+                    
+            </div>
+        </section>
 </div>
 {% endblock content %}
+{% block extraJs %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const searchInput = document.getElementById('search-input');
+    const clearBtn = document.getElementById('clear-search-btn');
+
+    // Function to show or hide the clear button
+    // This part remains the same.
+    function toggleClearButton() {
+        if (searchInput.value.length > 0) {
+            clearBtn.style.display = 'block';
+        } else {
+            clearBtn.style.display = 'none';
+        }
+    }
+
+    // --- Event Listeners ---
+
+    // 1. Show/hide button when user types
+    // This part remains the same.
+    searchInput.addEventListener('input', toggleClearButton);
+
+    // 2. Clear input AND RESET FILTERS when 'x' button is clicked
+    // --- THIS BLOCK IS CHANGED ---
+    clearBtn.addEventListener('click', function() {
+        // Redirect to the base page URL. This clears all
+        // GET parameters like ?search=, ?category=, etc.
+        window.location.href = "{% url 'admin_products' %}";
+    });
+
+    // 3. Check on page load (in case of pre-filled value from Django)
+    // This part remains the same and is still important.
+    toggleClearButton(); 
+
+});
+</script>
+{% endblock extraJs %}
