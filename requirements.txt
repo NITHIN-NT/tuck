@@ -1,0 +1,10 @@
+asgiref==3.10.0
+Django==5.2.7
+django-allauth==65.12.1
+django-dynamic-breadcrumbs==0.4.3
+django-environ==0.12.0
+django-view-breadcrumbs==2.5.1
+environ==1.0
+pillow==12.0.0
+psycopg2-binary==2.9.11
+sqlparse==0.5.3

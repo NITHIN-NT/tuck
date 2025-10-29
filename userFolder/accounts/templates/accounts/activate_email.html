@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Activate Your Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f9fc;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .email-container {
+            background-color: #fff;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff !important;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        small {
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <h2>Activate Your Account</h2>
+        <p>Hi {{ user.first_name }} {{ user.last_name }},</p>
+        <p>Thank you for signing up at <strong>{{ domain }}</strong>!</p>
+        <p>To complete your registration, please verify your email address by clicking the button below:</p>
+
+        <a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}" class="btn">
+            Activate Account
+        </a>
+
+        <p>If the button doesn't work, copy and paste this link into your browser:</p>
+        <p><small>http://{{ domain }}{% url 'activate' uidb64=uid token=token %}</small></p>
+
+        <p>Thank you,<br>The {{ domain }} Team</p>
+    </div>
+</body>
+</html>

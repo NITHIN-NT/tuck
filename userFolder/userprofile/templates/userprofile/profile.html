@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/userprofile/profile.css' %}">
+{% endblock extra_styles %}
+
+{% block content %}
+<div class="profile-container">
+
+    <aside class="profile-sidebar">
+        
+        <div class="profile-user-card">
+            <img src="{% static 'images/avatar.jpg' %}" alt="User Avatar" class="avatar">
+            <h3>{{user.first_name}}</h3>
+            <p>{{user.email}}</p>
+        </div>
+
+        <nav class="profile-nav">
+            <ul>
+                <li>
+                    <a href="#" class="active">
+                        <i class='bx bx-user'></i>
+                        <span>Personal Information</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-map'></i>
+                        <span>Addresses</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-credit-card'></i>
+                        <span>Payment Methods</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-receipt'></i>
+                        <span>Order History</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="profile-logout">
+            <a href="#" class="logout-link">
+                <i class='bx bx-log-out'></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <section class="profile-content">
+        
+        <div class="profile-card">
+            <div class="profile-card-header">
+                <h2>Personal Information</h2>
+                <a href="#" class="edit-link">
+                    <i class='bx bx-edit'></i> Edit
+                </a>
+            </div>
+            <div class="profile-card-body">
+                <dl>
+                    <div>
+                        <dt>Full Name</dt>
+                        <dd>{{user.first_name}}</dd>
+                    </div>
+                    <div>
+                        <dt>Email Address</dt>
+                        <dd>{{user.email}}</dd>
+                    </div>
+                    <div>
+                        <dt>Phone Number</dt>
+                        <dd>+91 {{user.phone}}</dd>
+                    </div>
+                    <div>
+                        <dt>Member Since</dt>
+                        <dd>{{user.created_at}}</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+
+        <div class="profile-stats-row">
+            
+            <div class="stat-card">
+                <i class='bx bx-wallet'></i>
+                <div class="stat-info">
+                    <h4>Wallet Balance</h4>
+                    <p class="stat-value">₹ 500</p>
+                </div>
+                <a href="#" class="stat-link">
+                    See details <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+            
+            <div class="stat-card">
+                <i class='bx bx-group'></i>
+                <div class="stat-info">
+                    <h4>Total Referrals</h4>
+                    <p class="stat-value">12</p>
+                </div>
+                <a href="#" class="stat-link">
+                    See details <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+{% endblock content %}

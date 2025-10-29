@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>TUCK - {% block title %}Home{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/breadcrumbs.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_styles %}{% endblock extra_styles %}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+</head>
+<body>
+
+    <header class="header">
+        <nav class="navbar container">
+            <a href="/" class="logo">TUCK.INDIA</a>
+
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                <a href="#" aria-label="Search"><i class='bx bx-search'></i></a>
+                <a href="{% url "profile_view_user" %}" aria-label="User Account"><i class='bx bx-user'></i></a>
+                <a href="#" aria-label="Wishlist"><i class='bx bx-heart'></i></a>
+                <a href="#" aria-label="Cart"><i class='bx bx-shopping-bag'></i></a>
+            </div>
+        </nav>
+    </header>
+    <br>
+    {% if breadcrumbs %}
+        <div class="container breadcrumbs-container">
+            {% include "dynamic_breadcrumbs/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+        </div>
+    {% endif %}
+    <main class="main-content container">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container container">
+            
+            <div class="footer-column">
+                <h4>Contact & Service</h4>
+                <ul>
+                    <li>+1 123 456 7890</li>
+                    <li>info@tuck.com</li>
+                    <li>FAQs</li>
+                    <li>Returns</li>
+                    <li>Shipping</li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/products">Products</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/terms">Terms</a></li>
+                    <li><a href="/privacy">Privacy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Newsletter</h4>
+                <p>Sign up to our newsletter to stay informed</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+        </div>
+
+        <hr class="footer-divider">
+        <div class="footer-bottom container">
+            <p>© 2023 TUCK All rights reserved.</p>
+            <p>Designed by TUCK</p>
+        </div>
+    </footer>
+
+</body>
+{% block extra_script %}{% endblock extra_script %}
+ <script>
+        // Set toastr options (optional)
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+        };
+    
+        // 4. Loop through the Django messages and show them
+        {% if messages %}
+            {% for message in messages %}
+                // Use the message 'tags' to determine the toast type
+                // (e.g., 'success', 'error', 'warning', 'info')
+                
+                var toastType = '{{ message.tags }}';
+                var messageText = '{{ message|safe }}'; // '|safe' is important if your messages have HTML
+
+                switch (toastType) {
+                    case 'success':
+                        toastr.success(messageText);
+                        break;
+                    case 'error':
+                        toastr.error(messageText);
+                        break;
+                    case 'warning':
+                        toastr.warning(messageText);
+                        break;
+                    case 'info':
+                        toastr.info(messageText);
+                        break;
+                    default:
+                        // Default to 'info' if tag is something else
+                        toastr.info(messageText);
+                        break;
+                }
+            {% endfor %}
+        {% endif %}
+    </script>
+</html>

@@ -1,0 +1,193 @@
+/* ==================== LOGIN PAGE STYLES ==================== */
+
+/* Override .main-content from base.css to be a flex container.
+  This will vertically and horizontally center its direct child.
+  (flex-grow: 1 is already set in base.css, which is perfect)
+*/
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px;    /* Extra padding */
+    padding-bottom: 40px; /* Extra padding */
+}
+
+.login-form-box {
+    width: 100%;
+    max-width: 420px; /* Set a max-width for the form */
+    text-align: center;
+}
+
+.login-form-box h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #000;
+}
+
+.login-form-box .login-subtitle {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 32px;
+}
+
+/* Make form text left-aligned */
+.login-form-box form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #000;
+    outline: none;
+    box-shadow: 0 0 0 1px #000;
+}
+
+/* Wrapper for password input and icon */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    /* (width: 100% is inherited) */
+    padding-right: 40px; /* Make space for the icon */
+}
+
+.password-wrapper i {
+    position: absolute;
+    right: 12px;
+    font-size: 22px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.password-wrapper i:hover {
+    color: #000;
+}
+
+/* "Forgot password?" link */
+.forgot-password {
+    display: block; /* Puts it on its own line */
+    text-align: right;
+    font-size: 14px;
+    color: #000;
+    font-weight: 500;
+    margin-top: -12px; /* Pulls it closer to the password field */
+    margin-bottom: 24px;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* "Sign in" button */
+.btn-signin {
+    width: 100%;
+    height: 44px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-signin:hover {
+    background-color: #333;
+}
+
+/* "Or continue with" separator */
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    margin: 32px 0;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.separator:not(:empty)::before {
+    margin-right: 1em; /* Space between line and text */
+}
+
+.separator:not(:empty)::after {
+    margin-left: 1em; /* Space between text and line */
+}
+
+/* Social login buttons */
+.social-login {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 50%; /* Make them circular */
+    font-size: 24px; /* Icon size */
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.social-btn:hover {
+    background-color: #f5f5f5;
+    border-color: #aaa;
+}
+
+/* "Don't have an account?" link */
+.signup-link {
+    font-size: 16px;
+    color: #555;
+    margin: 0; /* Reset paragraph margin */
+}
+
+.signup-link a {
+    color: #000;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}

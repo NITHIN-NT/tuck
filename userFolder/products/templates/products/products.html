@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Products{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/products/products.css' %}">
+{% endblock extra_styles %}
+
+{% block content %}
+    <div class="products-page-header">
+        <h2>Products</h2>
+    </div>
+
+    <div class="products-page-container">
+        
+        <aside class="products-sidebar">
+            <h3>Filters</h3>
+            
+          <div class="filter-group">
+                <h4>Category</h4>
+                <ul class="filter-list">
+                   <form id="filter-form" method="GET">
+                        <li>
+                            <input type="radio" id="cat-all" name="category" value="all" 
+                            {% if not selected_category_id or selected_category_id == 'all' %}checked{% endif %}> 
+                            <label for="cat-all">All Products</label>
+                        </li>
+
+                        {% for category in categorys %}
+                        <li>
+                            <input type="radio" id="cat-{{ category.id }}" name="category" value="{{category.id}}"
+                            {% if selected_category_id == category.id|stringformat:"s" %}checked{% endif %}>
+                            <label for="cat-{{ category.id }}">{{ category.name }}</label>
+                        </li>
+                        {% endfor %}
+                    </form>
+                </ul>
+            </div>
+            <div class="filter-group">
+                <h4>Sort By</h4>
+                <select name="sort-by" class="sort-select">
+                    <option value="newest">Newest</option>
+                    <option value="price-low-high">Price: Low to High</option>
+                    <option value="price-high-low">Price: High to Low</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <h4>Price Range</h4>
+                <div class="price-range-labels">
+                    <span>₹{{min_amount}}</span>
+                    <span>₹{{max_amount}}</span>
+                </div>
+                <input 
+                    type="range" 
+                    class="price-slider-placeholder" 
+                    min="{{min_amount|default:"0"}}" 
+                    max="{{max_amount|default:"10000"}}" 
+                    value="{{ max_amount|default:10000 }}">
+            </div>
+        </aside>
+
+        <section class="products-grid-container">
+            
+            <div class="products-grid"> 
+            {% for product in page_obj %}
+                <div class="product-card">
+                    <a href="{% url 'Product_card_view' product.slug %}"><div class="product-image-placeholder" style="background-image: url({{product.image}}); background-size: cover;"></div></a>
+                    <div class="product-info-container">
+                        <div class="product-details">
+                            <h5>{{product.name}}</h5>
+                            <p class="product-price">₹{{product.price}}</p>
+                        </div>
+                        <div class="product-actions">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-shopping-bag'></i>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+
+            <section class='pagination-container'>
+                <div class="pagination">
+                    
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+                    {% else %}
+                        <span class="disabled">&lt;</span>
+                    {% endif %}
+
+                    {% for i in custom_page_range %}
+                        {% if page_obj.number == i %}
+                            <span class="current">{{ i }}</span>
+                        {% else %}
+                            <a href="?page={{ i }}">{{ i }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                    {% else %}
+                        <span class="disabled">&gt;</span>
+                    {% endif %}
+                        
+                </div>
+            </section>
+        
+        </div>
+{% endblock content %}
+{% block extra_script %}
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterForm = document.getElementById('filter-form');
+        
+        // Find all radio buttons inside that form
+        const radioButtons = filterForm.querySelectorAll('input[type="radio"]');
+        
+        // Add a 'click' or 'change' listener to each one
+        radioButtons.forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                // When one is changed, automatically submit the form
+                filterForm.submit();
+            });
+        });
+    });
+
+</script>
+{% endblock extra_script %}

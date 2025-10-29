@@ -1,0 +1,317 @@
+/* ==================== PRODUCTS PAGE LAYOUT ==================== */
+
+.products-page-header h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+.products-page-container {
+    display: flex;
+    gap: 40px;
+    /* Space between sidebar and grid */
+}
+
+/* ==================== SIDEBAR STYLES ==================== */
+
+.products-sidebar {
+    /* Sidebar will be 240px wide, and won't grow or shrink */
+    flex: 0 0 240px;
+}
+
+.products-sidebar h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.filter-group {
+    margin-bottom: 32px;
+    /* Space between each filter block */
+}
+
+.filter-group h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+/* Category Filter List */
+.filter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    /* Increased from 12px for more space */
+    list-style-type: none;
+    /* Remove default list bullets */
+    padding-left: 0;
+    /* Remove default list padding */
+    margin: 0;
+    /* Remove default list margin */
+}
+
+.filter-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-list label {
+    font-size: 15px;
+    color: #333;
+    cursor: pointer;
+}
+
+/* === Custom Radio Button Styles (from image) === */
+.filter-list input[type="radio"] {
+    /* Reset and hide default radio */
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+
+    /* Custom radio styles */
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #adb5bd;
+    /* Grey border for unselected */
+    cursor: pointer;
+
+    /* For centering the inner dot */
+    display: grid;
+    place-content: center;
+
+    /* Smooth transition for border color */
+    transition: border-color 0.2s ease;
+}
+
+/* Inner dot */
+.filter-list input[type="radio"]::before {
+    content: "";
+    width: 10px;
+    /* Size of the inner dot */
+    height: 10px;
+    border-radius: 50%;
+    background-color: #007bff;
+    /* Blue color for the dot */
+
+    /* Hide dot by default */
+    transform: scale(0);
+    transition: transform 0.2s ease;
+}
+
+/* Checked state */
+.filter-list input[type="radio"]:checked {
+    border-color: #007bff;
+    /* Blue border when selected */
+}
+
+/* Show inner dot when checked */
+.filter-list input[type="radio"]:checked::before {
+    transform: scale(1);
+}
+
+/* Optional: Add focus ring for accessibility */
+.filter-list input[type="radio"]:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* ============================================== */
+
+
+/* Sort By Dropdown */
+.sort-select {
+    width: 100%;
+    padding: 10px 8px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+/* Price Range */
+.price-range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.price-slider-placeholder {
+    width: 100%;
+    accent-color: #000;
+}
+
+
+/* ==================== PRODUCTS GRID STYLES ==================== */
+
+.products-grid-container {
+    /* This container will take up the remaining space */
+    flex: 1;
+}
+
+.products-grid {
+    display: grid;
+    /* Creates a responsive grid:
+       - Fills the space with as many columns as possible
+       - Each column will be at least 250px wide
+       - Extra space is distributed equally (1fr)
+    */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px;
+    /* Space between cards */
+}
+
+.product-card {
+    /* This card will hold the image and info */
+    width: 100%;
+}
+
+.product-image-placeholder {
+    width: 100%;
+    /* Creates a square image area */
+    aspect-ratio: 1 / 1;
+    background-color: #f5f5f5;
+    /* Default solid placeholder color */
+    margin-bottom: 12px;
+}
+
+.product-info-container {
+    display: flex;
+    justify-content: space-between;
+    /* Pushes details left, actions right */
+    align-items: flex-start;
+    /* Aligns top of text with top of icons */
+    padding: 0 4px;
+    /* Small padding to align with grid */
+}
+
+.product-details h5 {
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    color: #000;
+}
+
+.product-price {
+    font-size: 14px;
+    color: #333;
+}
+
+.product-actions {
+    display: flex;
+    gap: 12px;
+    /* Space between heart and bag */
+}
+
+.product-actions i {
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.product-actions i:hover {
+    color: #000;
+}
+
+/* ==================== BUTTON-BASED PAGINATION ==================== */
+
+.pagination-container {
+    margin-top: 48px;
+    width: 100%;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    /* This creates the space between the buttons */
+}
+
+/* This is the base style for ALL buttons:
+  - Clickable links (<a>)
+  - The current page (<span>.current)
+  - Disabled arrows (<span>.disabled)
+*/
+.pagination a,
+.pagination .current,
+.pagination .disabled {
+    display: inline-flex;
+    /* Helps center the text/arrow perfectly */
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    /* Makes the button square */
+    height: 40px;
+    /* Makes the button square */
+
+    border: 1px solid #ddd;
+    /* The light grey border */
+    border-radius: 6px;
+    /* The rounded corners */
+
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Style for the clickable links (<a>) on HOVER */
+.pagination a:hover {
+    background-color: #f5f5ff;
+    /* Light grey background on hover */
+    border-color: #bbb;
+}
+
+/* Style for the CURRENT page button */
+.pagination .current {
+    color: #000000;
+    /* The blue text color from your image */
+    border-color: #000000;
+    /* A matching blue border */
+    font-weight: 600;
+    cursor: default;
+    /* It's not clickable */
+}
+
+/* Style for the DISABLED arrow buttons */
+.pagination .disabled {
+    color: #aaa;
+    /* Faded grey text */
+    border-color: #eee;
+    /* Faded grey border */
+    cursor: default;
+}
+
+.products-sidebar .filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.products-sidebar .filter-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* space between radio and label */
+    margin-bottom: 10px;
+    /* vertical space between each item */
+    line-height: 1.2;
+}
+
+.products-sidebar .filter-list input[type="radio"] {
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.products-sidebar .filter-list label {
+    margin: 0;
+}

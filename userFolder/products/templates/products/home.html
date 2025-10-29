@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'css/products/home.css' %}">
+{% endblock extra_styles %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-content">
+        <h1>Premium Men's Fashion & Accessories</h1>
+        <p>Timeless men's fashion, premium quality craftsmanship, and curated style for every occasion.</p>
+        <a href="/products" class="btn-primary">Shop Men's Collection</a>
+    </div>
+</section>
+
+{% if new_arrivals %}
+<section class="home-section">
+    <h2 class="section-title">New Arrivals</h2>
+    <div class="product-grid">
+        {% for new_arrival in new_arrivals %}
+        <div class="product-card">
+            <div class="product-image-container">
+                <a href="{% url 'Product_card_view' new_arrival.slug %}">
+                    <img src="{{ new_arrival.image }}" alt="{{ new_arrival.name }}">
+                </a>
+                <div class="product-card-icons">
+                    <button aria-label="Add to wishlist"><i class='bx bx-heart'></i></button>
+                    <button aria-label="Quick view"><i class='bx bx-search'></i></button>
+                </div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name"><a href="#">{{ new_arrival.name }}</a></h3>
+                <p class="product-price">{{ new_arrival.price }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if products %}
+<section class="home-section">
+    <h2 class="section-title">Shop By Category</h2>
+    <div class="category-grid">
+        {% for product in products %}
+        <a href="{% url 'Product_card_view' product.slug %}" class="category-card">
+            <img src="{{ product.image }}" alt="{{ product.name }}">
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if featured_products %}
+<section class="home-section">
+    <h2 class="section-title">Featured Products</h2>
+    <div class="product-grid">
+        {% for featured_product in featured_products %}
+        <div class="product-card">
+            <div class="product-image-container">
+                <a href="{% url 'Product_card_view' featured_product.slug %}">
+                    <img src="{{ featured_product.image }}" alt="{{ featured_product.name }}">
+                </a>
+                <div class="product-card-icons">
+                    <button aria-label="Add to wishlist"><i class='bx bx-heart'></i></button>
+                    <button aria-label="Quick view"><i class='bx bx-search'></i></button>
+                </div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name"><a href="#">{{ featured_product.name }}</a></h3>
+                <p class="product-price">{{ featured_product.price }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if most_demanded %}
+<section class="home-section">
+    <h2 class="section-title">Most Demanded Accessories</h2>
+    <div class="product-grid">
+        {% for most_demand in most_demanded %}
+        <div class="product-card">
+            <div class="product-image-container">
+                <a href="{% url 'Product_card_view' most_demand.slug %}">
+                    <img src="{{ most_demand.image }}" alt="{{ most_demand.name }}">
+                </a>
+                <div class="product-card-icons">
+                    <button aria-label="Add to wishlist"><i class='bx bx-heart'></i></button>
+                    <button aria-label="Quick view"><i class='bx bx-search'></i></button>
+                </div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name"><a href="#">{{ most_demand.name }}</a></h3>
+                <p class="product-price">{{ most_demand.price }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% endblock content %}

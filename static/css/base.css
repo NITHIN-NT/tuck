@@ -1,0 +1,218 @@
+/* ==================== GLOBAL RESET & VARIABLES ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #fff;
+    color: #000;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+input,
+button {
+    font-family: inherit;
+}
+
+/* Utility class for main content width */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    /* You can adjust this */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 40px;
+    /* Matches header/footer padding */
+    padding-right: 40px;
+    /* Matches header/footer padding */
+}
+
+/* ==================== HEADER / NAVBAR ==================== */
+.header {
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    /* Fixed height for the navbar */
+    padding-left: 40px;
+    /* Use padding on container instead */
+    padding-right: 40px;
+    /* Use padding on container instead */
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 32px;
+    /* Space between "Home", "Products", etc. */
+}
+
+.nav-links a {
+    font-size: 16px;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #000;
+}
+
+.nav-icons {
+    display: flex;
+    gap: 24px;
+    /* Space between icons */
+}
+
+.nav-icons i {
+    font-size: 22px;
+    /* Icon size */
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.nav-icons a:hover i {
+    color: #000;
+}
+
+/* ==================== MAIN CONTENT ==================== */
+.main-content {
+    /* This makes the main content area grow to fill all 
+       available space between header and footer */
+    flex-grow: 1;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    padding-top: 60px;
+    padding-bottom: 30px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+    /* Allows columns to stack on small screens */
+    margin-bottom: 40px;
+}
+
+.footer-column {
+    flex: 1;
+    /* Each column tries to take equal space */
+    min-width: 220px;
+    /* Prevents columns from getting too squished */
+}
+
+.footer-column h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.footer-column ul li {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.footer-column ul li a:hover,
+.footer-column ul li:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Newsletter text */
+.footer-column p {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+.newsletter-form {
+    display: flex;
+    border-bottom: 1px solid #fff;
+}
+
+.newsletter-form input {
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 10px 0;
+    color: #fff;
+    font-size: 14px;
+}
+
+.newsletter-form input::placeholder {
+    color: #888;
+}
+
+.newsletter-form button {
+    background-color: #fff;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.newsletter-form button:hover {
+    background-color: #ccc;
+}
+
+/* Footer Bottom Bar */
+.footer-divider {
+    border: none;
+    border-top: 1px solid #444;
+    margin-bottom: 20px;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #aaa;
+    padding-left: 40px;
+    /* Use padding on container instead */
+    padding-right: 40px;
+    /* Use padding on container instead */
+}

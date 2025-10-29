@@ -1,0 +1,282 @@
+/* ==================== PRODUCT DETAIL PAGE ==================== */
+
+.product-detail-container {
+    display: grid;
+    /* Two columns: left (gallery) and right (info) */
+    grid-template-columns: 1fr 1fr;
+    gap: 60px; /* Space between the two columns */
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+/* ==================== LEFT - PRODUCT GALLERY ==================== */
+
+.product-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between main image and thumbnails */
+}
+
+.gallery-main {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Makes the image container square */
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #eaeaea;
+}
+
+.gallery-main img {
+    width: 100%;
+    height: 100%;
+    /* Use 'contain' if image is like the quote, 'cover' if it's a photo */
+    object-fit: contain; 
+}
+
+.gallery-thumbnails {
+    display: grid;
+    /* Four thumbnail columns */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.gallery-thumbnails img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid #eaeaea;
+    cursor: pointer;
+    transition: border-color 0.3s ease, opacity 0.3s ease;
+    opacity: 0.7;
+}
+
+.gallery-thumbnails img:hover {
+    opacity: 1;
+    border-color: #999;
+}
+
+.gallery-thumbnails img.active {
+    opacity: 1;
+    border-color: #000;
+}
+
+
+/* ==================== RIGHT - PRODUCT INFO ==================== */
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-info h1 {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.product-info .price {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+.product-info .description {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* --- Options (Size, Color, Quantity) --- */
+
+.product-options {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.option-header span:first-child {
+    font-weight: 500;
+}
+
+.option-header span:last-child {
+    color: #777;
+    font-weight: 400;
+}
+
+.option-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Size buttons */
+.size-buttons .btn-size {
+    padding: 10px 18px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    min-width: 50px;
+    text-align: center;
+}
+
+.size-buttons .btn-size:hover {
+    border-color: #000;
+}
+
+.size-buttons .btn-size.active {
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+/* Color swatches */
+.color-swatches .btn-color {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    /* Used for the 'active' ring effect */
+    outline: 2px solid transparent; 
+    outline-offset: 2px;
+    transition: outline-color 0.2s ease;
+    /* A subtle border to help white swatches show up */
+    box-shadow: 0 0 0 1px #ccc;
+}
+
+.color-swatches .btn-color.active {
+    outline-color: #000;
+}
+
+/* Quantity selector */
+.quantity-label {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    display: block; /* Makes it stack correctly */
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: fit-content; /* Shrinks to content */
+}
+
+.quantity-selector .btn-quantity {
+    background: #f9f9f9;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    line-height: 1; /* Aligns icons better */
+}
+
+.quantity-selector .btn-quantity:first-child {
+    border-right: 1px solid #ccc;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.quantity-selector .btn-quantity:last-child {
+    border-left: 1px solid #ccc;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.quantity-selector .btn-quantity:hover {
+    background: #f1f1f1;
+}
+
+.quantity-selector #quantity-display {
+    padding: 0 24px;
+    font-size: 16px;
+    font-weight: 500;
+    min-width: 80px;
+    text-align: center;
+}
+
+/* --- Action Buttons (Add to Cart / Buy Now) --- */
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+/* Base button style */
+.action-buttons .btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid #000;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-buttons .btn-outline {
+    background-color: #fff;
+    color: #000;
+}
+
+.action-buttons .btn-outline:hover {
+    background-color: #f1f1f1;
+}
+
+.action-buttons .btn-solid {
+    background-color: #000;
+    color: #fff;
+}
+
+.action-buttons .btn-solid:hover {
+    background-color: #333;
+    border-color: #333;
+}
+
+/* --- Secondary Actions (Wishlist / Share) --- */
+
+.secondary-actions {
+    display: flex;
+    gap: 30px;
+}
+
+.secondary-actions .action-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.secondary-actions .action-link:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+.secondary-actions .action-link i {
+    font-size: 20px;
+}
