@@ -4,7 +4,7 @@ import os
 
 # ============================ CHECKPOINT ============================
 # BackUp - 1 Homepage / Breadcrumbs / Product listing / Product Category
-# ============================ CHECKPOINT ============================
+# ============================ CHECKPOINT ===========================
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,8 +12,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Initialize environment variables
 env = environ.Env(DEBUG=(bool, False))
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))  # .env should be in project root (same as manage.py)
-
-# ============================ SECURITY ============================
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
@@ -23,7 +21,6 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
 
-# ============================ APPLICATIONS ============================
 
 INSTALLED_APPS = [
     # Django default apps
@@ -33,17 +30,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'django.contrib.sites',
     # Third-party apps
     'dynamic_breadcrumbs',
 
     # Local apps
     'userFolder.userprofile',
     'userFolder.products',
-    'userFolder.accounts',
 ]
 
-# ============================ MIDDLEWARE ============================
+
+
+# Redirects
+LOGIN_URL = '/user/login/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -55,12 +57,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ============================ URLS / WSGI ============================
-
 ROOT_URLCONF = 'TuckProject.urls'
 WSGI_APPLICATION = 'TuckProject.wsgi.application'
 
-# ============================ TEMPLATES ============================
 
 TEMPLATES = [
     {
@@ -78,32 +77,25 @@ TEMPLATES = [
     },
 ]
 
-# ============================ DATABASE ============================
+
 
 DATABASES = {
     'default': env.db(),  # Reads DATABASE_URL from .env
 }
 
-# Example .env line:
-# DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/DBNAME
-
-# ============================ PASSWORD VALIDATION ============================
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {'NAME': 'django.contrib.auth.validation.NumericPasswordValidator'}, # [# FIX #] Corrected typo
 ]
 
-# ============================ INTERNATIONALIZATION ============================
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
-
-# ============================ STATIC & MEDIA ============================
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
@@ -111,8 +103,5 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # For production (collectstatic)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-
-# ============================ DEFAULT PRIMARY KEY ============================
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR /'media'
