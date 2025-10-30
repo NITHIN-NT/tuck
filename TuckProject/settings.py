@@ -43,10 +43,10 @@ INSTALLED_APPS = [
 
 
 # Redirects
-LOGIN_URL = '/user/login/'
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = ''
+LOGOUT_REDIRECT_URL = 'Home_page_user'
+LOGIN_REDIRECT_URL = 'Home_page_user'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'Home_page_user'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
