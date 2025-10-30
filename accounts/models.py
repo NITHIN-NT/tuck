@@ -45,8 +45,11 @@ class EmailOTP(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_valid(self):
-        return timezone.now() - self.created_at < timedelta(minutes=5)
+        return timezone.now() - self.created_at < timedelta(minutes=1)
     
     @staticmethod
     def genrate_otp():
         return str(random.randint(100000,999999))
+    
+    def __str__(self):
+        return f"{self.user}-{self.otp}"

@@ -120,7 +120,7 @@
 }
 
 /* ================================================
-  ADD THIS TO THE BOTTOM OF YOUR existing auth.css
+ADD THIS TO THE BOTTOM OF YOUR existing auth.css
 ================================================
 */
 
@@ -197,4 +197,65 @@
 .social-btn:hover {
     background-color: #f5f5f5;
     border-color: #aaa;
+}
+
+/*
+================================================
+  Error Styles (Add to bottom of auth.css)
+================================================
+*/
+
+/* Styles for field-specific errors 
+  (e.g., "This email is already taken.") 
+*/
+.error-list {
+    font-size: 14px;
+    color: #D8000C;
+    /* A strong, clear red */
+    margin-top: 0.5rem;
+    /* Space below the input field */
+}
+
+/* Django renders errors as a <ul> by default.
+  This removes the bullet points and default padding.
+*/
+.error-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Styles for non-field errors 
+  (e.g., "Passwords do not match.") 
+  (Uses the .non-field-errors class you just added to the HTML)
+*/
+.non-field-errors {
+    padding: 1rem;
+    background-color: #fff5f5;
+    /* Light red background */
+    border: 1px solid #e53e3e;
+    border-radius: 4px;
+    color: #c53030;
+    /* Darker red text */
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* This resets the <ul> inside the non-field error box */
+.non-field-errors ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* OPTIONAL: If your form setup adds an 'error' class
+  to invalid <input> fields, this will add a red border.
+*/
+.form-group input.error {
+    border-color: #e53e3e;
+}
+
+.form-group input.error:focus {
+    border-color: #e53e3e;
+    outline: none;
 }
