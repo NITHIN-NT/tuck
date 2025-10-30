@@ -1,6 +1,64 @@
-<form method="POST">{% csrf_token %}
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Signup{% endblock %}
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static "css/accounts/auth.css" %}">
+{% endblock extra_styles %}
+
+{% block content %}
+<div class="auth-form-container">
+    <h2>Create your account</h2>
+    <p class="subtitle">Sign up to get started</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="first_name">First name</label>
+                <input type="text" id="first_name" name="first_name" >
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last name</label>
+                <input type="text" id="last_name" name="last_name">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email address</label>
+            {# This is the 'email' field your view already uses #}
+            <input type="email" id="email" name="email">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            {# This is the 'password' field your view already uses #}
+            <input type="password" id="password" name="password">
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password">Confirm password</label>
+            <input type="password" id="confirm_password" name="confirm_password" >
+        </div>
+
+        <div class="form-group-checkbox">
+            <input type="checkbox" id="terms" name="terms" required>
+            <label for="terms">I agree to the <a href="/terms">Terms and Conditions</a></label>
+        </div>
+
+        <button type="submit" class="btn-primary">Sign up</button>
+    </form>
+    
+    <p class="auth-switch">
+        Already have an account? <a href="{% url "login" %}">Sign in</a>
+        {# Tip: Use {% url 'login' %} here if you have a login URL set up #}
+    </p>
+</div>
+{% endblock content %}
+
+{% comment %} <form method="POST">{% csrf_token %}
   <h2>Sign Up</h2>
   <input type="email" name="email" placeholder="Email" required>
   <input type="password" name="password" placeholder="Password" required>
   <button type="submit">Sign Up</button>
-</form>
+</form> {% endcomment %}

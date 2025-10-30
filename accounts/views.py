@@ -8,12 +8,14 @@ def signup_view(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
 
         if CustomUser.objects.filter(email=email).exists():
             messages.success(request,'Email Already Exists')
             return redirect('signup')
         
-        user = CustomUser.objects.create_user(email=email,password=password)
+        user = CustomUser.objects.create_user(email=email,password=password,first_name=first_name,last_name=last_name)
         user.is_active = False
         user.save()
 
@@ -84,3 +86,7 @@ def login_view(request):
         else:
             messages.error(request, "Invalid credentials.")
     return render(request, 'accounts/login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('Home_page_user')
