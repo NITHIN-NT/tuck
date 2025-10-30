@@ -5,6 +5,8 @@ urlpatterns = [
     path('defaultadmin/', admin.site.urls),
     path('',include('userFolder.products.urls')),
     path('profile/',include('userFolder.userprofile.urls')),
+    path('accounts/', include('accounts.urls')),
+
 
     path('superuser/',include('admin_dashboard.urls'))
 ]

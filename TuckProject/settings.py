@@ -4,9 +4,8 @@ import os
 
 # ============================ CHECKPOINT ============================
 # BackUp - 1 Homepage / Breadcrumbs / Product listing / Product Category
-# ============================ CHECKPOINT ===========================
+# ============================ CHECKPOINT ============================
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize environment variables
@@ -21,6 +20,11 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
 
+# Use custom user model
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# Sites framework (needed for some authentication features)
+SITE_ID = 1
 
 INSTALLED_APPS = [
     # Django default apps
@@ -31,19 +35,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+
     # Third-party apps
     'dynamic_breadcrumbs',
 
     # Local apps
     'userFolder.userprofile',
     'userFolder.products',
-    'admin_dashboard'
+    'admin_dashboard',
+    'accounts',
 ]
 
-
-
 # Redirects
-LOGIN_URL = ''
+LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'Home_page_user'
 LOGIN_REDIRECT_URL = 'Home_page_user'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'Home_page_user'
@@ -61,17 +65,15 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'TuckProject.urls'
 WSGI_APPLICATION = 'TuckProject.wsgi.application'
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],  # Project-level templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.request',  
                 'django.contrib.messages.context_processors.messages',
                 'dynamic_breadcrumbs.context_processors.breadcrumbs',
             ],
@@ -79,31 +81,42 @@ TEMPLATES = [
     },
 ]
 
-
-
+# Database
 DATABASES = {
     'default': env.db(),  # Reads DATABASE_URL from .env
 }
 
-
+# Password validators (Fixed last line typo)
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.validation.NumericPasswordValidator'}, # [# FIX #] Corrected typo
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
+# Localization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
+# Static & Media
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-
-# For production (collectstatic)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR /'media'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# ============================ EMAIL CONFIG ============================
+# For testing (prints email to console)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# If you want to use Gmail SMTP later:
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
