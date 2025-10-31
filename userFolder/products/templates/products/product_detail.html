@@ -24,36 +24,28 @@
     <div class="product-info">
         <h1>{{product.name}}</h1>
         <p class="price">₹ {{product.price}}</p>
+        
+        {% comment %}
         <p class="description">
-            {{prodcut.description}}
+            {{product.description}}
         </p>
-
+        {% endcomment %}
+        
         <div class="product-options">
             
              <div class="option-group">
                 <div class="option-header">
                     <span><strong>Size:</strong></span>
+                    <span id="selected-size"></span> 
                 </div>
                 <div class="option-buttons size-buttons">
                     {% for size in sizes %}
-                    <button class="btn-size" data-size="size">{{size}}</button>
+                    <button class="btn-size" data-size="{{size}}">{{size}}</button>
                     {% endfor %}
                 </div>
             </div>
 
-            {% comment %} <div class="option-group">
-                <div class="option-header">
-                    <span><strong>Color:</strong></span>
-                    <span id="selected-color">Blue</span>
-                </div>
-                <div class="option-buttons color-swatches">
-                    <button class="btn-color" data-color="White" style="background-color: #f1f1f1;" aria-label="White"></button>
-                    <button class="btn-color active" data-color="Blue" style="background-color: #007bff;" aria-label="Blue"></button>
-                    <button class="btn-color" data-color="Black" style="background-color: #222;" aria-label="Black"></button>
-                    <button class="btn-color" data-color="Gray" style="background-color: #808080;" aria-label="Gray"></button>
-                </div>
-            </div> {% endcomment %}
-
+            {% comment %} ... your commented-out color options ... {% endcomment %}
 
             <div class="option-group">
                 <label for="quantity-display" class="quantity-label"><strong>Quantity</strong></label>
@@ -82,6 +74,16 @@
             </a>
         </div>
 
+        <br>
+        <details class="description-accordion">
+            <summary class="description-header">
+                Description
+            </summary>
+            <div class="description-content">
+                {{product.description|linebreaks}}
+            </div>
+        </details>
+
     </div>
 </div>
 {% endblock content %}
@@ -89,20 +91,18 @@
 {% block extra_script %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Thumbnail image switcher
+        // ... your thumbnail switcher code ...
         const mainImage = document.getElementById('main-product-image');
         const thumbnails = document.querySelectorAll('.thumbnail-img');
 
         thumbnails.forEach(thumb => {
             thumb.addEventListener('click', function() {
-                // Update main image source
                 mainImage.src = this.dataset.image;
-                
-                // Update active state for thumbnails
                 thumbnails.forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
             });
         });
+
 
         // Size selector
         const sizeButtons = document.querySelectorAll('.btn-size');
@@ -112,37 +112,29 @@
             button.addEventListener('click', function() {
                 sizeButtons.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
-                selectedSize.textContent = this.dataset.size;
+                
+                // SAFETY CHECK: Only update if the element exists
+                if (selectedSize) { 
+                    selectedSize.textContent = this.dataset.size;
+                }
             });
         });
 
-        // Color selector
-        const colorButtons = document.querySelectorAll('.btn-color');
-        const selectedColor = document.getElementById('selected-color');
+        // ... your color selector code (commented) ...
 
-        colorButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                colorButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                selectedColor.textContent = this.dataset.color;
-            });
-        });
-
-        // Quantity selector
-            const decreaseBtn = document.getElementById('btn-decrease');
+        // ... your quantity selector code ...
+        const decreaseBtn = document.getElementById('btn-decrease');
         const increaseBtn = document.getElementById('btn-increase');
         const quantityDisplay = document.getElementById('quantity-display');
         let quantity = 1;
         const maxQuantity = 5; // Maximum allowed per person
 
-        // Update the display
         function updateDisplay() {
             quantityDisplay.textContent = `${quantity} ${quantity === 1 ? 'item' : 'items'}`;
-            decreaseBtn.disabled = quantity === 1;          // Disable minus if 1
-            increaseBtn.disabled = quantity === maxQuantity; // Disable plus if max reached
+            decreaseBtn.disabled = quantity === 1;
+            increaseBtn.disabled = quantity === maxQuantity;
         }
 
-        // Decrease button click
         decreaseBtn.addEventListener('click', function() {
             if (quantity > 1) {
                 quantity--;
@@ -150,7 +142,6 @@
             }
         });
 
-        // Increase button click
         increaseBtn.addEventListener('click', function() {
             if (quantity < maxQuantity) {
                 quantity++;
@@ -158,7 +149,6 @@
             }
         });
 
-        // Initialize
         updateDisplay();
 
     });

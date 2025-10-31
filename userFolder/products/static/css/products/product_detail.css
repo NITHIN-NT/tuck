@@ -4,7 +4,8 @@
     display: grid;
     /* Two columns: left (gallery) and right (info) */
     grid-template-columns: 1fr 1fr;
-    gap: 60px; /* Space between the two columns */
+    gap: 60px;
+    /* Space between the two columns */
     padding-top: 40px;
     padding-bottom: 60px;
 }
@@ -14,12 +15,14 @@
 .product-gallery {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Space between main image and thumbnails */
+    gap: 20px;
+    /* Space between main image and thumbnails */
 }
 
 .gallery-main {
     width: 100%;
-    aspect-ratio: 1 / 1; /* Makes the image container square */
+    aspect-ratio: 1 / 1;
+    /* Makes the image container square */
     background-color: #f8f8f8;
     border-radius: 8px;
     display: flex;
@@ -33,7 +36,7 @@
     width: 100%;
     height: 100%;
     /* Use 'contain' if image is like the quote, 'cover' if it's a photo */
-    object-fit: contain; 
+    object-fit: contain;
 }
 
 .gallery-thumbnails {
@@ -154,7 +157,7 @@
     border: none;
     cursor: pointer;
     /* Used for the 'active' ring effect */
-    outline: 2px solid transparent; 
+    outline: 2px solid transparent;
     outline-offset: 2px;
     transition: outline-color 0.2s ease;
     /* A subtle border to help white swatches show up */
@@ -170,7 +173,8 @@
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 12px;
-    display: block; /* Makes it stack correctly */
+    display: block;
+    /* Makes it stack correctly */
 }
 
 .quantity-selector {
@@ -178,7 +182,8 @@
     align-items: center;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: fit-content; /* Shrinks to content */
+    width: fit-content;
+    /* Shrinks to content */
 }
 
 .quantity-selector .btn-quantity {
@@ -188,7 +193,8 @@
     cursor: pointer;
     font-size: 18px;
     color: #333;
-    line-height: 1; /* Aligns icons better */
+    line-height: 1;
+    /* Aligns icons better */
 }
 
 .quantity-selector .btn-quantity:first-child {
@@ -280,3 +286,95 @@
 .secondary-actions .action-link i {
     font-size: 20px;
 }
+
+/* ... your existing .product-info .description rule ... */
+
+.product-info .description {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* ==================== NEW: DESCRIPTION ACCORDION (SMOOTHER) ==================== */
+
+.description-accordion {
+    margin-bottom: 30px;
+    border-top: 1px solid #eaeaea;
+    border-bottom: 1px solid #eaeaea;
+
+    /* --- 1. Set up the grid --- */
+    display: grid;
+    grid-template-rows: auto 0fr;
+
+    /* --- 2. Define the grid transition --- */
+    /* This will be our main animation */
+    transition: grid-template-rows 0.8s cubic-bezier(0.65, 0, 0.35, 1); /* Was 0.5s */
+}
+
+/* --- 3. Set the 'open' state for the grid --- */
+.description-accordion[open] {
+    /* Row 1 (header) = auto. Row 2 (content) = 1fr (1 fraction) */
+    grid-template-rows: auto 1fr;
+}
+
+.description-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    list-style: none;
+    /* Removes default triangle */
+}
+
+/* Removes default triangle in Chrome/Safari */
+.description-header::-webkit-details-marker {
+    display: none;
+}
+
+/* This is the '+' icon */
+.description-header::after {
+    content: '+';
+    font-size: 24px;
+    font-weight: 300;
+    color: #333;
+    
+
+    /* --- 4. Animate the icon rotation --- */
+    /* Use the same duration and easing as the grid */
+    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1); /* Was 0.5s */
+}
+
+/* When the <details> is open, change the icon to '-' */
+.description-accordion[open]>.description-header::after {
+    content: '−';
+    transform: rotate(180deg);
+}
+
+.description-content {
+    /* These are the styles from your old .description class */
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+
+    /* --- 5. Animate the fade-in/out --- */
+    /* We add overflow:hidden and animate opacity */
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+}
+
+/* --- 6. Set the 'open' state for the content --- */
+.description-accordion[open]>.description-content {
+    /* Add padding back in for the 'open' state */
+    padding-bottom: 20px;
+    opacity: 1;
+    /* Delay the fade-in so it looks better */
+    transition: opacity 0.3s ease-in 0.2s;
+}
+
+/* =================================================================== */
