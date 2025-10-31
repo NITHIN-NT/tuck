@@ -44,59 +44,27 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Role</th>
+                    <th>Phone</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
+                {% for user in Users %}
                 <tr>
-                    <td>John Smith</td>
-                    <td>john@example.com</td>
-                    <td>Admin</td>
-                    <td><span class="status-badge status-active">Active</span></td>
-                    <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
-                    </td>
-                </tr>
+                    <td>{{user.first_name}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.phone}}</td>
 
-                <tr>
-                    <td>Sarah Johnson</td>
-                    <td>sarah@example.com</td>
-                    <td>User</td>
-                    <td><span class="status-badge status-active">Active</span></td>
+                    <td><span class="status-badge status-active">{{user.is_active}}</span></td>
                     <td class="action-buttons">
                         <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
                         <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
                         <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
                     </td>
                 </tr>
+                {% endfor %}
 
-                <tr>
-                    <td>Mike Wilson</td>
-                    <td>mike@example.com</td>
-                    <td>User</td>
-                    <td><span class="status-badge status-blocked">Blocked</span></td>
-                    <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>Emily Brown</td>
-                    <td>emily@example.com</td>
-                    <td>Manager</td>
-                    <td><span class="status-badge status-active">Active</span></td>
-                    <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
-                    </td>
-                </tr>
             </tbody>
         </table>
     </div>
