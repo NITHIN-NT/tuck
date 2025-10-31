@@ -2,6 +2,16 @@ from django.shortcuts import render
 from django.views.generic import TemplateView,DetailView,ListView
 from userFolder.products.models import Product,Category
 # Create your views here.
+
+def admin_login(request):
+    return render(request,'adminAuth/login.html')
+def admin_forgot (request):
+    return render(request,'adminAuth/forgot-password.html')
+def admin_otp_verification (request):
+    return render(request,'adminAuth/otp-verification.html')
+def admin_reset(request):
+    return render(request,'adminAuth/reset-password.html')
+
 def admin_home(request):
     return render(request,'dashboard/dashboard.html')
 
@@ -49,12 +59,6 @@ class AdminProductsView(ListView):
         context['category_filter'] = self.request.GET.get('category', '')
         return context
     
-
-# def admin_user_edit(request):
-#     return render(request,'users/edit_user.html')
-
-# def admin_user_add(request):
-#     return render(request,'users/add_user.html')
 '''Product View End Here'''
 class AdminCategoryView(ListView):
     model = Category

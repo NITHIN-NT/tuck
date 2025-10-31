@@ -2,8 +2,14 @@ from django.urls import path
 from . import views
 from .views import AdminProductsView,AdminCategoryView
 urlpatterns = [
-    path('',views.admin_home,name='admin_home'),
-    
+
+    path('',views.admin_login,name='admin_login'),
+    path('forget/',views.admin_forgot,name='admin_forgot_password'),
+    path('verifi/',views.admin_otp_verification,name='admin_otp_verification'),
+    path('reset/',views.admin_reset,name='admin_reset'),
+
+    path('strap/',views.admin_home,name='admin_home'),
+
     path('users/',views.admin_user_view,name='admin_user'),
     path('users/edit',views.admin_user_edit,name='admin_user_edit'),
     path('users/add',views.admin_user_add,name='admin_user_add'),

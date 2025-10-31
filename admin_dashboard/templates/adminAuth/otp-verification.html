@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="{% static "css/adminAuth/style.css" %}">
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="card-header">
+            <h2>Verify OTP</h2>
+            <p>Enter the code sent to your email</p>
+        </div>
+
+        <div class="card-body">
+            
+            <div class="otp-message text-center">
+                <div class="otp-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <p>We've sent a 4-digit code to</p>
+                <strong>user@example.com</strong>
+            </div>
+
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label for="otp" class="text-center">Verification Code</label>
+                    <div class="otp-inputs">
+                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                    </div>
+                </div>
+
+                <div class="resend-timer">
+                    Resend code in <span>60</span>s
+                </div>
+
+                <button type="submit" class="btn">Verify & Continue</button>
+
+                <a href="#" class="change-email-link">Change Email</a>
+            </form>
+
+            <p class="demo-credentials">
+                For demo purposes, use code: 1234
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>
