@@ -378,3 +378,17 @@
 }
 
 /* =================================================================== */
+.gallery-main {
+   position: relative;
+   overflow: hidden; /* This is crucial for the in-place zoom */
+ }
+ 
+ #main-product-image {
+   transition: transform 0.3s ease; /* Adds a smooth zoom effect */
+   width: 100%; /* Ensure the image fills the container */
+   height: auto;
+ }
+ 
+ .gallery-main:hover #main-product-image {
+   transform: scale(2); /* Adjust the zoom level (e.g., 2 = 200% zoom) */
+ }

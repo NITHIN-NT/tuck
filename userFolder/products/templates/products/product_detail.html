@@ -11,25 +11,20 @@
 <div class="product-detail-container">
     
     <div class="product-gallery">
-        <div class="gallery-main">
-            <img src="{{product.image}}" alt="Premium Formal Shirt" id="main-product-image">
-        </div>
-        <div class="gallery-thumbnails">
-            {% for image in images_list_limited %}
-            <img src="{{image.image_url}}" alt="Thumbnail 1" class="thumbnail-img" data-image="{{image.image_url}}">
-            {% endfor %}
-        </div> 
-    </div>
+     <div class="gallery-main img-zoom-container">
+         <img src="{{product.image}}" alt="{{product.name}}" id="main-product-image">
+     </div>
+     <div id="zoom-result" class="img-zoom-result"></div>
+     <div class="gallery-thumbnails">
+         {% for image in images_list_limited %}
+         <img src="{{image.image_url}}" alt="Thumbnail 1" class="thumbnail-img" data-image="{{image.image_url}}">
+         {% endfor %}
+     </div>
+ </div>
 
     <div class="product-info">
         <h1>{{product.name}}</h1>
         <p class="price">₹ {{product.price}}</p>
-        
-        {% comment %}
-        <p class="description">
-            {{product.description}}
-        </p>
-        {% endcomment %}
         
         <div class="product-options">
             
@@ -40,7 +35,7 @@
                 </div>
                 <div class="option-buttons size-buttons">
                     {% for size in sizes %}
-                    <button class="btn-size" data-size="{{size}}">{{size}}</button>
+                        <button class="btn-size" data-size="{{size}}">{{size}}</button>
                     {% endfor %}
                 </div>
             </div>
@@ -151,6 +146,28 @@
 
         updateDisplay();
 
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+     // ... (your existing thumbnail and quantity code) ...
+ 
+     const galleryMain = document.querySelector('.gallery-main');
+     const mainImage = document.getElementById('main-product-image');
+ 
+     galleryMain.addEventListener('mousemove', function(e) {
+         const rect = galleryMain.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+    
+            const xPercent = (x / rect.width) * 100;
+            const yPercent = (y / rect.height) * 100;
+    
+            mainImage.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+        });
+    
+        // Reset the zoom origin when the mouse leaves
+        galleryMain.addEventListener('mouseleave', function() {
+            mainImage.style.transformOrigin = 'center center';
+        });
     });
 </script>
 {% endblock extra_script %}
