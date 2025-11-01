@@ -4,7 +4,7 @@ from django.utils import timezone
 from datetime import date,timedelta
 from django.core.paginator import Paginator
 from django.db.models import Max,Min
-from django.views.generic import TemplateView,DetailView
+from django.views.generic import TemplateView,DetailView,ListView
 
 # Create your views here.
 '''
@@ -139,12 +139,17 @@ class ProductDetailedView(DetailView):
         def get_queryset(self):
             query_set =  super().get_queryset() # This get the queryset or the product details
             return query_set.prefetch_related('images','size') # Take related Items of that products like images and size from their respective tables
-        
+
         
         def get_context_data(self, **kwargs): # This method is used when you want to add more data to send to the template.
             context = super().get_context_data(**kwargs)
             all_images = self.object.images.all() # In this we are taking the related_name, images from productimage table
             context["images_list_limited"] = all_images[:4] # In here we are limiting the images we are sending
             context["sizes"] = self.object.size.all() # in here the size is the field name .
+            product = self.object
+            product_category = product.category
+            related_products = Product.objects.filter(category=product_category).select_related('category').exclude(pk=product.pk)
+            context['related_products'] = related_products[:4]
+            
             
             return context
