@@ -26,7 +26,7 @@
         <div class="form-group">
             <div class="label-row">
                 <label for="password">Password</label>
-                <a href="#" class="form-link">Forgot password?</a>
+                <a href="{% url "forgot-password" %}" class="form-link">Forgot password?</a>
                 {# Tip: Use {% url 'password_reset' %} if you have it #}
             </div>
             {# This is the 'password' field your view already uses #}

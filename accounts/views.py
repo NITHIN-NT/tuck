@@ -201,7 +201,7 @@ class VerifyOTPView(View):
             return redirect('forgot-password')
         
         form = VerifyOTPForm()
-        return render(request,'accounts/verify-otp.html',{'form':form})
+        return render(request,'accounts/verify-otp-password_reset.html',{'form':form})
     
     def post(self,request):
         email = request.session.get('reset_user_email')
@@ -218,7 +218,7 @@ class VerifyOTPView(View):
                 email_otp = EmailOTP.objects.filter(user=user).latest('created_at')
             except EmailOTP.DoesNotExist:
                 messages.error(request,"No OTP found,Please request New One")
-                return render(request,'accounts/verify-otp.html',{'form':form})
+                return render(request,'accounts/verify-otp-password_reset.html',{'form':form})
             
 
             if email_otp.otp == otp_from_from and email_otp.is_valid():
@@ -227,11 +227,11 @@ class VerifyOTPView(View):
                 messages.success(request,'OTP verified successfully. Please set your new password')
                 return redirect('set-new-password')
             elif not email_otp.is_valid():
-                messages.errot(request,'Your OTP has expired. Please request a new one.')
+                messages.error(request,'Your OTP has expired. Please request a new one.')
             else:
                 messages.error(request,'Invalid or expired OTP. Please try again.')
 
-        return render(request,'accounts/verify-otp.html',{'form':form})
+        return render(request,'accounts/verify-otp-password_reset.html',{'form':form})
 
 
 class NewPasswordView(View):
