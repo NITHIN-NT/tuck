@@ -12,15 +12,15 @@
         <h2>Products</h2>
     </div>
 
-    <div class="products-page-container">
-        
-        <aside class="products-sidebar">
-            <h3>Filters</h3>
+    <form id="filter-form" method="GET">
+        <div class="products-page-container">
             
-          <div class="filter-group">
-                <h4>Category</h4>
-                <ul class="filter-list">
-                   <form id="filter-form" method="GET">
+            <aside class="products-sidebar">
+                <h3>Filters</h3>
+                
+                <div class="filter-group">
+                    <h4>Category</h4>
+                    <ul class="filter-list">
                         <li>
                             <input type="radio" id="cat-all" name="category" value="all" 
                             {% if not selected_category_id or selected_category_id == 'all' %}checked{% endif %}> 
@@ -34,98 +34,168 @@
                             <label for="cat-{{ category.id }}">{{ category.name }}</label>
                         </li>
                         {% endfor %}
-                    </form>
-                </ul>
-            </div>
-            <div class="filter-group">
-                <h4>Sort By</h4>
-                <select name="sort-by" class="sort-select">
-                    <option value="newest">Newest</option>
-                    <option value="price-low-high">Price: Low to High</option>
-                    <option value="price-high-low">Price: High to Low</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <h4>Price Range</h4>
-                <div class="price-range-labels">
-                    <span>₹{{min_amount}}</span>
-                    <span>₹{{max_amount}}</span>
+                    </ul>
                 </div>
-                <input 
-                    type="range" 
-                    class="price-slider-placeholder" 
-                    min="{{min_amount|default:"0"}}" 
-                    max="{{max_amount|default:"10000"}}" 
-                    value="{{ max_amount|default:10000 }}">
-            </div>
-        </aside>
 
-        <section class="products-grid-container">
-            
-            <div class="products-grid"> 
-            {% for product in page_obj %}
-                <div class="product-card">
-                    <a href="{% url 'Product_card_view' product.slug %}"><div class="product-image-placeholder" style="background-image: url({{product.image}}); background-size: cover;"></div></a>
-                    <div class="product-info-container">
-                        <div class="product-details">
-                            <h5>{{product.name}}</h5>
-                            <p class="product-price">₹{{product.price}}</p>
-                        </div>
-                        <div class="product-actions">
-                            <i class='bx bx-heart'></i>
-                            <i class='bx bx-shopping-bag'></i>
-                        </div>
+                <hr>
+                <br>
+                <div class="filter-group">
+                    <h4>Price Range</h4>
+                    <div class="price-range-labels">    
+                        <span>₹{{min_amount}}</span>
+                        <span id='price_value'>₹{{request.GET.price_range|default:max_amount}}</span>
+                    </div>
+                    <input 
+                        type="range" 
+                        name = 'price_range'
+                        id="price_range"
+                        class="price-slider-placeholder" 
+                        min="{{min_amount|default:"0"}}" 
+                        max="{{max_amount|default:"10000"}}" 
+                        value="{{request.GET.price_range|default:max_amount}}"
+                        >
+                </div>
+                
+                <hr>
+                <br>
+                <br>
+                <div class="filter-group">
+                    <h4>Sort by</h4>
+                    <select name="sort" id="sort-by" class="sort-select" onchange="this.form.submit();" value='{{request.GET.sort}}'>
+                        <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>New arrivals</option>
+                        <option value="price-low-high" {% if selected_sort == 'price-low-high' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price-high-low" {% if selected_sort == 'price-high-low' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="name-asc" {% if selected_sort == 'name-asc' %}selected{% endif %}>Name: aA - zZ</option>
+                        <option value="name-desc" {% if selected_sort == 'name-desc' %}selected{% endif %}>Name: zZ - aA</option>
+                        <option value="popularity" {% if selected_sort == 'popularity' %}selected{% endif %}>Popularity</option>
+                        <option value="rating" {% if selected_sort == 'rating' %}selected{% endif %}>Average ratings</option>
+                        <option value="featured" {% if selected_sort == 'featured' %}selected{% endif %}>Featured</option>
+                    </select>
+                </div>
+
+                <div class="filter-buttons">
+                    <a href="{% url "products_page_user" %}" class="btn-filter-reset">Reset</a>
+                </div>
+                
+            </aside> <section class="products-grid-container">
+
+                <div class="products-grid-header">
+                    <div class="search-input-container">
+                        <input type="search" 
+                               name="search" 
+                               id="search-box" 
+                               placeholder="Search products..." 
+                               value="{{ request.GET.search|default:'' }}">
+                        
+                        <button type="button" class="clear-search-btn" id="clear-search-btn">
+                            &times; </button>
                     </div>
                 </div>
-            {% endfor %}
-            </div>
-
-            <section class='pagination-container'>
-                <div class="pagination">
-                    
-                    {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
-                    {% else %}
-                        <span class="disabled">&lt;</span>
-                    {% endif %}
-
-                    {% for i in custom_page_range %}
-                        {% if page_obj.number == i %}
-                            <span class="current">{{ i }}</span>
-                        {% else %}
-                            <a href="?page={{ i }}">{{ i }}</a>
-                        {% endif %}
+                <div class="products-grid"> 
+                    {% for product in page_obj %}
+                        <div class="product-card">
+                            <a href="{% url 'Product_card_view' product.slug %}">
+                                <div class="product-image-placeholder" style="background-image: url({{product.image}}); background-size: cover;"></div>
+                            </a>
+                            <div class="product-info-container">
+                                <div class="product-details">
+                                    <h5>{{product.name}}</h5>
+                                    <p class="product-price">₹{{product.price}}</p>
+                                </div>
+                                <div class="product-actions">
+                                    <i class='bx bx-heart'></i>
+                                    <i class='bx bx-shopping-bag'></i>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                     <div class="product-empty">
+                        <p>No Products</p>
+                     </div>
                     {% endfor %}
-
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
-                    {% else %}
-                        <span class="disabled">&gt;</span>
-                    {% endif %}
-                        
                 </div>
-            </section>
-        
-        </div>
-{% endblock content %}
-{% block extra_script %}
-<script>
-    
-    document.addEventListener('DOMContentLoaded', function () {
-        const filterForm = document.getElementById('filter-form');
-        
-        // Find all radio buttons inside that form
-        const radioButtons = filterForm.querySelectorAll('input[type="radio"]');
-        
-        // Add a 'click' or 'change' listener to each one
-        radioButtons.forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                // When one is changed, automatically submit the form
-                filterForm.submit();
-            });
-        });
-    });
 
-</script>
+                <section class='pagination-container'>
+                    <div class="pagination">
+                    
+                        {% if page_obj.has_previous %}
+                            <a href="?{{ request.GET.urlencode }}&page={{ page_obj.previous_page_number }}">&lt;</a>
+                        {% else %}
+                            <span class="disabled">&lt;</span>
+                        {% endif %}
+
+                        {% for i in custom_page_range %}
+                            {% if page_obj.number == i %}
+                                <span class="current">{{ i }}</span>
+                            {% else %}
+                                <a href="?{{ request.GET.urlencode }}&page={{ i }}">{{ i }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a href="?{{ request.GET.urlencode }}&page={{ page_obj.next_page_number }}">&gt;</a>
+                        {% else %}
+                            <span class="disabled">&gt;</span>
+                        {% endif %}
+                            
+                    </div>
+                </section>
+            
+            </section> </div> </form> {% endblock content %}
+
+
+{% block extra_script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterForm = document.getElementById('filter-form');
+            
+            // === Auto-submit for radio/checkboxes ===
+            const filterInputs = filterForm.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+            filterInputs.forEach(function (input) {
+                input.addEventListener('change', function () {
+                    filterForm.submit();
+                });
+            });
+
+            // === Auto-submit for price range ===
+            const priceRange = document.getElementById('price_range');
+            const priceValue = document.getElementById('price_value');
+            if (priceRange && priceValue) {
+                priceRange.addEventListener('input', function() {
+                    priceValue.textContent = '₹' + this.value;
+                });
+
+                priceRange.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            }
+
+            // ==================== NEW SEARCH BOX LOGIC ====================
+            const searchBox = document.getElementById('search-box');
+            const clearBtn = document.getElementById('clear-search-btn');
+
+            // Function to show/hide the clear button
+            function toggleClearButton() {
+                if (searchBox.value.length > 0) {
+                    clearBtn.style.display = 'block';
+                } else {
+                    clearBtn.style.display = 'none';
+                }
+            }
+
+            // 1. Check on page load (in case it loads with a search value)
+            toggleClearButton();
+
+            // 2. Check as the user types
+            searchBox.addEventListener('input', toggleClearButton);
+
+            // 3. Clear the search box and submit the form when 'x' is clicked
+            clearBtn.addEventListener('click', function() {
+                searchBox.value = ''; // Clear the text
+                toggleClearButton(); // Hide the 'x' button
+                filterForm.submit(); // Re-submit the form to show all results
+            });
+
+        });
+    </script>
 {% endblock extra_script %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Product,ProductImage,Category
 from django.utils import timezone
+from datetime import date,timedelta
 from django.core.paginator import Paginator
 from django.db.models import Max,Min
 from django.views.generic import TemplateView,DetailView
@@ -44,28 +45,55 @@ class HomePageView(TemplateView):
 
 def product_list_view(request):
     categorys = Category.objects.all().order_by('name')
-    
+    products = Product.objects.filter(stock__gte = 1).order_by('name')
+
     selected_category_id = request.GET.get('category')
+    selected_price = request.GET.get('price_range')
+    selected_sort = request.GET.get('sort')
+    search = request.GET.get('search')
 
-    products = Product.objects.filter(stock__gte = 1)
-        
+
+    if selected_sort == 'newest':
+        products = products.order_by('-created_at')
+    elif selected_sort == 'price_low_high':
+        products = products.order_by('price')
+    elif selected_sort == 'price-high-low':
+        products = products.order_by('-price')
+    elif selected_sort == 'name-asc':
+        products = products.order_by('name')
+    elif selected_sort == 'name-desc':
+        products = products.order_by('-name')
+    elif selected_sort == 'popularity':
+        products = products.order_by('-popularity_score')
+    elif selected_sort == 'rating':
+        products = products.order_by('-average_rating')
+    elif selected_sort == 'featured':
+        products = products.order_by('-is_featured', '-created_at')
+
     if selected_category_id and selected_category_id != 'all':
-        products = Product.objects.filter(category = selected_category_id,stock__gte = 1)
-
-    price_range = Product.objects.aggregate(
+        products = products.filter(category = selected_category_id)
+    
+    price_range = products.aggregate(
         min_amount=Min('price'),
         max_amount=Max('price')
     )
+
+
+    if selected_price:
+        try:
+            price_limit = float(selected_price)
+            products = products.filter(price__lte = price_limit)
+        except ValueError:
+            pass
+
+    if search:
+        products = products.filter(name__icontains=search)
     """
         Paginaton Logic Start here 
     """
     paginator = Paginator(products, 9) 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number) 
-    """
-        If page_number is invalid (e.g., "abc" or 999 when you only have 20 pages), 
-        it returns the last page instead of crashing
-    """
     current_page = page_obj.number
     total_pages = paginator.num_pages
     window = 5 
@@ -88,13 +116,15 @@ def product_list_view(request):
     """
 
     context = {
-        'products': products,
         'categorys': categorys,
         'page_obj': page_obj,
         'custom_page_range': custom_page_range,
         'max_amount':  price_range['max_amount'] or 10000,
         'min_amount': price_range['min_amount'] or 0,
         'selected_category_id': selected_category_id,
+        'selected_price' : selected_price,
+        'selected_sort' : selected_sort,
+        'search' : search
     }
     
     return render(request,'products/products.html',context)
