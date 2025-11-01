@@ -82,26 +82,6 @@
     </div>
 </div>
 
-<hr>
-<div class="related-products-container">
-    <h2>You Might Also Like</h2>
-
-    <div class="related-products-grid">
-        {% for related_product in related_products %}
-        <a href="#" class="product-card">
-            <div class="product-card-image">
-                <img src="{{related_product.image}}" alt="Related Product Name">
-            </div>
-            <div class="product-card-info">
-                <h3 class="product-card-name">{{related_product.name}}</h3>
-                <p class="product-card-price">₹ {{related_product.price}}</p>
-            </div>
-        </a>
-        {% endfor %}
-
-    </div>
-</div>
-
 <div class="customer-reviews-container">
     <h2>Customer Reviews</h2>
 
@@ -160,7 +140,24 @@
     </div>
 </div>
 
+<div class="related-products-container">
+    <h2>You Might Also Like</h2>
 
+    <div class="related-products-grid">
+        {% for related_product in related_products %}
+        <a href="#" class="product-card">
+            <div class="product-card-image">
+                <img src="{{related_product.image}}" alt="Related Product Name">
+            </div>
+            <div class="product-card-info">
+                <h3 class="product-card-name">{{related_product.name}}</h3>
+                <p class="product-card-price">₹ {{related_product.price}}</p>
+            </div>
+        </a>
+        {% endfor %}
+
+    </div>
+</div>
 
 {% endblock content %}
 {% block extra_script %}

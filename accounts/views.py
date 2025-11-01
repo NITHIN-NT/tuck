@@ -7,35 +7,37 @@ from .forms import CustomUserRegisterForm, LoginForm
 from django.template.loader import render_to_string # Add this import                                                                 │
 from django.core.mail import send_mail, EmailMultiAlternatives 
 # Create your views here.
-# def signup_view(request):
-#     if request.method == 'POST':
-#         email = request.POST['email']
-#         password = request.POST['password']
-#         first_name = request.POST['first_name']
-#         last_name = request.POST['last_name']
+'''login Function Based View
+def signup_view(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
 
-#         if CustomUser.objects.filter(email=email).exists():
-#             messages.success(request,'Email Already Exists')
-#             return redirect('signup')
+        if CustomUser.objects.filter(email=email).exists():
+            messages.success(request,'Email Already Exists')
+            return redirect('signup')
         
-#         user = CustomUser.objects.create_user(email=email,password=password,first_name=first_name,last_name=last_name)
-#         user.is_active = False
-#         user.save()
+        user = CustomUser.objects.create_user(email=email,password=password,first_name=first_name,last_name=last_name)
+        user.is_active = False
+        user.save()
 
-#         otp_code = EmailOTP.genrate_otp()
-#         EmailOTP.objects.create(user=user,otp=otp_code)
+        otp_code = EmailOTP.genrate_otp()
+        EmailOTP.objects.create(user=user,otp=otp_code)
 
-#         send_mail(
-#             subject="Your OTP Verification Code",
-#             message=f"Your OTP code is {otp_code}",
-#             from_email="no-reply@example.com",
-#             recipient_list=[email],
-#         )
+        send_mail(
+            subject="Your OTP Verification Code",
+            message=f"Your OTP code is {otp_code}",
+            from_email="no-reply@example.com",
+            recipient_list=[email],
+        )
 
-#         request.session['pending_user_id'] = user.id
-#         messages.info(request, "OTP sent to your email. Verify to continue.")
-#         return redirect('verify_otp')
-#     return render(request, 'accounts/signup.html')
+        request.session['pending_user_id'] = user.id
+        messages.info(request, "OTP sent to your email. Verify to continue.")
+        return redirect('verify_otp')
+    return render(request, 'accounts/signup.html')
+'''
 
 def signup_view(request):
     if request.method == 'POST':
