@@ -18,16 +18,19 @@
             <aside class="products-sidebar">
                 <h3>Filters</h3>
                 
-                <div class="filter-group">
-                    <h4>Category</h4>
-                    <ul class="filter-list">
+                <div class="filter-group category-dropdown">
+                    <h4 id="category-toggle">
+                        Category 
+                        <span class="arrow" id="category-arrow">&#9662;</span> <!-- ▼ down arrow -->
+                    </h4>
+                    <ul class="filter-list" id="category-list">
                         <li>
-                            <input type="radio" id="cat-all" name="category" value="all" 
+                            <input type="radio" id="cat-all" name="category" value="all"
                             {% if not selected_category_id or selected_category_id == 'all' %}checked{% endif %}> 
                             <label for="cat-all">All Products</label>
                         </li>
 
-                        {% for category in categorys %}
+                        {% for category in categories %}
                         <li>
                             <input type="radio" id="cat-{{ category.id }}" name="category" value="{{category.id}}"
                             {% if selected_category_id == category.id|stringformat:"s" %}checked{% endif %}>
@@ -36,7 +39,6 @@
                         {% endfor %}
                     </ul>
                 </div>
-
                 <hr>
                 <br>
                 <div class="filter-group">
@@ -55,9 +57,7 @@
                         value="{{request.GET.price_range|default:max_amount}}"
                         >
                 </div>
-                
                 <hr>
-                <br>
                 <br>
                 <div class="filter-group">
                     <h4>Sort by</h4>
@@ -72,11 +72,9 @@
                         <option value="featured" {% if selected_sort == 'featured' %}selected{% endif %}>Featured</option>
                     </select>
                 </div>
-
                 <div class="filter-buttons">
                     <a href="{% url "products_page_user" %}" class="btn-filter-reset">Reset</a>
                 </div>
-                
             </aside> <section class="products-grid-container">
 
                 <div class="products-grid-header">
@@ -195,6 +193,20 @@
                 toggleClearButton(); // Hide the 'x' button
                 filterForm.submit(); // Re-submit the form to show all results
             });
+            // === CATEGORY DROPDOWN TOGGLE ===
+            const categoryToggle = document.getElementById('category-toggle');
+            const categoryList = document.getElementById('category-list');
+            const categoryArrow = document.getElementById('category-arrow');
+
+            // Set initial state (open)
+            let categoryOpen = true;
+
+            categoryToggle.addEventListener('click', () => {
+                categoryOpen = !categoryOpen;
+                categoryList.style.display = categoryOpen ? 'flex' : 'none';
+                categoryArrow.innerHTML = categoryOpen ? '&#9652;' : '&#9662;'; // ▲ / ▼
+            });
+
 
         });
     </script>

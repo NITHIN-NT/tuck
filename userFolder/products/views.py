@@ -44,18 +44,18 @@ class HomePageView(TemplateView):
     
 
 def product_list_view(request):
-    categorys = Category.objects.all().order_by('name')
-    products = Product.objects.filter(stock__gte = 1).order_by('name')
+    categories = Category.objects.all().order_by('name')
+    products = Product.objects.filter(stock__gte=1).order_by('name')
 
     selected_category_id = request.GET.get('category')
     selected_price = request.GET.get('price_range')
     selected_sort = request.GET.get('sort')
     search = request.GET.get('search')
 
-
+    # Sorting
     if selected_sort == 'newest':
         products = products.order_by('-created_at')
-    elif selected_sort == 'price_low_high':
+    elif selected_sort == 'price-low-high':
         products = products.order_by('price')
     elif selected_sort == 'price-high-low':
         products = products.order_by('-price')
@@ -70,33 +70,35 @@ def product_list_view(request):
     elif selected_sort == 'featured':
         products = products.order_by('-is_featured', '-created_at')
 
+    # Category Filter
     if selected_category_id and selected_category_id != 'all':
-        products = products.filter(category = selected_category_id)
-    
-    price_range = products.aggregate(
+        products = products.filter(category__id=selected_category_id)
+
+    # Price Filter
+    if selected_price:
+        try:
+            price_limit = float(selected_price)
+            products = products.filter(price__lte=price_limit)
+        except ValueError:
+            pass
+
+    # Search Filter
+    if search:
+        products = products.filter(name__icontains=search)
+
+    # Price Range
+    price_range = Product.objects.aggregate(
         min_amount=Min('price'),
         max_amount=Max('price')
     )
 
-
-    if selected_price:
-        try:
-            price_limit = float(selected_price)
-            products = products.filter(price__lte = price_limit)
-        except ValueError:
-            pass
-
-    if search:
-        products = products.filter(name__icontains=search)
-    """
-        Paginaton Logic Start here 
-    """
-    paginator = Paginator(products, 9) 
+    # Pagination
+    paginator = Paginator(products, 9)
     page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number) 
+    page_obj = paginator.get_page(page_number)
     current_page = page_obj.number
     total_pages = paginator.num_pages
-    window = 5 
+    window = 5
     half_window = (window - 1) // 2
 
     start_page = max(1, current_page - half_window)
@@ -105,29 +107,26 @@ def product_list_view(request):
     if current_page <= half_window:
         start_page = 1
         end_page = min(window, total_pages)
-    
     elif current_page >= total_pages - half_window:
         end_page = total_pages
         start_page = max(1, total_pages - window + 1)
 
     custom_page_range = range(start_page, end_page + 1)
-    """
-        Paginaton Logic End here 
-    """
 
     context = {
-        'categorys': categorys,
+        'categories': categories,
         'page_obj': page_obj,
         'custom_page_range': custom_page_range,
-        'max_amount':  price_range['max_amount'] or 10000,
+        'max_amount': price_range['max_amount'] or 10000,
         'min_amount': price_range['min_amount'] or 0,
         'selected_category_id': selected_category_id,
-        'selected_price' : selected_price,
-        'selected_sort' : selected_sort,
-        'search' : search
+        'selected_price': selected_price,
+        'selected_sort': selected_sort,
+        'search': search
     }
-    
-    return render(request,'products/products.html',context)
+
+    return render(request, 'products/products.html', context)
+
 
 class ProductDetailedView(DetailView):
         model = Product
