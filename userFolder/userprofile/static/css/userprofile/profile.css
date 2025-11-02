@@ -1,263 +1,371 @@
-/* ==================== PROFILE PAGE STYLES ==================== */
+/* General body styling, assuming 'base.html' provides this */
+body {
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
 
+/* Profile container layout */
 .profile-container {
     display: flex;
-    gap: 30px;
-    align-items: flex-start; /* Aligns items to the top */
+    max-width: 1200px;
+    margin: 2rem auto;
+    gap: 2rem;
+    padding: 1rem;
 }
 
-/* ==================== Profile Sidebar ==================== */
+/* Sidebar styles - now just a container, not a card */
 .profile-sidebar {
-    flex: 0 0 280px; /* Sidebar is 280px wide, doesn't grow or shrink */
-    background-color: #fff;
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    /* The sidebar navigation area in the image has a light BG */
-    background-color: #fcfcfc;
+    flex: 0 0 280px; /* Fixed width sidebar */
+    height: fit-content;
 }
 
+/* User card in sidebar - now no card styles, just alignment */
 .profile-user-card {
     text-align: center;
-    padding: 24px;
-    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
-.avatar {
+/* NEW: Wrapper for hover effect */
+.avatar-wrapper {
+    position: relative;
+    display: inline-block; /* To fit content */
+}
+
+.profile-user-card .avatar {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 12px;
-    border: 3px solid #f0f0f0;
+    margin-bottom: 1rem;
+    /* Removed border to match screenshot */
+    transition: filter 0.3s ease; /* Add transition */
 }
 
-.profile-user-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: #000;
-}
-
-.profile-user-card p {
-    font-size: 14px;
-    color: #666;
-    margin: 0;
-}
-
-.profile-nav {
-    padding: 16px;
-}
-
-.profile-nav ul {
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Space between nav items */
-}
-
-.profile-nav li a {
+/* This is the new style for the initials fallback */
+.profile-user-card .avatar-initials {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #ffffff;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    border-radius: 8px;
-    color: #333;
-    font-weight: 500;
-    font-size: 15px;
+    justify-content: center;
+    margin: 0 auto 1rem auto;
+    /* Removed border to match screenshot */
+    transition: filter 0.3s ease; /* Add transition */
+}
+
+/* NEW: Style for the edit button */
+.avatar-edit-link {
+    position: absolute;
+    bottom: 15px; /* Adjust position from bottom */
+    right: 5px;  /* Adjust position from right */
+    background-color: #ffffff;
+    color: #007bff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    opacity: 0; /* Hidden by default */
+    transform: scale(0.8);
     transition: all 0.3s ease;
 }
 
-.profile-nav li a i {
-    font-size: 22px;
-    color: #555; /* Icon color */
+.avatar-edit-link i {
+    font-size: 1.2rem;
 }
 
-.profile-nav li a:hover {
-    background-color: #f5f5f5;
-    color: #000;
+/* NEW: Show button on wrapper hover */
+.avatar-wrapper:hover .avatar-edit-link {
+    opacity: 1;
+    transform: scale(1);
 }
 
-.profile-nav li a.active {
-    /* Light blue background from image */
-    background-color: #e8f0fe; 
-    /* Darker blue text color */
-    color: #0d6efd; 
+/* NEW: Add visual feedback to avatar on hover */
+.avatar-wrapper:hover .avatar,
+.avatar-wrapper:hover .avatar-initials {
+    filter: brightness(0.9);
+}
+
+
+.profile-user-card .avatar-initials span {
+    font-size: 2.5rem;
     font-weight: 600;
+    text-transform: uppercase;
 }
 
-.profile-nav li a.active i {
-    color: #0d6efd; /* Match icon color to text */
+.profile-user-card h3 {
+    margin: 0.5rem 0 0.25rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #222;
 }
 
+.profile-user-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* Sidebar navigation - This is now the card */
+.profile-nav {
+    list-style: none;
+    padding: 1rem;
+    margin: 0;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.profile-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.profile-nav li {
+    margin-bottom: 0.5rem;
+}
+
+.profile-nav a {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.profile-nav a:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+}
+
+/* Active style to match screenshot (light blue) */
+.profile-nav a.active {
+    background-color: #f0f8ff; /* Light blue background */
+    color: #007bff; /* Dark blue text/icon */
+    box-shadow: none;
+}
+
+.profile-nav a i {
+    font-size: 1.2rem;
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* Logout link - styled to look like a nav item, but separate */
 .profile-logout {
-    padding: 16px;
-    border-top: 1px solid #eaeaea;
-    margin-top: 8px; /* Give space from nav */
+    margin-top: 1rem; /* Spaced from the card above */
+    padding-top: 0;
+    border-top: none;
 }
 
 .logout-link {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    border-radius: 8px;
-    font-size: 15px;
+    text-decoration: none;
+    color: #d9534f;
     font-weight: 500;
-    color: #d9534f; /* Red color for logout */
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
     transition: all 0.3s ease;
 }
 
-.logout-link i {
-    font-size: 22px;
-}
-
 .logout-link:hover {
-    background-color: #fbeeee; /* Light red background on hover */
+    background-color: #fdf0f0;
 }
 
+.logout-link i {
+    font-size: 1.2rem;
+    margin-right: 0.75rem;
+}
 
-/* ==================== Profile Content ==================== */
+/* Main content area */
 .profile-content {
-    flex: 1; /* Takes up all remaining space */
-    min-width: 0; /* Prevents flex items from overflowing */
+    flex: 1; /* Takes remaining space */
 }
 
+/* Re-usable card component */
 .profile-card {
-    background-color: #fff;
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    margin-bottom: 24px; /* Space between cards */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
 }
 
 .profile-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 24px;
-    border-bottom: 1px solid #eaeaea;
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
 }
 
 .profile-card-header h2 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #000;
     margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
 }
 
 .edit-link {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 15px;
+    text-decoration: none;
+    color: #007bff;
     font-weight: 500;
-    color: #0d6efd; /* Blue color */
+    font-size: 0.9rem;
 }
 
-.edit-link:hover {
-    text-decoration: underline;
+.edit-link i {
+    margin-right: 0.25rem;
+    font-size: 1.1rem;
 }
 
 .profile-card-body {
-    padding: 24px;
+    padding: 1.5rem;
 }
 
-/* Using <dl> for semantic key-value pairs */
+/* Definition list for user info - updated spacing and fonts */
 .profile-card-body dl div {
-    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0; /* Increased padding */
+    border-bottom: 1px solid #f9f9f9;
 }
+
 .profile-card-body dl div:last-child {
-    margin-bottom: 0;
+    border-bottom: none;
 }
 
 .profile-card-body dt {
-    font-size: 13px;
-    color: #666;
-    font-weight: 500;
-    margin-bottom: 4px;
-    text-transform: capitalize;
+    font-weight: 400; /* Lighter font for label */
+    color: #777;
 }
 
 .profile-card-body dd {
-    font-size: 16px;
-    color: #000;
-    font-weight: 500;
-    margin: 0; /* Reset browser default margin */
+    font-weight: 500; /* Slightly bolder font for value */
+    color: #333;
+    margin: 0;
+    text-align: right;
 }
 
-/* Stats Row */
+/* --- Stats Row - Completely Rebuilt --- */
 .profile-stats-row {
-    display: flex;
-    gap: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
 }
 
 .stat-card {
-    flex: 1; /* Each card takes equal space */
-    display: flex;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    
+    /* Using CSS Grid to rearrange items to match screenshot */
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* [icon] [title/value] [link] */
+    grid-template-rows: auto auto; /* row 1 for title/link, row 2 for value */
     align-items: center;
-    gap: 16px;
-    padding: 20px 24px;
-    background-color: #fff;
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
+    row-gap: 0.25rem;
+    column-gap: 1rem;
 }
 
-.stat-card i {
-    font-size: 32px;
-    color: #0d6efd; /* Blue icon */
-    background-color: #e8f0fe; /* Light blue bg */
-    padding: 8px;
-    border-radius: 50%;
+.stat-card > i {
+    grid-row: 1 / span 2; /* Span both rows */
+    grid-column: 1;
+    font-size: 2rem; /* Smaller icon */
+    color: #007bff;
+    background-color: #f0f4ff;
+    padding: 0.75rem;
+    border-radius: 12px; /* Rounded rectangle */
+    margin-right: 0; /* Handled by gap */
 }
 
+.stat-card:nth-child(2) > i {
+    color: #28a745;
+    background-color: #f0fff4;
+}
+
+/* This is the magic: makes h4 and p direct grid children */
 .stat-info {
-    flex: 1; /* Pushes link to the right */
+    display: contents; 
 }
 
 .stat-info h4 {
-    font-size: 14px;
-    color: #666;
+    grid-row: 1;
+    grid-column: 2;
+    margin: 0;
+    font-size: 1rem;
+    color: #555; /* Lighter than value */
     font-weight: 500;
-    margin: 0 0 4px 0;
+    align-self: end; /* Aligns to bottom of its row */
 }
 
-.stat-value {
-    font-size: 24px;
-    font-weight: 600;
-    color: #000;
+.stat-info .stat-value {
+    grid-row: 2;
+    grid-column: 2;
     margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600; /* Bolder than title */
+    color: #333;
+    align-self: start; /* Aligns to top of its row */
 }
 
 .stat-link {
-    font-size: 14px;
+    grid-row: 1; /* Top row, with title */
+    grid-column: 3;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 0.9rem;
     font-weight: 500;
-    color: #0d6efd;
-    display: flex;
-    align-items: center;
+    align-self: end; /* Match title's alignment */
 }
 
 .stat-link i {
-    font-size: 20px;
-    color: #0d6efd;
-    background: none;
-    padding: 0;
+    vertical-align: middle;
 }
 
-.stat-link:hover {
-    text-decoration: underline;
-}
-
-/* ==================== Responsive ==================== */
+/* Responsive styles */
 @media (max-width: 992px) {
     .profile-container {
-        flex-direction: column; /* Stack sidebar and content */
+        flex-direction: column;
     }
     .profile-sidebar {
+        flex: 0 0 auto;
         width: 100%;
-        flex: 1; /* Reset flex-basis */
+        max-width: none;
+    }
+    .profile-stats-row {
+        grid-template-columns: 1fr;
     }
 }
 
-@media (max-width: 768px) {
-    .profile-stats-row {
-        flex-direction: column; /* Stack stat cards */
+@media (max-width: 576px) {
+    .profile-card-body dl div {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .profile-card-body dd {
+        margin-left: 0;
+        text-align: left;
     }
 }
+
