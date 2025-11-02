@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.template.loader import render_to_string # Add this import                                                                 │
-from django.core.mail import send_mail, EmailMultiAlternatives 
+from django.core.mail import EmailMultiAlternatives 
 from django.views import View
 from .models import CustomUser,EmailOTP
 from .forms import CustomUserRegisterForm, LoginForm,VerifyOTPForm,SetNewPassword,ForgotPasswordEmailForm
@@ -70,7 +70,7 @@ def signup_view(request):
                 msg = EmailMultiAlternatives(                                                                                             
                     body=plain_message,                                                                                                   
                     subject='Your OTP Verification Code',                                                                               
-                    from_email="secondstrap@gmail.com", # Use your DEFAULT_FROM_EMAIL or a specific one                                 
+                    from_email="TuckInda@gmail.com", # Use your DEFAULT_FROM_EMAIL or a specific one                                 
                     to=[email],                                                                                                           
                 )                                                                                                                         
                 msg.attach_alternative(html_message, "text/html")                                                                         
@@ -184,7 +184,7 @@ class SendOTPView(View):
                 msg = EmailMultiAlternatives(
                     body=plain_message,
                     subject='Your OTP Verification Code',
-                    from_email ='secondstrap@gmail.com',
+                    from_email ='TuckInda@gmail.com',
                     to=[email],
                 )
                 msg.attach_alternative(html_message,"text/html")
