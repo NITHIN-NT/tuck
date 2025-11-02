@@ -46,6 +46,7 @@
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Status</th>
+                    <th>Last Login</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -55,13 +56,14 @@
                     <td>{{user.first_name}}</td>
                     <td>{{user.email}}</td>
                     <td>{{user.phone}}</td>
-
+                    <td>{{user.last_login}}</td>
                     <td><span class="status-badge status-active">{{user.is_active}}</span></td>
                     <td class="action-buttons">
                         <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
                         <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
                         <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
                     </td>
+                    
                 </tr>
                 {% endfor %}
 

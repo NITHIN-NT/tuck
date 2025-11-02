@@ -1,17 +1,18 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from django.views.generic import TemplateView,ListView
-from userFolder.products.models import Product,Category
 from django.template.loader import render_to_string 
 from accounts.models import CustomUser,EmailOTP
 from django.core.mail import EmailMultiAlternatives 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate,login,logout
-from .forms import AdminLoginForm,AdminForgotPasswordEmailForm,AdminSetNewPassword,AdminVerifyOTPForm
 from django.contrib import messages
-from .decorators import superuser_required
-from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView,ListView
 from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
+from django.db.models import Count,Sum
 
+from .forms import AdminLoginForm,AdminForgotPasswordEmailForm,AdminSetNewPassword,AdminVerifyOTPForm
+from .decorators import superuser_required
+from userFolder.products.models import Product,Category,ProductVariant
 # Create your views here.
 @never_cache
 def admin_login(request):
@@ -165,11 +166,7 @@ class AdminUserView(LoginRequiredMixin,ListView):
     model = CustomUser
     template_name = 'users/home_user.html'
     context_object_name = 'Users'
-    ordering =['-date_joined']
-
-    # def get_queryset(self):
-    #     queryset =  super().get_queryset()
-
+    ordering =['date_joined']
 
 # def admin_user_view(request):
 #     return render(request,'users/home_user.html')
@@ -228,4 +225,22 @@ class AdminCategoryView(ListView):
 # def admin_user_add(request):
 #     return render(request,'users/add_user.html')
 
+@method_decorator([never_cache,superuser_required],name='dispatch')
+class StockManagementView(ListView):
+    model = Product
+    context_object_name = 'products'
+    template_name = 'stock/stock_management.html'
 
+    def get_queryset(self):
+        return Product.objects.annotate(
+            total_stock=Sum('variants__stock'), 
+            variant_count=Count('variants')
+        ).prefetch_related(
+            'variants',         
+            'variants__size'    
+        )
+    
+
+
+    
+    

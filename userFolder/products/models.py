@@ -11,16 +11,21 @@ class Category(models.Model):  # Changed from 'Categorie' for naming consistency
 class Product(models.Model):
     name = models.CharField(max_length=1024)
     slug = models.SlugField(max_length=1024, unique=True)
+
     description = models.TextField()
+
     base_price = models.DecimalField(max_digits=8, decimal_places=2) 
-    offer_price = models.DecimalField(max_digits=8, decimal_places=2) 
+    offer_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True) 
+
     image = models.URLField(max_length=1024)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    created_at = models.DateTimeField(auto_now_add=True) 
+
     is_featured = models.BooleanField(default=False)
     is_selective = models.BooleanField(default=False)
     is_most_demanded = models.BooleanField(default=False)
 
+    is_blocked = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True) 
     def __str__(self):
         return self.name
 
@@ -32,14 +37,14 @@ class ProductImage(models.Model):
         return f"Image for {self.product.name}"
 
 class Size(models.Model):
-    size = models.CharField(max_length=50)
+    size = models.CharField(max_length=50,unique=True)
 
     def __str__(self):
         return self.size
 
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='variants')
-    size = models.ForeignKey(Size, on_delete=models.CASCADE,related_name='sizes')
+    size = models.ForeignKey(Size, on_delete=models.CASCADE,related_name='variants')
     price = models.DecimalField(max_digits=8,decimal_places=2)
     stock = models.PositiveIntegerField(default=0)
 
@@ -48,3 +53,4 @@ class ProductVariant(models.Model):
 
     def __str__(self):
         return f"{self.size.size}"
+

@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import AdminProductsView,AdminCategoryView,AdminUserView,AdminHome
+from .views import AdminProductsView,AdminCategoryView,AdminUserView,AdminHome,StockManagementView
 urlpatterns = [
 
     path('',views.admin_login,name='admin_login'),
@@ -22,5 +22,7 @@ urlpatterns = [
     path('category/',AdminCategoryView.as_view(),name='admin_category'),
     # path('category/edit',views.admin_category_edit,name='admin_category_edit'),
     # path('category/add',views.admin_category_add,name='admin_category_add'),
+
+    path('stock/',StockManagementView.as_view(),name='stock_mangement')
 
 ]
