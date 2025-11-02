@@ -48,7 +48,7 @@ class EmailOTP(models.Model):
         return timezone.now() - self.created_at < timedelta(minutes=1)
     
     @staticmethod
-    def genrate_otp():
+    def generate_otp():
         return str(random.randint(100000,999999))
     
     def __str__(self):

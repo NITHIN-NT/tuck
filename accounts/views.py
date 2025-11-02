@@ -58,7 +58,7 @@ def signup_view(request):
             user.is_active = False
             user.save()
 
-            otp_code = EmailOTP.genrate_otp()
+            otp_code = EmailOTP.generate_otp()
             EmailOTP.objects.create(user=user,otp=otp_code)
 # Render the HTML email content                                                                                           
 
@@ -68,7 +68,7 @@ def signup_view(request):
             # Send the email                                                                                                          
             msg = EmailMultiAlternatives(                                                                                             
                 body=plain_message,                                                                                                   
-                subject="Your OTP Verification Code",                                                                                 
+                subject='Your OTP Verification Code',                                                                               
                 from_email="secondstrap@gmail.com", # Use your DEFAULT_FROM_EMAIL or a specific one                                 
                 to=[email],                                                                                                           
             )                                                                                                                         
@@ -107,7 +107,6 @@ def verify_otp_view(request):
             user.is_active = True
             user.save()
             otp_record.delete()
-
             # Remove session key
             del request.session['pending_user_id']
 
@@ -116,10 +115,9 @@ def verify_otp_view(request):
             messages.success(request, "Your email has been verified successfully!")
             return redirect('Home_page_user')
         else :
-            messages.error(request,'Invalid or ')
-    else:
-        messages.error(request, "OTP expired. Please resend a new one.")
-        return render(request, 'accounts/verify_otp.html', {'email': user.email})
+            messages.error(request,'Invalid or expired OTP. Please try again.')
+            return render(request, 'accounts/verify_otp.html', {'email': user.email})                   
+    return render(request, 'accounts/verify_otp.html', {'email': user.email})
 
 def login_view(request):
     if request.method == 'POST':
@@ -159,7 +157,7 @@ class SendOTPView(View):
 
     def get(self,request):
         form = ForgotPasswordEmailForm()
-        return render(request,'accounts/Forgot-password.html',{'form':form})
+        return render(request,'accounts/forgot-password.html',{'form':form})
     
     def post(self,request):
         form = ForgotPasswordEmailForm(request.POST)
@@ -170,29 +168,34 @@ class SendOTPView(View):
                 user = CustomUser.objects.get(email=email)
             except CustomUser.DoesNotExist:
                 messages.error(request,'No user found with this email')
-                return render(request,'accounts/forgot-password.html',{'form':form})
+                return render(request,'accounts/signup.html')
             
-            otp = EmailOTP.genrate_otp()
+            otp = EmailOTP.generate_otp()
             EmailOTP.objects.create(user=user,otp=otp)
 
-            plain_message = f'Your OTP Code for Reset {otp}'
+            plain_message = f'Your OTP code for password reset is: {otp}'
             html_message = render_to_string('accounts/email/otp_email_reset.html', {'otp_code': otp}) 
 
-            msg = EmailMultiAlternatives(
-                body=plain_message,
-                subject='Your OTP Veficitaion Code',
-                from_email ='secondstrap@gmail.com',
-                to=[email],
-            )
-            msg.attach_alternative(html_message,"text/html")
-            msg.send()
+            try:
+                msg = EmailMultiAlternatives(
+                    body=plain_message,
+                    subject='Your OTP Verification Code',
+                    from_email ='secondstrap@gmail.com',
+                    to=[email],
+                )
+                msg.attach_alternative(html_message,"text/html")
+                msg.send()
+            except Exception as e :
+                messages.error(request, 'There was an error sending the email. Please try again later.')
+                return redirect('signup')
 
             request.session['reset_user_email'] = user.email
 
             messages.success(request,f'An otp has been sent to {email}.')
-            return redirect('verify-otp')
+            return redirect('forgot-verify-otp')
         else:
-            return render(request,'accounts/signup.html',{'form': form})
+            return render(request,'accounts/forgot-password.html',{'form': form})
+
 
 class VerifyOTPView(View):
     def get(self,request):
@@ -211,7 +214,7 @@ class VerifyOTPView(View):
         
         form = VerifyOTPForm(request.POST)
         if form.is_valid():
-            otp_from_from = form.cleaned_data['otp']
+            otp_from_form = form.cleaned_data['otp']
             user = get_object_or_404(CustomUser,email=email)
 
             try:
@@ -221,7 +224,7 @@ class VerifyOTPView(View):
                 return render(request,'accounts/verify-otp-password_reset.html',{'form':form})
             
 
-            if email_otp.otp == otp_from_from and email_otp.is_valid():
+            if email_otp.otp == otp_from_form and email_otp.is_valid():
                 email_otp.delete()
                 request.session['reset_password_allowed'] = True
                 messages.success(request,'OTP verified successfully. Please set your new password')
@@ -232,7 +235,6 @@ class VerifyOTPView(View):
                 messages.error(request,'Invalid or expired OTP. Please try again.')
 
         return render(request,'accounts/verify-otp-password_reset.html',{'form':form})
-
 
 class NewPasswordView(View):
     def get(self,request):
@@ -257,15 +259,13 @@ class NewPasswordView(View):
 
             user.set_password(new_password)
             user.save()
-
+            request.session.flush()
+            messages.success(request,'Your password has been reset successfully. Please log in.')
             try:
                 del request.session['reset_user_email']
                 del request.session['reset_password_allowed']
-
             except KeyError:
                 pass
-
-            messages.success(request,'Your password has been reset successfully. Please log in.')
             return redirect('login')
         
         return render(request,'accounts/new-password.html',{'form':form})

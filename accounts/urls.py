@@ -9,6 +9,6 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
 
     path('forgot-password/',SendOTPView.as_view(),name='forgot-password'),
-    path('verify-otp/',VerifyOTPView.as_view(),name='verify-otp'),
+    path('verify-otp/',VerifyOTPView.as_view(),name='forgot-verify-otp'),
     path('new-password/',NewPasswordView.as_view(),name='set-new-password')
 ]
