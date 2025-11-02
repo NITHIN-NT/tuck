@@ -66,14 +66,18 @@ def signup_view(request):
             html_message = render_to_string('accounts/email/otp_email.html', {'otp_code': otp_code})                                  
                                                                                                                                       
             # Send the email                                                                                                          
-            msg = EmailMultiAlternatives(                                                                                             
-                body=plain_message,                                                                                                   
-                subject='Your OTP Verification Code',                                                                               
-                from_email="secondstrap@gmail.com", # Use your DEFAULT_FROM_EMAIL or a specific one                                 
-                to=[email],                                                                                                           
-            )                                                                                                                         
-            msg.attach_alternative(html_message, "text/html")                                                                         
-            msg.send()                                                                                                                
+            try:
+                msg = EmailMultiAlternatives(                                                                                             
+                    body=plain_message,                                                                                                   
+                    subject='Your OTP Verification Code',                                                                               
+                    from_email="secondstrap@gmail.com", # Use your DEFAULT_FROM_EMAIL or a specific one                                 
+                    to=[email],                                                                                                           
+                )                                                                                                                         
+                msg.attach_alternative(html_message, "text/html")                                                                         
+                msg.send()         
+            except Exception as e :
+                messages.error(request, 'There was an error sending the email. Please try again later.')
+                return redirect('signup')                                                                                                 
                                         
 
             request.session['pending_user_id'] = user.id
