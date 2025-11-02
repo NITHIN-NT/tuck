@@ -6,7 +6,7 @@ class ProductImageInline(admin.TabularInline): # or admin.StackedInline
     model = ProductImage
     extra = 1 
 class ProductAdminView(admin.ModelAdmin):
-    list_display=['name','description','price','category','stock','created_at','is_featured','is_most_demanded','is_selective']
+    list_display=['name','description','base_price','offer_price','category','created_at','is_featured','is_most_demanded','is_selective']
 admin.site.register(Product,ProductAdminView,inlines=[ProductImageInline])
 
 class ProductImageAdminView(admin.ModelAdmin):

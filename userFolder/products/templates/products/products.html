@@ -98,7 +98,8 @@
                             <div class="product-info-container">
                                 <div class="product-details">
                                     <h5>{{product.name}}</h5>
-                                    <p class="product-price">₹{{product.price}}</p>
+                                    {% comment %} <del><p class="product-price">₹{{product.base_price}}</p></del> {% endcomment %}
+                                    <p class="product-price">₹{{product.offer_price}}</p>
                                 </div>
                                 <div class="product-actions">
                                     <i class='bx bx-heart'></i>

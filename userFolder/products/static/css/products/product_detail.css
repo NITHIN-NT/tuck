@@ -631,3 +631,55 @@
         opacity: 1;
     }
 }
+
+.product-card-price-container {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    /* small space between prices */
+}
+
+.product-card-price-container del {
+    font-size: 18px;
+    /* smaller font for old price */
+    color: #888;
+    /* gray color */
+}
+
+.product-card-price-container .offer-price {
+    font-size: 24px;
+    /* slightly larger for visibility */
+    font-weight: 600;
+    color: #000;
+}
+
+/* This is the main container for the prices in the .product-info section */
+.product-price-container {
+    display: flex;
+    align-items: baseline;
+    /* Aligns the bottom of the text (e.g., "₹" symbols) */
+    gap: 12px;
+    /* Adjusts the space between the two prices */
+    margin-bottom: 24px;
+    /* Matches the margin from your original .price class */
+}
+
+/* This styles the main, larger "offer price" */
+.product-price-container .offer-price {
+    font-size: 28px;
+    /* Larger to draw attention */
+    font-weight: 600;
+    /* Bolder than the original price */
+    color: #000;
+    /* You could also use a sale color like #b22222 (firebrick) */
+}
+
+/* This styles the smaller, struck-through <del> price */
+.product-price-container del {
+    font-size: 20px;
+    /* Smaller and less prominent */
+    font-weight: 400;
+    color: #777;
+    /* Lighter, grayed-out color */
+    /* The <del> tag automatically adds the line-through */
+}

@@ -12,19 +12,17 @@ class Product(models.Model):
     name = models.CharField(max_length=1024)
     slug = models.SlugField(max_length=1024, unique=True)
     description = models.TextField()
-    price = models.DecimalField(max_digits=8, decimal_places=2) 
+    base_price = models.DecimalField(max_digits=8, decimal_places=2) 
+    offer_price = models.DecimalField(max_digits=8, decimal_places=2) 
     image = models.URLField(max_length=1024)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    stock = models.PositiveIntegerField(default=99)
-    size = models.ManyToManyField("Size",blank=True,related_name='sizes')
     created_at = models.DateTimeField(auto_now_add=True) 
-
     is_featured = models.BooleanField(default=False)
     is_selective = models.BooleanField(default=False)
     is_most_demanded = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name
-
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
@@ -39,3 +37,14 @@ class Size(models.Model):
     def __str__(self):
         return self.size
 
+class ProductVariant(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='variants')
+    size = models.ForeignKey(Size, on_delete=models.CASCADE,related_name='sizes')
+    price = models.DecimalField(max_digits=8,decimal_places=2)
+    stock = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('product', 'size')  
+
+    def __str__(self):
+        return f"{self.size.size}"

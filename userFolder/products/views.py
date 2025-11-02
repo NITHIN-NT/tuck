@@ -45,7 +45,7 @@ class HomePageView(TemplateView):
 
 def product_list_view(request):
     categories = Category.objects.all().order_by('name')
-    products = Product.objects.filter(stock__gte=1).order_by('name')
+    products = Product.objects.all().order_by('name')
 
     selected_category_id = request.GET.get('category')
     selected_price = request.GET.get('price_range')
@@ -78,7 +78,7 @@ def product_list_view(request):
     if selected_price:
         try:
             price_limit = float(selected_price)
-            products = products.filter(price__lte=price_limit)
+            products = products.filter(offer_price__lte=price_limit)
         except ValueError:
             pass
 
@@ -88,8 +88,8 @@ def product_list_view(request):
 
     # Price Range
     price_range = Product.objects.aggregate(
-        min_amount=Min('price'),
-        max_amount=Max('price')
+        min_amount=Min('offer_price'),
+        max_amount=Max('offer_price')
     )
 
     # Pagination
@@ -136,19 +136,25 @@ class ProductDetailedView(DetailView):
         slug_url_kwarg = 'slug'
 
         def get_queryset(self):
-            query_set =  super().get_queryset() # This get the queryset or the product details
-            return query_set.prefetch_related('images','size') # Take related Items of that products like images and size from their respective tables
+            query_set =  super().get_queryset() 
+            return query_set.select_related('category').prefetch_related('variants__size','images') 
 
         
-        def get_context_data(self, **kwargs): # This method is used when you want to add more data to send to the template.
+        def get_context_data(self, **kwargs): 
             context = super().get_context_data(**kwargs)
-            all_images = self.object.images.all() # In this we are taking the related_name, images from productimage table
-            context["images_list_limited"] = all_images[:4] # In here we are limiting the images we are sending
-            context["sizes"] = self.object.size.all() # in here the size is the field name .
             product = self.object
+
+            all_images = product.images.all()
+            context["images_list_limited"] = all_images[:4] 
+
+            context["sizes"] = product.variants.all().select_related('size')
+
             product_category = product.category
+            
             related_products = Product.objects.filter(category=product_category).select_related('category').exclude(pk=product.pk)
+            random_products = Product.objects.all().order_by('?')
             context['related_products'] = related_products[:4]
+            context['random_products'] = random_products[:4]
             
             
             return context

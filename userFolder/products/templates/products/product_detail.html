@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Premium Formal Shirt{% endblock title %}
+{% block title %}{{ product.name }}{% endblock title %}
 
 {% block extra_styles %}
-    <link rel="stylesheet" href="{% static 'css/products/product_detail.css' %}">
+<link rel="stylesheet" href="{% static 'css/products/product_detail.css' %}">
 {% endblock extra_styles %}
 
 {% block content %}
@@ -12,51 +12,48 @@
     
     <div class="product-gallery">
         <div class="gallery-main img-zoom-container">
-            <img src="{{product.image}}" alt="{{product.name}}" id="main-product-image">
+            <img src="{{ product.image }}" alt="{{ product.name }}" id="main-product-image">
         </div>
-        <div id="zoom-result" class="img-zoom-result"></div>
         <div class="gallery-thumbnails">
             {% for image in images_list_limited %}
-            <img src="{{image.image_url}}" alt="Thumbnail 1" class="thumbnail-img" data-image="{{image.image_url}}">
+            <img src="{{ image.image_url }}" alt="{{ product.name }}" class="thumbnail-img" data-image="{{ image.image_url }}">
             {% endfor %}
         </div>
     </div>
-    <!-- Image Popup Modal -->
+
     <div id="imageModal" class="image-modal">
         <span class="close-modal">&times;</span>
         <img class="modal-content" id="modalImage">
     </div>
 
-
     <div class="product-info">
-        <h1>{{product.name}}</h1>
-        <p class="price">₹ {{product.price}}</p>
-        
+        <h1>{{ product.name }}</h1>
+        <div class="product-price-container">
+            <del>₹ {{ product.base_price }}</del>
+            <span class="offer-price">₹ {{ product.offer_price }}</span>
+        </div>
+
         <div class="product-options">
-            
-             <div class="option-group">
+            <div class="option-group">
                 <div class="option-header">
                     <span><strong>Size:</strong></span>
-                    <span id="selected-size"></span> 
+                    <span id="selected-size"></span>
                 </div>
                 <div class="option-buttons size-buttons">
                     {% for size in sizes %}
-                        <button class="btn-size" data-size="{{size}}">{{size}}</button>
+                        <button class="btn-size" data-size="{{ size }}">{{ size }}</button>
                     {% endfor %}
                 </div>
             </div>
 
-            {% comment %} ... your commented-out color options ... {% endcomment %}
-
             <div class="option-group">
                 <label for="quantity-display" class="quantity-label"><strong>Quantity</strong></label>
                 <div class="quantity-selector">
-                    <button class="btn-quantity" id="btn-decrease" aria-label="Decrease quantity"><i class='bx bx-minus'></i></button>
+                    <button class="btn-quantity" id="btn-decrease"><i class='bx bx-minus'></i></button>
                     <span id="quantity-display">1 item</span>
-                    <button class="btn-quantity" id="btn-increase" aria-label="Increase quantity"><i class='bx bx-plus'></i></button>
+                    <button class="btn-quantity" id="btn-increase"><i class='bx bx-plus'></i></button>
                 </div>
             </div>
-
         </div>
 
         <div class="action-buttons">
@@ -65,107 +62,109 @@
         </div>
 
         <div class="secondary-actions">
-            <a href="#" class="action-link">
-                <i class='bx bx-heart'></i>
-                <span>Add to Wishlist</span>
-            </a>
-            <a href="#" class="action-link">
-                <i class='bx bx-share' ></i>
-                <span>Share</span>
-            </a>
+            <a href="#" class="action-link"><i class='bx bx-heart'></i> <span>Add to Wishlist</span></a>
+            <a href="#" class="action-link"><i class='bx bx-share'></i> <span>Share</span></a>
         </div>
-
-        <br>
+<br>
         <details class="description-accordion">
-            <summary class="description-header">
-                Description
-            </summary>
-            <div class="description-content">
-                {{product.description|linebreaks}}
-            </div>
+            <summary class="description-header">Description</summary>
+            <div class="description-content">{{ product.description|linebreaks }}</div>
         </details>
-
     </div>
 </div>
 
 <div class="customer-reviews-container">
-    <h2>Customer Reviews</h2>
+  <h2>Customer Reviews</h2>
+  <div class="reviews-summary">
+    <div class="average-rating">
+      <span class="rating-value">4.5</span>
+      <div class="stars">
+        <i class='bx bxs-star'></i>
+        <i class='bx bxs-star'></i>
+        <i class='bx bxs-star'></i>
+        <i class='bx bxs-star'></i>
+        <i class='bx bxs-star-half'></i>
+      </div>
+      <span class="total-reviews">(Based on 12 reviews)</span>
+    </div>
+    <button class="btn btn-outline" id="btn-write-review">Write a Review</button>
+  </div>
 
-    <div class="reviews-summary">
-        <div class="average-rating">
-            <span class="rating-value">4.5</span>
-            <div class="stars">
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star'></i>
-                <i class='bx bxs-star-half'></i>
-            </div>
-            <span class="total-reviews">(Based on 12 reviews)</span>
+  <div class="review-list">
+    {% comment %} Example of a loop: {% for review in reviews %} {% endcomment %}
+    <div class="review-item">
+      <div class="review-header">
+        <span class="review-author">Nithin S.</span>
+        <div class="review-rating stars">
+          <i class='bx bxs-star'></i>
+          <i class='bx bxs-star'></i>
+          <i class='bx bxs-star'></i>
+          <i class='bx bxs-star'></i>
+          <i class='bx bxs-star'></i>
         </div>
-        <button class="btn btn-outline" id="btn-write-review">Write a Review</button>
+      </div>
+      <span class="review-date">October 28, 2025</span>
+      <p class="review-text">
+        Excellent quality shirt! The fit is perfect and the material feels very premium. Exactly as described. Highly recommend.
+      </p>
     </div>
 
-    <div class="review-list">
-        {% comment %} Example of a loop: {% for review in reviews %} {% endcomment %}
-        <div class="review-item">
-            <div class="review-header">
-                <span class="review-author">Nithin S.</span>
-                <div class="review-rating stars">
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                </div>
-            </div>
-            <span class="review-date">October 28, 2025</span>
-            <p class="review-text">
-                Excellent quality shirt! The fit is perfect and the material feels very premium.
-                Exactly as described. Highly recommend.
-            </p>
+    <div class="review-item">
+      <div class="review-header">
+        <span class="review-author">Arjun</span>
+        <div class="review-rating stars">
+          <i class='bx bxs-star'></i>
+          <i class='bx bxs-star'></i>
+          <i class='bx bxs-star'></i>
+          <i class='bx bxs-star'></i>
+          <i class='bx bx-star'></i>
         </div>
-
-        <div class="review-item">
-            <div class="review-header">
-                <span class="review-author">Arjun</span>
-                <div class="review-rating stars">
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bx-star'></i> </div>
-            </div>
-            <span class="review-date">October 25, 2025</span>
-            <p class="review-text">
-                Good shirt, but the color was slightly different than the picture. Still,
-                the quality is nice.
-            </p>
-        </div>
-        {% comment %} {% endfor %} {% endcomment %}
+      </div>
+      <span class="review-date">October 25, 2025</span>
+      <p class="review-text">
+        Good shirt, but the color was slightly different than the picture. Still, the quality is nice.
+      </p>
     </div>
+    {% comment %} {% endfor %} {% endcomment %}
+  </div>
 </div>
-
 <div class="related-products-container">
     <h2>You Might Also Like</h2>
-
     <div class="related-products-grid">
-        {% for related_product in related_products %}
-        <a href="#" class="product-card">
-            <div class="product-card-image">
-                <img src="{{related_product.image}}" alt="Related Product Name">
-            </div>
-            <div class="product-card-info">
-                <h3 class="product-card-name">{{related_product.name}}</h3>
-                <p class="product-card-price">₹ {{related_product.price}}</p>
-            </div>
-        </a>
+            {% for related_product in related_products %}
+                <a href="{% url 'Product_card_view' related_product.slug %}" class="product-card">
+                    <div class="product-card-image">
+                        <img src="{{ related_product.image }}" alt="{{ related_product.name }}">
+                    </div>
+                    <div class="product-card-info">
+                        <h3 class="product-card-name">{{ related_product.name }}</h3>
+                        <div class="product-card-price-container">
+                            <del>₹ {{ related_product.base_price }}</del>
+                            <span class="offer-price">₹ {{ related_product.offer_price }}</span>
+                        </div>
+                    </div>
+                </a>
+            
+        {% empty %}
+            {% for random_product in random_products %}
+                <a href="{% url 'Product_card_view' random_product.slug %}" class="product-card">
+                    <div class="product-card-image">
+                        <img src="{{ random_product.image }}" alt="{{ random_product.name }}">
+                    </div>
+                    <div class="product-card-info">
+                        <h3 class="product-card-name">{{ random_product.name }}</h3>
+                        <div class="product-card-price-container">
+                            <del>₹ {{ random_product.base_price }}</del>
+                            <span class="offer-price">₹ {{ random_product.offer_price }}</span>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
         {% endfor %}
-
     </div>
 </div>
-
 {% endblock content %}
+
 {% block extra_script %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
