@@ -42,6 +42,8 @@ class HomePageView(TemplateView):
         context["new_arrivals"] = new_arrivals
         return context
     
+class AboutView(TemplateView):
+    template_name ='products/about.html'
 
 def product_list_view(request):
     categories = Category.objects.all().order_by('name')
