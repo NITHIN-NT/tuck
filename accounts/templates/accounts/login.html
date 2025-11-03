@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load socialaccount %}
 
 {% block title %}Login{% endblock %}
 
@@ -41,7 +42,7 @@
     </div>
 
     <div class="social-login">
-        <a href="#" class="social-btn" aria-label="Login with Google">
+        <a href="{%provider_login_url 'google'%}" class="social-btn" aria-label="Login with Google">
             <i class='bx bxl-google'></i>
         </a>
         <a href="#" class="social-btn" aria-label="Login with Facebook">

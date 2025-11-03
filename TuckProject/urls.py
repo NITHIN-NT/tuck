@@ -6,7 +6,8 @@ urlpatterns = [
     path('',include('userFolder.products.urls')),
     path('profile/',include('userFolder.userprofile.urls')),
     path('accounts/', include('accounts.urls')),
+    path('accounts/', include('allauth.urls')),
 
 
-    path('superuser/',include('admin_dashboard.urls'))
+    path('superuser/',include('Admin.urls'))
 ]
