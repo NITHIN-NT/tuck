@@ -93,7 +93,7 @@
                     {% for product in page_obj %}
                         <div class="product-card">
                             <a href="{% url 'Product_card_view' product.slug %}">
-                                <div class="product-image-placeholder" style="background-image: url({{product.image}}); background-size: cover;"></div>
+                                <div class="product-image-placeholder" style="background-image: url({{product.image_url}}); background-size: cover;"></div>
                             </a>
                             <div class="product-info-container">
                                 <div class="product-details">

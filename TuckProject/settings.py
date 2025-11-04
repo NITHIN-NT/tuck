@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'userFolder.products',
     'Admin',
     'accounts',
+    'Scripts',
 
     # Allauth
     'allauth',

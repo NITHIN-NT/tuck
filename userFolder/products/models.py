@@ -17,7 +17,8 @@ class Product(models.Model):
     base_price = models.DecimalField(max_digits=8, decimal_places=2) 
     offer_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True) 
 
-    image = models.URLField(max_length=1024)
+    image_url = models.URLField(max_length=1024)
+    image = models.ImageField(upload_to='products/', height_field=None, width_field=None, max_length=1024,null=True,blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
 
     is_featured = models.BooleanField(default=False)
@@ -31,7 +32,8 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image_url = models.URLField(max_length=1024) # 
+    image_url = models.URLField(max_length=1024) 
+    image = models.ImageField(upload_to='products/', height_field=None, width_field=None, max_length=1024,null=True,blank=True)
 
     def __str__(self):
         return f"Image for {self.product.name}"
