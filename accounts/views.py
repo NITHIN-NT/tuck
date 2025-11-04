@@ -132,13 +132,13 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('Home_page_user')
-
-
 '''
     Forgot Password
 '''
 class SendOTPView(View):
-
+    '''
+        This OTP View Is for forgot Password
+    '''
     def get(self,request):
         form = ForgotPasswordEmailForm()
         return render(request,'accounts/forgot-password.html',{'form':form})
@@ -180,8 +180,10 @@ class SendOTPView(View):
         else:
             return render(request,'accounts/forgot-password.html',{'form': form})
 
-
 class VerifyOTPView(View):
+    '''
+        Thsi verify OTP view to Verify the OTP
+    '''
     def get(self,request):
         if 'reset_user_email' not in request.session:
             messages.error(request,'Please Request an OTP First.')
@@ -221,6 +223,9 @@ class VerifyOTPView(View):
         return render(request,'accounts/verify-otp-password_reset.html',{'form':form})
 
 class NewPasswordView(View):
+    '''
+        This New password is setNew Password
+    '''
     def get(self,request):
         if not request.session.get('reset_user_email') or not request.session.get('reset_password_allowed'):
             messages.error(request, 'You are not authorized to access this page. Please verify your OTP first.')
