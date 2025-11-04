@@ -6,41 +6,13 @@ from django.core.mail import EmailMultiAlternatives
 from django.views import View
 from .models import CustomUser,EmailOTP
 from .forms import CustomUserRegisterForm, LoginForm,VerifyOTPForm,SetNewPassword,ForgotPasswordEmailForm
-
+from django.conf import settings
 
 # Create your views here.
-'''login Function Based View
-def signup_view(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
 
-        if CustomUser.objects.filter(email=email).exists():
-            messages.success(request,'Email Already Exists')
-            return redirect('signup')
-        
-        user = CustomUser.objects.create_user(email=email,password=password,first_name=first_name,last_name=last_name)
-        user.is_active = False
-        user.save()
-
-        otp_code = EmailOTP.genrate_otp()
-        EmailOTP.objects.create(user=user,otp=otp_code)
-
-        send_mail(
-            subject="Your OTP Verification Code",
-            message=f"Your OTP code is {otp_code}",
-            from_email="no-reply@example.com",
-            recipient_list=[email],
-        )
-
-        request.session['pending_user_id'] = user.id
-        messages.info(request, "OTP sent to your email. Verify to continue.")
-        return redirect('verify_otp')
-    return render(request, 'accounts/signup.html')
 '''
-
+    User Creat/Login 
+'''
 def signup_view(request):
     if request.method == 'POST':
         form = CustomUserRegisterForm(request.POST)
@@ -111,11 +83,14 @@ def verify_otp_view(request):
             user.is_active = True
             user.save()
             otp_record.delete()
-            # Remove session key
-            del request.session['pending_user_id']
 
-            # Auto-login user
-            login(request, user)
+            try:
+                del request.session['pending_user_id']
+            except KeyError:
+                pass
+            if user:
+                backend = settings.AUTHENTICATION_BACKENDS[0]
+                login(request, user,backend=backend)
             messages.success(request, "Your email has been verified successfully!")
             return redirect('Home_page_user')
         else :
@@ -131,12 +106,13 @@ def login_view(request):
             password = form.cleaned_data['password']
             user = authenticate(request, email=email, password=password)
             if user is not None:
-                if user.is_active:
+                if user.is_active:  
                     login(request, user)
                     messages.success(request, f"Welcome back, {user.first_name or user.email}!")
                     return redirect('Home_page_user')
                 else:
                     messages.error(request, "Please verify your email first.")
+                    return render(request,'accounts/verify_otp.html',{'form':form})
             else:
                 messages.error(request, "Invalid credentials. Please check your email and password.")
         else:
@@ -157,6 +133,10 @@ def logout_view(request):
     logout(request)
     return redirect('Home_page_user')
 
+
+'''
+    Forgot Password
+'''
 class SendOTPView(View):
 
     def get(self,request):
