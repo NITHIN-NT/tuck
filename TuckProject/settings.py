@@ -2,28 +2,36 @@ from pathlib import Path
 import environ
 import os
 
-# ============================ CHECKPOINT ============================
-# BackUp - 1 Homepage / Breadcrumbs / Product listing / Product Category
-# ============================ CHECKPOINT ============================
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Initialize environment variables
+'''
+    Env Setup
+'''
 env = environ.Env(DEBUG=(bool, False))
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))  # .env should be in project root (same as manage.py)
 
-# ============================ SECURITY ============================
-
-# SECURITY WARNING: keep the secret key used in production secret!
+'''
+    SECURITY
+'''
 SECRET_KEY = env('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
-
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
+CSRF_TRUSTED_ORIGINS = ['https://stephanie-unmanipulative-louella.ngrok-free.dev']
 
-# ============================ APPLICATIONS ============================
+'''
+    USER & AUTH
+'''
+AUTH_USER_MODEL = 'accounts.CustomUser'
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+'''
+    APPLICATIONS
+'''
 
 INSTALLED_APPS = [
     # Django default apps
@@ -33,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # Third-party apps
     'dynamic_breadcrumbs',
@@ -40,10 +49,35 @@ INSTALLED_APPS = [
     # Local apps
     'userFolder.userprofile',
     'userFolder.products',
-    'userFolder.accounts',
+    'Admin',
+    'accounts',
+    'Scripts',
+
+    # Allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
-# ============================ MIDDLEWARE ============================
+# ============================ AUTHENTICATION SETTINGS ============================
+LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL = 'Home_page_user'
+LOGIN_REDIRECT_URL = 'Home_page_user'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'Home_page_user'
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_ADAPTER = 'accounts.adapter.CustomSocialAccountAdapter'
+
+'''
+    MIDDLEWARE
+'''
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,14 +87,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
-# ============================ URLS / WSGI ============================
+'''
+    URLS & WSGI 
+'''
 
 ROOT_URLCONF = 'TuckProject.urls'
 WSGI_APPLICATION = 'TuckProject.wsgi.application'
 
-# ============================ TEMPLATES ============================
+'''
+    TEMPLATES
+'''
 
 TEMPLATES = [
     {
@@ -78,17 +117,33 @@ TEMPLATES = [
     },
 ]
 
-# ============================ DATABASE ============================
-
+'''
+    DATABASE
+'''
 DATABASES = {
-    'default': env.db(),  # Reads DATABASE_URL from .env
+    'default': env.db(),
 }
 
-# Example .env line:
-# DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/DBNAME
+'''
+    SOCIAL ACCOUNT PROVIDERS
+'''
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': env('client_id'),
+            'secret': env('secret'),
+            'key': '',
+            'FETCH_USERINFO': True,
+        },
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
 
-# ============================ PASSWORD VALIDATION ============================
-
+'''
+    PASSWORD VALIDATORS
+'''
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -96,23 +151,31 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# ============================ INTERNATIONALIZATION ============================
-
+'''
+    LOCALIZATION
+'''
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
-# ============================ STATIC & MEDIA ============================
-
+'''
+    STATIC & MEDIA
+'''
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-
-# For production (collectstatic)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-# ============================ DEFAULT PRIMARY KEY ============================
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+'''
+    EMAIL CONFIG
+'''
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

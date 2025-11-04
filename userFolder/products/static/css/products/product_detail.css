@@ -4,7 +4,8 @@
     display: grid;
     /* Two columns: left (gallery) and right (info) */
     grid-template-columns: 1fr 1fr;
-    gap: 60px; /* Space between the two columns */
+    gap: 60px;
+    /* Space between the two columns */
     padding-top: 40px;
     padding-bottom: 60px;
 }
@@ -14,12 +15,14 @@
 .product-gallery {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Space between main image and thumbnails */
+    gap: 20px;
+    /* Space between main image and thumbnails */
 }
 
 .gallery-main {
     width: 100%;
-    aspect-ratio: 1 / 1; /* Makes the image container square */
+    aspect-ratio: 1 / 1;
+    /* Makes the image container square */
     background-color: #f8f8f8;
     border-radius: 8px;
     display: flex;
@@ -33,7 +36,7 @@
     width: 100%;
     height: 100%;
     /* Use 'contain' if image is like the quote, 'cover' if it's a photo */
-    object-fit: contain; 
+    object-fit: contain;
 }
 
 .gallery-thumbnails {
@@ -154,7 +157,7 @@
     border: none;
     cursor: pointer;
     /* Used for the 'active' ring effect */
-    outline: 2px solid transparent; 
+    outline: 2px solid transparent;
     outline-offset: 2px;
     transition: outline-color 0.2s ease;
     /* A subtle border to help white swatches show up */
@@ -170,7 +173,8 @@
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 12px;
-    display: block; /* Makes it stack correctly */
+    display: block;
+    /* Makes it stack correctly */
 }
 
 .quantity-selector {
@@ -178,7 +182,8 @@
     align-items: center;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: fit-content; /* Shrinks to content */
+    width: fit-content;
+    /* Shrinks to content */
 }
 
 .quantity-selector .btn-quantity {
@@ -188,7 +193,8 @@
     cursor: pointer;
     font-size: 18px;
     color: #333;
-    line-height: 1; /* Aligns icons better */
+    line-height: 1;
+    /* Aligns icons better */
 }
 
 .quantity-selector .btn-quantity:first-child {
@@ -279,4 +285,401 @@
 
 .secondary-actions .action-link i {
     font-size: 20px;
+}
+
+/* ... your existing .product-info .description rule ... */
+
+.product-info .description {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* ==================== NEW: DESCRIPTION ACCORDION (SMOOTHER) ==================== */
+
+.description-accordion {
+    margin-bottom: 30px;
+    border-top: 1px solid #eaeaea;
+    border-bottom: 1px solid #eaeaea;
+
+    /* --- 1. Set up the grid --- */
+    display: grid;
+    grid-template-rows: auto 0fr;
+
+    /* --- 2. Define the grid transition --- */
+    /* This will be our main animation */
+    transition: grid-template-rows 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    /* Was 0.5s */
+}
+
+/* --- 3. Set the 'open' state for the grid --- */
+.description-accordion[open] {
+    /* Row 1 (header) = auto. Row 2 (content) = 1fr (1 fraction) */
+    grid-template-rows: auto 1fr;
+}
+
+.description-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    list-style: none;
+    /* Removes default triangle */
+}
+
+/* Removes default triangle in Chrome/Safari */
+.description-header::-webkit-details-marker {
+    display: none;
+}
+
+/* This is the '+' icon */
+.description-header::after {
+    content: '+';
+    font-size: 24px;
+    font-weight: 300;
+    color: #333;
+
+
+    /* --- 4. Animate the icon rotation --- */
+    /* Use the same duration and easing as the grid */
+    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    /* Was 0.5s */
+}
+
+/* When the <details> is open, change the icon to '-' */
+.description-accordion[open]>.description-header::after {
+    content: '−';
+    transform: rotate(180deg);
+}
+
+.description-content {
+    /* These are the styles from your old .description class */
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+
+    /* --- 5. Animate the fade-in/out --- */
+    /* We add overflow:hidden and animate opacity */
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+}
+
+/* --- 6. Set the 'open' state for the content --- */
+.description-accordion[open]>.description-content {
+    /* Add padding back in for the 'open' state */
+    padding-bottom: 20px;
+    opacity: 1;
+    /* Delay the fade-in so it looks better */
+    transition: opacity 0.3s ease-in 0.2s;
+}
+
+/* =================================================================== */
+.gallery-main {
+    position: relative;
+    overflow: hidden;
+    /* This is crucial for the in-place zoom */
+}
+
+#main-product-image {
+    transition: transform 0.3s ease;
+    /* Adds a smooth zoom effect */
+    width: 100%;
+    /* Ensure the image fills the container */
+    height: auto;
+}
+
+.gallery-main:hover #main-product-image {
+    transform: scale(2);
+    /* Adjust the zoom level (e.g., 2 = 200% zoom) */
+}
+
+/* =================================================================== */
+/* NEW: CUSTOMER REVIEWS                           */
+/* =================================================================== */
+
+.customer-reviews-container {
+    padding: 60px 0;
+    border-top: 1px solid #eaeaea;
+}
+
+.customer-reviews-container h2 {
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.reviews-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding: 30px;
+    background-color: #fdfdfd;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+}
+
+.average-rating {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.average-rating .rating-value {
+    font-size: 48px;
+    font-weight: 600;
+}
+
+.average-rating .stars {
+    font-size: 22px;
+    color: #f5a623;
+    /* Gold/Yellow for stars */
+}
+
+.average-rating .total-reviews {
+    font-size: 16px;
+    color: #777;
+    padding-top: 8px;
+    /* Aligns it nicely */
+}
+
+/* Re-using your existing button style! */
+#btn-write-review {
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.review-item {
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 30px;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.review-author {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.review-rating.stars {
+    font-size: 16px;
+    color: #f5a623;
+}
+
+.review-rating.stars .bx-star {
+    color: #ccc;
+    /* Color for empty stars */
+}
+
+.review-date {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.review-text {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.7;
+}
+
+
+/* =================================================================== */
+/* NEW: RELATED PRODUCTS                           */
+/* =================================================================== */
+
+.related-products-container {
+    padding: 60px 0;
+}
+
+.related-products-container h2 {
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.related-products-grid {
+    display: grid;
+    /* This grid is responsive: it shows as many items as fit (min 250px) */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.product-card {
+    text-decoration: none;
+    color: #000;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-5px);
+}
+
+.product-card-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #f8f8f8;
+}
+
+.product-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-card-info {
+    padding: 20px;
+}
+
+.product-card-name {
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    /* Truncate long names */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-card-price {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* ===== Image Modal Popup ===== */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    padding-top: 80px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.image-modal .close-modal {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.image-modal .close-modal:hover {
+    color: #ff4444;
+}
+
+.image-modal .modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 85vh;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.product-card-price-container {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    /* small space between prices */
+}
+
+.product-card-price-container del {
+    font-size: 18px;
+    /* smaller font for old price */
+    color: #888;
+    /* gray color */
+}
+
+.product-card-price-container .offer-price {
+    font-size: 24px;
+    /* slightly larger for visibility */
+    font-weight: 600;
+    color: #000;
+}
+
+/* This is the main container for the prices in the .product-info section */
+.product-price-container {
+    display: flex;
+    align-items: baseline;
+    /* Aligns the bottom of the text (e.g., "₹" symbols) */
+    gap: 12px;
+    /* Adjusts the space between the two prices */
+    margin-bottom: 24px;
+    /* Matches the margin from your original .price class */
+}
+
+/* This styles the main, larger "offer price" */
+.product-price-container .offer-price {
+    font-size: 28px;
+    /* Larger to draw attention */
+    font-weight: 600;
+    /* Bolder than the original price */
+    color: #000;
+    /* You could also use a sale color like #b22222 (firebrick) */
+}
+
+/* This styles the smaller, struck-through <del> price */
+.product-price-container del {
+    font-size: 20px;
+    /* Smaller and less prominent */
+    font-weight: 400;
+    color: #777;
+    /* Lighter, grayed-out color */
+    /* The <del> tag automatically adds the line-through */
 }

@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from .models import Product,ProductImage,Category
 from django.utils import timezone
+from datetime import date,timedelta
 from django.core.paginator import Paginator
 from django.db.models import Max,Min
-from django.views.generic import TemplateView,DetailView
+from django.views.generic import TemplateView,DetailView,ListView
 
 # Create your views here.
 '''
@@ -41,34 +42,65 @@ class HomePageView(TemplateView):
         context["new_arrivals"] = new_arrivals
         return context
     
+class AboutView(TemplateView):
+    template_name ='products/about.html'
 
 def product_list_view(request):
-    categorys = Category.objects.all().order_by('name')
-    
+    categories = Category.objects.all().order_by('name')
+    products = Product.objects.all().order_by('name')
+
     selected_category_id = request.GET.get('category')
+    selected_price = request.GET.get('price_range')
+    selected_sort = request.GET.get('sort')
+    search = request.GET.get('search')
 
-    products = Product.objects.filter(stock__gte = 1)
-        
+    # Sorting
+    if selected_sort == 'newest':
+        products = products.order_by('-created_at')
+    elif selected_sort == 'price-low-high':
+        products = products.order_by('price')
+    elif selected_sort == 'price-high-low':
+        products = products.order_by('-price')
+    elif selected_sort == 'name-asc':
+        products = products.order_by('name')
+    elif selected_sort == 'name-desc':
+        products = products.order_by('-name')
+    elif selected_sort == 'popularity':
+        products = products.order_by('-popularity_score')
+    elif selected_sort == 'rating':
+        products = products.order_by('-average_rating')
+    elif selected_sort == 'featured':
+        products = products.order_by('-is_featured', '-created_at')
+
+    # Category Filter
     if selected_category_id and selected_category_id != 'all':
-        products = Product.objects.filter(category = selected_category_id,stock__gte = 1)
+        products = products.filter(category__id=selected_category_id)
 
+    # Price Filter
+    if selected_price:
+        try:
+            price_limit = float(selected_price)
+            products = products.filter(offer_price__lte=price_limit)
+        except ValueError:
+            pass
+
+    # Search Filter
+    if search:
+        products = products.filter(name__icontains=search)
+
+    # Price Range
     price_range = Product.objects.aggregate(
-        min_amount=Min('price'),
-        max_amount=Max('price')
+        min_amount=Min('offer_price'),
+        max_amount=Max('offer_price')
     )
-    """
-        Paginaton Logic Start here 
-    """
-    paginator = Paginator(products, 9) 
+
+    # Pagination
+    paginator = Paginator(products, 9)
     page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number) 
-    """
-        If page_number is invalid (e.g., "abc" or 999 when you only have 20 pages), 
-        it returns the last page instead of crashing
-    """
+    page_obj = paginator.get_page(page_number)
     current_page = page_obj.number
     total_pages = paginator.num_pages
-    window = 5 
+    window = 5
     half_window = (window - 1) // 2
 
     start_page = max(1, current_page - half_window)
@@ -77,27 +109,26 @@ def product_list_view(request):
     if current_page <= half_window:
         start_page = 1
         end_page = min(window, total_pages)
-    
     elif current_page >= total_pages - half_window:
         end_page = total_pages
         start_page = max(1, total_pages - window + 1)
 
     custom_page_range = range(start_page, end_page + 1)
-    """
-        Paginaton Logic End here 
-    """
 
     context = {
-        'products': products,
-        'categorys': categorys,
+        'categories': categories,
         'page_obj': page_obj,
         'custom_page_range': custom_page_range,
-        'max_amount':  price_range['max_amount'] or 10000,
+        'max_amount': price_range['max_amount'] or 10000,
         'min_amount': price_range['min_amount'] or 0,
         'selected_category_id': selected_category_id,
+        'selected_price': selected_price,
+        'selected_sort': selected_sort,
+        'search': search
     }
-    
-    return render(request,'products/products.html',context)
+
+    return render(request, 'products/products.html', context)
+
 
 class ProductDetailedView(DetailView):
         model = Product
@@ -107,14 +138,25 @@ class ProductDetailedView(DetailView):
         slug_url_kwarg = 'slug'
 
         def get_queryset(self):
-            query_set =  super().get_queryset() # This get the queryset or the product details
-            return query_set.prefetch_related('images','size') # Take related Items of that products like images and size from their respective tables
+            query_set =  super().get_queryset() 
+            return query_set.select_related('category').prefetch_related('variants__size','images') 
+
         
-        
-        def get_context_data(self, **kwargs): # This method is used when you want to add more data to send to the template.
+        def get_context_data(self, **kwargs): 
             context = super().get_context_data(**kwargs)
-            all_images = self.object.images.all() # In this we are taking the related_name, images from productimage table
-            context["images_list_limited"] = all_images[:4] # In here we are limiting the images we are sending
-            context["sizes"] = self.object.size.all() # in here the size is the field name .
+            product = self.object
+
+            all_images = product.images.all()
+            context["images_list_limited"] = all_images[:4] 
+
+            context["sizes"] = product.variants.all().select_related('size')
+
+            product_category = product.category
+            
+            related_products = Product.objects.filter(category=product_category).select_related('category').exclude(pk=product.pk)
+            random_products = Product.objects.all().order_by('?')
+            context['related_products'] = related_products[:4]
+            context['random_products'] = random_products[:4]
+            
             
             return context

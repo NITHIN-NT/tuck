@@ -5,6 +5,8 @@
 
 {% block extra_styles %}
     <link rel="stylesheet" href="{% static 'css/userprofile/profile.css' %}">
+    <!-- Using Boxicons for icons, as seen in your template -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 {% endblock extra_styles %}
 
 {% block content %}
@@ -13,9 +15,28 @@
     <aside class="profile-sidebar">
         
         <div class="profile-user-card">
-            <img src="{% static 'images/avatar.jpg' %}" alt="User Avatar" class="avatar">
-            <h3>{{user.first_name}}</h3>
-            <p>{{user.email}}</p>
+            
+            <!-- NEW: Wrapper to contain avatar and edit button -->
+            <div class="avatar-wrapper">
+                {% if user.profile_image %}
+                    <!-- If user has a profile image, display it -->
+                    <img src="{{ user.profile_image.url }}" alt="User Avatar" class="avatar">
+                {% else %}
+                    <!-- Fallback to initials if no profile image -->
+                    <div class="avatar-initials">
+                        <span>{{ user.first_name|slice:":2"|upper }}</span>
+                    </div>
+                {% endif %}
+                
+                <!-- NEW: Edit link with pencil icon -->
+                <a href="#" class="avatar-edit-link">
+                    <i class='bx bxs-pencil'></i>
+                </a>
+            </div>
+            
+            <!-- Assuming user has first_name and last_name -->
+            <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+            <p>{{ user.email }}</p>
         </div>
 
         <nav class="profile-nav">
@@ -48,7 +69,7 @@
         </nav>
 
         <div class="profile-logout">
-            <a href="#" class="logout-link">
+            <a href="{% url "logout" %}" class="logout-link">
                 <i class='bx bx-log-out'></i>
                 <span>Logout</span>
             </a>
@@ -69,19 +90,21 @@
                 <dl>
                     <div>
                         <dt>Full Name</dt>
-                        <dd>{{user.first_name}}</dd>
+                        <dd>{{ user.first_name }} {{ user.last_name }}</dd>
                     </div>
                     <div>
                         <dt>Email Address</dt>
-                        <dd>{{user.email}}</dd>
+                        <dd>{{ user.email }}</dd>
                     </div>
                     <div>
                         <dt>Phone Number</dt>
-                        <dd>+91 {{user.phone}}</dd>
+                        <!-- Added a check in case phone is optional -->
+                        <dd>{% if user.phone %}+91 {{ user.phone }}{% else %}Not provided{% endif %}</dd>
                     </div>
                     <div>
                         <dt>Member Since</dt>
-                        <dd>{{user.created_at}}</dd>
+                        <!-- Format the date for better readability -->
+                        <dd>{{ user.created_at|date:"F d, Y" }}</dd>
                     </div>
                 </dl>
             </div>
@@ -101,7 +124,7 @@
             </div>
             
             <div class="stat-card">
-                <i class='bx bx-group'></i>
+                <i class='bx bxs-group'></i>
                 <div class="stat-info">
                     <h4>Total Referrals</h4>
                     <p class="stat-value">12</p>
@@ -117,3 +140,4 @@
 
 </div>
 {% endblock content %}
+

@@ -216,3 +216,166 @@ button {
     padding-right: 40px;
     /* Use padding on container instead */
 }
+
+/* --------------------------------------------------- */
+/* NEW TOASTR.JS STYLES - Based on your image
+/* (Delete your old toastr CSS and use this)
+/* --------------------------------------------------- */
+
+/* 1. BASE TOAST STYLE (This styles the white toast) */
+#toast-container>div {
+    /* Shape & Appearance */
+    border-radius: 999px;
+    /* This creates the "pill" shape */
+    opacity: 1;
+    box-shadow: none;
+    /* Remove shadow for a flat look */
+    border: 1px solid #e0e0e0;
+    /* Light border for the white toast */
+    padding: 10px 20px;
+    /* Adjust padding */
+    margin-bottom: 10px;
+    /* Space between toasts */
+
+    /* Font & Color (Default for white toast) */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #ffffff !important;
+    /* Force white bg */
+    color: #333333 !important;
+    /* Dark text for the white toast */
+}
+
+/* 2. SPECIFIC TOASTS (Colored backgrounds, white text) */
+/* We use !important to override toastr.js inline styles */
+
+/* Success (Green) */
+#toast-container>.toast-success {
+    background-color: #8CC152 !important;
+    color: #ffffff !important;
+    border: none;
+}
+
+/* Error (Red) */
+#toast-container>.toast-error {
+    background-color: #DA4453 !important;
+    color: #ffffff !important;
+    border: none;
+}
+
+/* Warning (Yellow) */
+#toast-container>.toast-warning {
+    background-color: #F6BB42 !important;
+    color: #ffffff !important;
+    border: none;
+}
+
+/* Info (Blue) */
+#toast-container>.toast-info {
+    background-color: #4A89DC !important;
+    color: #ffffff !important;
+    border: none;
+}
+
+/* 3. TEXT & TITLE STYLING */
+/* This makes sure the title and message inherit the correct color */
+.toast-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: inherit !important;
+}
+
+.toast-message {
+    font-size: 14px;
+    color: inherit !important;
+}
+
+/* 4. CLOSE BUTTON STYLING ("X") */
+
+/* Default close button (for the white toast) */
+.toast-close-button {
+    color: #000 !important;
+    /* Black "X" */
+    opacity: 0.7 !important;
+    font-size: 20px !important;
+    text-shadow: none !important;
+    margin-left: 15px;
+    /* Add some space */
+}
+
+.toast-close-button:hover {
+    opacity: 1 !important;
+    color: #000 !important;
+}
+
+/* White close button for all colored toasts */
+#toast-container>.toast-success .toast-close-button,
+#toast-container>.toast-error .toast-close-button,
+#toast-container>.toast-warning .toast-close-button,
+#toast-container>.toast-info .toast-close-button {
+    color: #ffffff !important;
+    /* White "X" */
+    opacity: 0.8 !important;
+}
+
+#toast-container>.toast-success .toast-close-button:hover,
+#toast-container>.toast-error .toast-close-button:hover,
+#toast-container>.toast-warning .toast-close-button:hover,
+#toast-container>.toast-info .toast-close-button:hover {
+    color: #ffffff !important;
+    opacity: 1 !important;
+}
+
+/* 5. PROGRESS BAR STYLING */
+.toast-progress {
+    background-color: rgba(0, 0, 0, 0.1);
+    /* Subtle dark on white toast */
+    height: 3px;
+    opacity: 0.4;
+}
+
+/* Make progress bar on colored toasts a subtle white */
+#toast-container>.toast-success .toast-progress,
+#toast-container>.toast-error .toast-progress,
+#toast-container>.toast-warning .toast-progress,
+#toast-container>.toast-info .toast-progress {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+/* ===== Offer Carousel Styles ===== */
+.offer-carousel {
+    background-color: #000; /* Black background */
+    color: #fff;            /* White text */
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.offer-track {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scrollOffers 40s linear infinite; /* Slower for more offers */
+}
+
+.offer-item {
+    display: inline-block;
+    margin-right: 80px; /* Space between offers */
+}
+
+@keyframes scrollOffers {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Pause scroll when hovered */
+.offer-carousel:hover .offer-track {
+    animation-play-state: paused;
+}

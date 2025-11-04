@@ -1,0 +1,137 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/products/admin_products.css' %}">
+{% endblock extra_css %}
+
+
+{% block content %}
+    
+    <div class="page-header-container">
+        <div class="page-header">
+            <h1>Products</h1>
+            <p>Manage your store products</p>
+        </div>
+        <a href="#" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> Add Product
+        </a>
+    </div>
+
+    <div class="data-table-card">
+        
+        <form action="" method="GET">
+            <div class="table-toolbar">
+                <div class="search-bar">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id='search-input' name="search" placeholder="Search products..." value="{{ search_query }}">
+                    <i class="fa-solid fa-xmark clear-icon" id="clear-search-btn"></i>  
+                </div>
+
+                <div class="filters">
+                    <select name="category" class="filter-dropdown">
+                        <option value="">All Categories</option>
+                        {% for category in categorys %}
+                        <option value="{{category.name}}" {% if category.name == category_filter %}Selected{% endif %}>{{category.name}}</option>
+                        {% endfor %}
+                    </select>
+                    {% comment %} <select name="status" class="filter-dropdown">
+                        <option value="">All Status</option>
+                        <option value="in_stock">In Stock</option>
+                        <option value="out_of_stock">Out of Stock</option>
+                    </select> {% endcomment %}
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Base Price</th>
+                    <th>Offer Price</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>
+                            <img src="{{product.image_url}}" alt="Product" class="product-table-image">
+                        </td>
+                        <td>{{product.name}}</td>
+                        <td>{{product.category}}</td>
+                        <td>₹{{product.base_price}}</td>
+                        <td>₹{{product.offer_price}}</td>
+                        <td>
+                            <span class="status-badge status-active">In Stock</span>
+                        </td>
+                        <td class="action-buttons">
+                            <a href="#" class="btn-action btn-edit" title="Edit" onclick="event.stopPropagation();"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="#" class="btn-action btn-delete" title="Delete" onclick="event.stopPropagation();"><i class="fa-solid fa-trash-can"></i></a>
+                        </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td>No Data</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <section class='pagination-container'>
+        <div class="pagination">
+            
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+            {% else %}
+                <span class="disabled">&lt;</span>
+            {% endif %}
+
+            {% for i in custom_page_range %}
+                {% if page_obj.number == i %}
+                    <span class="current">{{ i }}</span>
+                {% else %}
+                    <a href="?page={{ i }}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+            {% else %}
+                <span class="disabled">&gt;</span>
+            {% endif %}
+                
+        </div>
+    </section>
+
+{% endblock content %}
+{% block extraJs %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    
+    // --- Clear Search Button Logic ---
+    const searchInput = document.getElementById('search-input');
+    const clearBtn = document.getElementById('clear-search-btn');
+
+    function toggleClearButton() {
+        if (searchInput.value.length > 0) {
+            clearBtn.style.display = 'block';
+        } else {
+            clearBtn.style.display = 'none';
+        }
+    }
+
+    searchInput.addEventListener('input', toggleClearButton);
+
+    clearBtn.addEventListener('click', function() {
+        window.location.href = "{% url 'admin_products' %}";
+    });
+
+    toggleClearButton();
+}); // Check on page load
+</script>
+{% endblock extraJs %}

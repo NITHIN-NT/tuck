@@ -1,0 +1,103 @@
+/* static/css/otp_form.css */
+
+.otp-container {
+    max-width: 450px;
+    margin: 4rem auto;
+    padding: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    border: 1px solid #eee;
+}
+
+.otp-container h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.75rem;
+}
+
+.otp-container p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.otp-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Container for the 6 boxes */
+.otp-input-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between boxes */
+}
+
+/* Individual OTP input box */
+.otp-box {
+    width: 50px;  /* Box width */
+    height: 50px; /* Box height */
+    font-size: 1.5rem; /* Digit font size */
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px; /* Rounded corners */
+    box-sizing: border-box;
+    
+    /* Removes the arrows on number inputs in some browsers */
+    -moz-appearance: textfield;
+}
+
+.otp-box::-webkit-outer-spin-button,
+.otp-box::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.otp-box:focus {
+    border-color: #007bff; /* Blue border on focus */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); /* Soft blue glow */
+}
+
+/* Style for the verify button */
+.btn-submit {
+    width: 100%;
+    padding: 0.9rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #007bff; /* Blue color from image */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.resend-timer-container {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+#timer-container #timer {
+    font-weight: 700;
+    color: #000;
+}
+
+#resend-link {
+    font-weight: 600;
+    color: #007bff;
+    text-decoration: none;
+}
+
+#resend-link:hover {
+    text-decoration: underline;
+}

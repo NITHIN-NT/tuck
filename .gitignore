@@ -137,3 +137,6 @@ GitHub.sublime-settings
 !.vscode/extensions.json 
 .history
 .DS_Store
+
+GEMINI.md
+extracted_products_with_variants.json
