@@ -169,9 +169,6 @@ class AdminUserView(LoginRequiredMixin,ListView):
     context_object_name = 'Users'
     ordering =['date_joined']
 
-# def admin_user_view(request):
-#     return render(request,'users/home_user.html')
-
 def admin_user_edit(request):
     return render(request,'users/edit_user.html')
 
