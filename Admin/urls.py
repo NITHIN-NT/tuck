@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import AdminProductsView,AdminCategoryView,AdminUserView,AdminHome,StockManagementView
+from .views import AdminProductsView,AdminCategoryView,AdminUserView,AdminHome,StockManagementView,AdminProductAdd
 urlpatterns = [
 
     path('',views.admin_login,name='admin_login'),
@@ -16,8 +16,8 @@ urlpatterns = [
     path('users/add',views.admin_user_add,name='admin_user_add'),
 
     path('products/',AdminProductsView.as_view(),name='admin_products'),
+    path('products/add',AdminProductAdd.as_view(),name='admin_product_add'),
     # path('products/edit',views.admin_products_edit,name='admin_products_edit'),
-    # path('products/add',views.admin_products_add,name='admin_products_add'),
 
     path('category/',AdminCategoryView.as_view(),name='admin_category'),
     # path('category/edit',views.admin_category_edit,name='admin_category_edit'),

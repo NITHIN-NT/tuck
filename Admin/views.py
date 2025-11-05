@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.views.generic import TemplateView,ListView
+from django.views import View
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from django.db.models import Count,Sum
@@ -212,6 +213,15 @@ class AdminProductsView(LoginRequiredMixin,ListView):
         context['category_filter'] = self.request.GET.get('category', '')
         return context
     
+class AdminProductAdd(View):
+    template_name = 'products/product_add.html'
+
+    def get(self,request):
+        return render(request,self.template_name)
+
+
+
+
 '''Product View End Here'''
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class AdminCategoryView(ListView):
