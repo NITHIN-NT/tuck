@@ -5,13 +5,20 @@
     box-sizing: border-box;
 }
 
+/* ================================================= */
+/* ==== FONT FAMILY: BARLOW CONDENSED (DEFAULT) ==== */
+/* ================================================= */
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #fff;
-    color: #000;
+    font-family: "Barlow Condensed", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+input,
+button,
+a {
+    font-family: inherit;
 }
 
 ul {
@@ -28,22 +35,14 @@ img {
     height: auto;
 }
 
-input,
-button {
-    font-family: inherit;
-}
-
-/* Utility class for main content width */
+/* ==================== LAYOUT CONTAINERS ==================== */
 .container {
     width: 100%;
     max-width: 1280px;
-    /* You can adjust this */
     margin-left: auto;
     margin-right: auto;
     padding-left: 40px;
-    /* Matches header/footer padding */
     padding-right: 40px;
-    /* Matches header/footer padding */
 }
 
 /* ==================== HEADER / NAVBAR ==================== */
@@ -58,11 +57,9 @@ button {
     justify-content: space-between;
     align-items: center;
     height: 80px;
-    /* Fixed height for the navbar */
     padding-left: 40px;
-    /* Use padding on container instead */
     padding-right: 40px;
-    /* Use padding on container instead */
+    position: relative;
 }
 
 .logo {
@@ -74,7 +71,6 @@ button {
 .nav-links {
     display: flex;
     gap: 32px;
-    /* Space between "Home", "Products", etc. */
 }
 
 .nav-links a {
@@ -90,12 +86,10 @@ button {
 .nav-icons {
     display: flex;
     gap: 24px;
-    /* Space between icons */
 }
 
 .nav-icons i {
     font-size: 22px;
-    /* Icon size */
     color: #333;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -107,8 +101,6 @@ button {
 
 /* ==================== MAIN CONTENT ==================== */
 .main-content {
-    /* This makes the main content area grow to fill all 
-       available space between header and footer */
     flex-grow: 1;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -128,15 +120,12 @@ button {
     justify-content: space-between;
     gap: 40px;
     flex-wrap: wrap;
-    /* Allows columns to stack on small screens */
     margin-bottom: 40px;
 }
 
 .footer-column {
     flex: 1;
-    /* Each column tries to take equal space */
     min-width: 220px;
-    /* Prevents columns from getting too squished */
 }
 
 .footer-column h4 {
@@ -158,7 +147,6 @@ button {
     text-decoration: underline;
 }
 
-/* Newsletter text */
 .footer-column p {
     font-size: 14px;
     color: #aaa;
@@ -199,7 +187,6 @@ button {
     background-color: #ccc;
 }
 
-/* Footer Bottom Bar */
 .footer-divider {
     border: none;
     border-top: 1px solid #444;
@@ -212,138 +199,90 @@ button {
     font-size: 13px;
     color: #aaa;
     padding-left: 40px;
-    /* Use padding on container instead */
     padding-right: 40px;
-    /* Use padding on container instead */
 }
 
-/* --------------------------------------------------- */
-/* NEW TOASTR.JS STYLES - Based on your image
-/* (Delete your old toastr CSS and use this)
-/* --------------------------------------------------- */
-
-/* 1. BASE TOAST STYLE (This styles the white toast) */
-#toast-container>div {
-    /* Shape & Appearance */
+/* ==================== TOASTR.JS STYLES ==================== */
+#toast-container > div {
     border-radius: 999px;
-    /* This creates the "pill" shape */
     opacity: 1;
     box-shadow: none;
-    /* Remove shadow for a flat look */
     border: 1px solid #e0e0e0;
-    /* Light border for the white toast */
     padding: 10px 20px;
-    /* Adjust padding */
     margin-bottom: 10px;
-    /* Space between toasts */
-
-    /* Font & Color (Default for white toast) */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: #ffffff !important;
-    /* Force white bg */
     color: #333333 !important;
-    /* Dark text for the white toast */
 }
 
-/* 2. SPECIFIC TOASTS (Colored backgrounds, white text) */
-/* We use !important to override toastr.js inline styles */
-
-/* Success (Green) */
-#toast-container>.toast-success {
-    background-color: #8CC152 !important;
+/* Specific Toast Colors */
+#toast-container > .toast-success {
+    background-color: #8cc152 !important;
     color: #ffffff !important;
-    border: none;
 }
-
-/* Error (Red) */
-#toast-container>.toast-error {
-    background-color: #DA4453 !important;
+#toast-container > .toast-error {
+    background-color: #da4453 !important;
     color: #ffffff !important;
-    border: none;
 }
-
-/* Warning (Yellow) */
-#toast-container>.toast-warning {
-    background-color: #F6BB42 !important;
+#toast-container > .toast-warning {
+    background-color: #f6bb42 !important;
     color: #ffffff !important;
-    border: none;
 }
-
-/* Info (Blue) */
-#toast-container>.toast-info {
-    background-color: #4A89DC !important;
+#toast-container > .toast-info {
+    background-color: #4a89dc !important;
     color: #ffffff !important;
-    border: none;
 }
 
-/* 3. TEXT & TITLE STYLING */
-/* This makes sure the title and message inherit the correct color */
 .toast-title {
     font-weight: 600;
     font-size: 16px;
     color: inherit !important;
 }
-
 .toast-message {
     font-size: 14px;
     color: inherit !important;
 }
 
-/* 4. CLOSE BUTTON STYLING ("X") */
-
-/* Default close button (for the white toast) */
 .toast-close-button {
     color: #000 !important;
-    /* Black "X" */
     opacity: 0.7 !important;
     font-size: 20px !important;
     text-shadow: none !important;
     margin-left: 15px;
-    /* Add some space */
 }
-
 .toast-close-button:hover {
     opacity: 1 !important;
     color: #000 !important;
 }
-
-/* White close button for all colored toasts */
-#toast-container>.toast-success .toast-close-button,
-#toast-container>.toast-error .toast-close-button,
-#toast-container>.toast-warning .toast-close-button,
-#toast-container>.toast-info .toast-close-button {
-    color: #ffffff !important;
-    /* White "X" */
+#toast-container > .toast-success .toast-close-button,
+#toast-container > .toast-error .toast-close-button,
+#toast-container > .toast-warning .toast-close-button,
+#toast-container > .toast-info .toast-close-button {
+    color: #fff !important;
     opacity: 0.8 !important;
 }
-
-#toast-container>.toast-success .toast-close-button:hover,
-#toast-container>.toast-error .toast-close-button:hover,
-#toast-container>.toast-warning .toast-close-button:hover,
-#toast-container>.toast-info .toast-close-button:hover {
-    color: #ffffff !important;
+#toast-container > .toast-success .toast-close-button:hover,
+#toast-container > .toast-error .toast-close-button:hover,
+#toast-container > .toast-warning .toast-close-button:hover,
+#toast-container > .toast-info .toast-close-button:hover {
+    color: #fff !important;
     opacity: 1 !important;
 }
-
-/* 5. PROGRESS BAR STYLING */
 .toast-progress {
     background-color: rgba(0, 0, 0, 0.1);
-    /* Subtle dark on white toast */
     height: 3px;
     opacity: 0.4;
 }
-
-/* Make progress bar on colored toasts a subtle white */
-#toast-container>.toast-success .toast-progress,
-#toast-container>.toast-error .toast-progress,
-#toast-container>.toast-warning .toast-progress,
-#toast-container>.toast-info .toast-progress {
+#toast-container > .toast-success .toast-progress,
+#toast-container > .toast-error .toast-progress,
+#toast-container > .toast-warning .toast-progress,
+#toast-container > .toast-info .toast-progress {
     background-color: rgba(255, 255, 255, 0.25);
 }
-/* ===== Offer Carousel Styles ===== */
+
+/* ==================== OFFER CAROUSEL ==================== */
 .offer-carousel {
-    background-color: #000; /* Black background */
-    color: #fff;            /* White text */
+    background-color: #000;
+    color: #fff;
     overflow: hidden;
     white-space: nowrap;
     position: relative;
@@ -354,18 +293,15 @@ button {
     font-size: 0.95rem;
     font-weight: 500;
 }
-
 .offer-track {
     display: inline-block;
     padding-left: 100%;
-    animation: scrollOffers 40s linear infinite; /* Slower for more offers */
+    animation: scrollOffers 40s linear infinite;
 }
-
 .offer-item {
     display: inline-block;
-    margin-right: 80px; /* Space between offers */
+    margin-right: 80px;
 }
-
 @keyframes scrollOffers {
     0% {
         transform: translateX(0);
@@ -374,8 +310,187 @@ button {
         transform: translateX(-100%);
     }
 }
-
-/* Pause scroll when hovered */
 .offer-carousel:hover .offer-track {
     animation-play-state: paused;
+}
+
+/* ==================== MOBILE MENU ==================== */
+.menu-toggle {
+    display: none;
+}
+
+.menu-icon {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #333;
+    z-index: 1001;
+    order: 3;
+}
+
+/* Drawer */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    max-width: 80%;
+    height: 100vh;
+    background-color: #fff;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Overlay */
+.mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* Toggle */
+.menu-toggle:checked ~ .mobile-menu {
+    transform: translateX(0);
+}
+.menu-toggle:checked ~ .mobile-menu-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Drawer Content */
+.mobile-menu-header {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+.mobile-menu-header a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111;
+}
+.mobile-menu-header a i {
+    font-size: 1.5rem;
+    color: #444;
+}
+.mobile-menu-divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+.mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.mobile-menu-links li a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.mobile-menu-links li a:hover,
+.mobile-menu-links li a:focus {
+    background-color: #f4f4f4;
+    color: #000;
+}
+.mobile-menu-links li a i {
+    font-size: 1.3rem;
+    width: 25px;
+    text-align: center;
+    color: #555;
+}
+
+/* Hide mobile items on desktop */
+@media (min-width: 769px) {
+    .menu-icon,
+    .mobile-menu,
+    .mobile-menu-overlay {
+        display: none !important;
+    }
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .navbar {
+        height: 70px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .logo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 22px;
+    }
+
+    .nav-links,
+    .nav-icons {
+        display: none;
+    }
+
+    /* ✅ Correct Hamburger Position */
+    .menu-icon {
+        display: block;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 10px;
+        margin: 0;
+    }
+
+    /* ✅ Hide hamburger when menu is open */
+    .menu-toggle:checked ~ .menu-icon {
+        display: none !important;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .offer-carousel {
+        height: 35px;
+        font-size: 0.8rem;
+    }
+
+    .offer-item {
+        margin-right: 50px;
+    }
 }
