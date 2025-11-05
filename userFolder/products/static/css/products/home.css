@@ -2,13 +2,11 @@
 .hero-section {
     text-align: center;
     padding: 60px 20px;
-    /* Reduced padding from 80px */
     margin-bottom: 40px;
 }
 
 .hero-content h1 {
     font-size: 32px;
-    /* Slightly smaller font */
     font-weight: 600;
     margin-bottom: 16px;
     letter-spacing: -0.5px;
@@ -16,17 +14,14 @@
 
 .hero-content p {
     font-size: 16px;
-    /* Slightly smaller font */
     color: #555;
     margin-bottom: 32px;
     line-height: 1.6;
     max-width: 600px;
-    /* Constrain line width */
     margin-left: auto;
     margin-right: auto;
 }
 
-/* Button style from screenshot */
 .btn-primary {
     display: inline-block;
     background-color: #000;
@@ -52,13 +47,12 @@
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 32px;
-    /* Reduced from 40px */
 }
 
 /* ==================== CATEGORY GRID ==================== */
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 0.5fr);
     gap: 20px;
 }
 
@@ -68,15 +62,42 @@
     justify-content: center;
     overflow: hidden;
     position: relative;
+    /* This is required for the shield */
     aspect-ratio: 3 / 4;
     background-color: #f5f5f5;
+    border-radius: 8px;
 }
+
+/* ▼▼▼ THIS IS THE "BLACK SHIELD" YOU ASKED FOR ▼▼▼ */
+/* It creates a dark overlay on top of the image */
+.category-card:not(.category-text-card)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.35);
+    /* Adjust 0.35 to make it darker or lighter */
+    z-index: 1;
+    /* Sits *on top* of the image */
+}
+
+/* ▲▲▲ END OF NEW "BLACK SHIELD" RULE ▲▲▲ */
+
+
 .category-card span {
-    position: absolute; 
+    position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); 
-    z-index: 10; 
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    /* Sits *on top* of the shield */
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    /* ▼▼▼ 'text-shadow' REMOVED FROM HERE ▼▼▼ */
+    /* text-shadow: 1px 1px 3px rgba(0,0,0,0.4); (No longer needed) */
 }
 
 .category-card img {
@@ -84,13 +105,13 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s ease;
+    /* z-index: 0; (This is the default) */
 }
 
 .category-card:hover img {
     transform: scale(1.05);
 }
 
-/* For the gray boxes with text */
 .category-text-card {
     background-color: #f0f0f0;
     display: flex;
@@ -100,6 +121,17 @@
     font-weight: 500;
     color: #333;
     transition: background-color 0.3s ease;
+    aspect-ratio: 3 / 4;
+    /* Match other cards */
+}
+
+/* Make sure text in text-card doesn't get shield text styles */
+.category-text-card span {
+    color: #333;
+    text-shadow: none;
+    font-size: 18px;
+    z-index: 2;
+    /* Still good practice */
 }
 
 .category-text-card:hover {
@@ -123,9 +155,7 @@
     overflow: hidden;
     margin-bottom: 16px;
     aspect-ratio: 3 / 4;
-    /* Matches category cards */
     background-color: #f9f9f9;
-    /* Light bg for images */
 }
 
 .product-image-container img {
@@ -142,8 +172,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-
-    /* Hide by default, show on card hover */
     opacity: 0;
     transform: translateX(10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -159,15 +187,12 @@
     border: 1px solid #eee;
     border-radius: 50%;
     width: 38px;
-    /* Slightly smaller */
     height: 38px;
-    /* Slightly smaller */
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 18px;
-    /* Icon size */
     color: #000;
     transition: all 0.3s ease;
 }
@@ -181,7 +206,6 @@
 /* Product Info Text */
 .product-info {
     text-align: left;
-    /* Matches screenshot */
 }
 
 .product-name {
@@ -190,7 +214,6 @@
     margin-bottom: 4px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    /* Matches screenshot */
 }
 
 .product-name a {
@@ -205,6 +228,110 @@
 .product-price {
     font-size: 15px;
     font-weight: 500;
-    /* Screenshot price doesn't look bold */
     color: #000;
+}
+
+
+/* ======================================================== */
+/* ==================== RESPONSIVE (MOBILE) ==================== */
+/* ======================================================== */
+
+/* Tablet and larger phones */
+@media (max-width: 768px) {
+
+    /* --- Hero Section --- */
+    .hero-section {
+        padding: 40px 15px;
+        margin-bottom: 30px;
+    }
+
+    .hero-content h1 {
+        font-size: 28px;
+        /* Smaller font for mobile */
+    }
+
+    .hero-content p {
+        font-size: 15px;
+        max-width: 100%;
+        /* Allow full width */
+    }
+
+    /* --- General Section --- */
+    .home-section {
+        margin-bottom: 40px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        /* Smaller title */
+        margin-bottom: 24px;
+    }
+
+    /* --- Grids (The main change) --- */
+    .category-grid {
+        grid-template-columns: 1fr;
+        /* 1 column for mobile */
+        gap: 15px;
+        /* Slightly smaller gap */
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 columns for mobile */
+        gap: 15px;
+        /* Slightly smaller gap */
+    }
+
+    /* --- Product Card Icons (to match screenshot) --- */
+    .product-card-icons {
+        opacity: 1;
+        /* Always visible on mobile */
+        transform: none;
+        /* Remove hover-in animation */
+    }
+
+    .product-card:hover .product-card-icons {
+        /* Disable any remaining hover effect */
+        transform: none;
+    }
+
+    /* Hide "Quick view" icon on mobile to match screenshot */
+    .product-card-icons button[aria-label="Quick view"] {
+        display: none;
+    }
+
+    .product-name {
+        font-size: 14px;
+        /* Slightly smaller for 2-col layout */
+    }
+}
+
+/* Smaller mobile phones */
+@media (max-world: 480px) {
+
+    /* --- Hero Section --- */
+    .hero-content h1 {
+        font-size: 24px;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    /* --- Product Card --- */
+    .product-name {
+        font-size: 13px;
+        letter-spacing: 0.3px;
+    }
+
+    .product-price {
+        font-size: 14px;
+    }
+
+    .product-card-icons button {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+    }
 }

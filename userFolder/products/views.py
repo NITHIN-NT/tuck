@@ -34,12 +34,14 @@ class HomePageView(TemplateView):
         most_demanded = Product.objects.filter(is_most_demanded=True).order_by('?')[:4]
         today = timezone.now().date()
         new_arrivals = Product.objects.filter(created_at__date=today).order_by('?')[:4]
-
+        categories = Product.objects.all().distinct()[:4]
 
         context["products"] = products
         context["featured_products"] = featured_products
         context["most_demanded"] = most_demanded
         context["new_arrivals"] = new_arrivals
+        context['categories'] = categories
+
         return context
     
 class AboutView(TemplateView):
