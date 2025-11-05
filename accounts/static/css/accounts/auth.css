@@ -259,3 +259,190 @@ ADD THIS TO THE BOTTOM OF YOUR existing auth.css
     border-color: #e53e3e;
     outline: none;
 }
+
+/* ---------- RESPONSIVE ENHANCEMENTS (add at bottom of auth.css) ---------- */
+
+/* Make the form container fluid but capped, with comfortable side padding */
+.auth-form-container {
+    max-width: 540px;
+    /* slightly wider for tablets */
+    margin: 2rem auto 4rem auto;
+    padding: 2.25rem;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    background-color: #fff;
+    width: 92%;
+    box-sizing: border-box;
+}
+
+/* Ensure headings scale a little on small screens */
+.auth-form-container h2 {
+    font-size: 1.75rem;
+    /* ~28px on larger, scales down naturally */
+    line-height: 1.1;
+}
+
+/* Inputs: touch-friendly sizes preserved but slightly reduced on small screens */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    padding: 0.75rem 0.75rem;
+    font-size: 15px;
+}
+
+/* Social buttons: make them slightly smaller on narrow screens */
+.social-btn {
+    width: 55px;
+    height: 55px;
+    font-size: 26px;
+}
+
+/* Separator keeps breathing room but shrinks on small screens */
+.separator {
+    margin: 1.5rem 0;
+}
+
+/* Label-row: allow the "Forgot password?" link to wrap gracefully */
+.label-row {
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Make form rows wrap on smaller screens so First/Last name stack */
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.form-row .form-group {
+    flex: 1 1 220px;
+    /* grow, shrink, base width */
+}
+
+/* Error container: keep it visible but compact on mobile */
+.non-field-errors {
+    padding: 0.85rem;
+    font-size: 0.95rem;
+}
+
+/* ---------- MEDIA QUERY: Tablets / small laptops ---------- */
+@media (max-width: 900px) {
+    .auth-form-container {
+        max-width: 600px;
+        padding: 2rem;
+    }
+
+    .auth-form-container h2 {
+        font-size: 1.6rem;
+    }
+
+    .social-login {
+        gap: 1rem;
+    }
+
+    .social-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+}
+
+/* ---------- MEDIA QUERY: Mobile phones (narrow) ---------- */
+@media (max-width: 480px) {
+    .auth-form-container {
+        margin: 1rem auto 2rem auto;
+        padding: 1.25rem;
+        width: 96%;
+        border-radius: 6px;
+    }
+
+    .auth-form-container h2 {
+        font-size: 1.35rem;
+        /* ~22px */
+        margin-bottom: 0.4rem;
+    }
+
+    .auth-form-container .subtitle {
+        margin-bottom: 1.25rem;
+        font-size: 0.95rem;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"] {
+        padding: 0.65rem 0.65rem;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        padding: 0.75rem;
+        font-size: 15px;
+    }
+
+    /* Stack label and link vertically if there's not enough horizontal room */
+    .label-row {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+    }
+
+    /* make social icons smaller and allow wrap */
+    .social-login {
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .social-btn {
+        width: 46px;
+        height: 46px;
+        font-size: 22px;
+    }
+
+    /* Reduce separator margin */
+    .separator {
+        margin: 1rem 0;
+    }
+
+    /* Form-row stacks */
+    .form-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-row .form-group {
+        flex: 1 1 100%;
+    }
+
+    .auth-switch {
+        font-size: 0.95rem;
+    }
+
+    .form-link {
+        font-size: 13px;
+    }
+
+    .error-list,
+    .non-field-errors {
+        font-size: 13.5px;
+    }
+}
+
+/* ---------- Small accessibility and UX tweaks ---------- */
+/* Increase focus outline thickness for keyboard users */
+.form-group input:focus {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Make social buttons easier to tap on mobile */
+.social-btn {
+    touch-action: manipulation;
+}
+
+/* Reduce layout shift if icons load late */
+.social-btn i {
+    display: inline-block;
+    line-height: 1;
+}
