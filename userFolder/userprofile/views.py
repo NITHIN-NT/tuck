@@ -15,3 +15,13 @@ class ProfileView(LoginRequiredMixin,TemplateView):
 
         context['user'] = self.request.user
         return context
+    
+class ProfileAddressView(LoginRequiredMixin,TemplateView):
+    template_name= "userprofile/profile_addresses.html"
+    
+class ProfilePaymentView(LoginRequiredMixin,TemplateView):
+    template_name= "userprofile/profile_payment.html"
+
+class ProfileOrderView(LoginRequiredMixin,TemplateView):
+    template_name= "userprofile/profile_orders.html"
+

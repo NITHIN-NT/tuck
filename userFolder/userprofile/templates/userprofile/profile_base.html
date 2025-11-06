@@ -37,28 +37,28 @@
             <p>{{ user.email }}</p>
         </div>
 
-        <nav class="profile-nav">
+      <nav class="profile-nav">
             <ul>
                 <li>
-                    <a href="#" class="active">
+                    <a href="{% url "profile_view_user" %}" class="{% if request.resolver_match.url_name == 'profile_view_user' %}active{% endif %}">
                         <i class='bx bx-user'></i>
                         <span>Personal Information</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{% url "profile_adress" %}" class="{% if request.resolver_match.url_name == 'profile_adress' %}active{% endif %}">
                         <i class='bx bx-map'></i>
                         <span>Addresses</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{% url "profile_payment" %}" class="{% if request.resolver_match.url_name == 'profile_payment' %}active{% endif %}">
                         <i class='bx bx-credit-card'></i>
                         <span>Payment Methods</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{% url "profile_order" %}" class="{% if request.resolver_match.url_name == 'profile_order' %}active{% endif %}">
                         <i class='bx bx-receipt'></i>
                         <span>Order History</span>
                     </a>
@@ -115,3 +115,24 @@
 
 </div>
 {% endblock content %}
+
+{% block extra_script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Find the active link inside your mobile navigation
+        const activeLink = document.querySelector('.profile-nav a.active');
+        
+        // 2. Check if we found one
+        if (activeLink) {
+            
+            // 3. Tell the browser to scroll it into the horizontal view
+            // This works inside the '.profile-nav ul' container
+            activeLink.scrollIntoView({
+                behavior: 'auto', // Use 'smooth' for a sliding effect, or 'auto' for an instant snap
+                block: 'nearest',   // Keeps it vertically aligned
+                inline: 'center'    // This is the magic part: it centers the item horizontally
+            });
+        }
+    });
+</script>
+{% endblock extra_script %}
