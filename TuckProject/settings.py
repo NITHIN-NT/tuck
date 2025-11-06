@@ -48,6 +48,8 @@ INSTALLED_APPS = [
 
     # Local apps
     'userFolder.userprofile',
+    'userFolder.wishlist',
+    'userFolder.cart',
     'products',
     'Admin',
     'accounts',

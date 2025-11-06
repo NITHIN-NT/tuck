@@ -8,6 +8,9 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),
 
+    path('wishlist/',include('userFolder.wishlist.urls')),
+    path('cart/',include('userFolder.cart.urls')),
+
 
     path('superuser/',include('Admin.urls'))
 ]

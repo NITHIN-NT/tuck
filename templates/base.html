@@ -184,8 +184,8 @@
                 {% else %}
                     <a href="{% url "login" %}">Login</a>
                 {% endif %}
-                <a href="#" aria-label="Wishlist"><i class='bx bx-heart'></i></a>
-                <a href="#" aria-label="Cart"><i class='bx bx-shopping-bag'></i></a>
+                <a href="{% url "wishlist" %}" aria-label="Wishlist"><i class='bx bx-heart'></i></a>
+                <a href="{% url "cart" %}" aria-label="Cart"><i class='bx bx-shopping-bag'></i></a>
             </div>
 
             <input type="checkbox" id="menu-toggle" class="menu-toggle">
@@ -215,8 +215,8 @@
                 <hr class="mobile-menu-divider">
 
                 <ul class="mobile-menu-links">
-                    <li><a href="#"><i class='bx bx-heart'></i><span>Wishlist</span></a></li>
-                    <li><a href="#"><i class='bx bx-shopping-bag'></i><span>Cart</span></a></li>
+                    <li><a href="{% url "wishlist" %}"><i class='bx bx-heart'></i><span>Wishlist</span></a></li>
+                    <li><a href="{% url "cart" %}"><i class='bx bx-shopping-bag'></i><span>Cart</span></a></li>
                 </ul>
             </div>
             
