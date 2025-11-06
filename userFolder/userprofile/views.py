@@ -25,3 +25,6 @@ class ProfilePaymentView(LoginRequiredMixin,TemplateView):
 class ProfileOrderView(LoginRequiredMixin,TemplateView):
     template_name= "userprofile/profile_orders.html"
 
+class ProfileWalletView(LoginRequiredMixin,TemplateView):
+    template_name= "userprofile/wallet.html"
+

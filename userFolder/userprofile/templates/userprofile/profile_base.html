@@ -64,6 +64,12 @@
                     </a>
                 </li>
                 
+                <li>
+                    <a href="{% url "profile_wallet" %}" class="{% if request.resolver_match.url_name == 'profile_wallet' %}active{% endif %}">
+                        <i class='bx bx-wallet'></i>
+                        <span>Wallet</span>
+                    </a>
+                </li>
                 <li class="desktop-logout-li">
                     <a href="{% url "logout" %}" class="logout-link">
                         <i class='bx bx-log-out'></i>
@@ -80,31 +86,6 @@
        
        {% endblock profile_content %}
 
-        <div class="profile-stats-row">
-            
-            <div class="stat-card">
-                <i class='bx bx-wallet'></i>
-                <div class="stat-info">
-                    <h4>Wallet Balance</h4>
-                    <p class="stat-value">₹ 500</p>
-                </div>
-                <a href="#" class="stat-link">
-                    See details <i class='bx bx-right-arrow-alt'></i>
-                </a>
-            </div>
-            
-            <div class="stat-card">
-                <i class='bx bxs-group'></i>
-                <div class="stat-info">
-                    <h4>Total Referrals</h4>
-                    <p class="stat-value">12</p>
-                </div>
-                <a href="#" class="stat-link">
-                    See details <i class='bx bx-right-arrow-alt'></i>
-                </a>
-            </div>
-
-        </div>
 
         <a href="{% url "logout" %}" class="mobile-logout-link">
             <i class='bx bx-log-out'></i>
