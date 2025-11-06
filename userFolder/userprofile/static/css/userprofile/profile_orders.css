@@ -26,13 +26,9 @@
     padding: 1.25rem 1.5rem;
     text-decoration: none;
     color: #333;
-    border-bottom: 1px solid #f0f0f0; /* Light line between items */
+    border-bottom: 1px solid #f0f0f0;
+    /* Light line between items */
     transition: background-color 0.3s ease;
-}
-
-.order-item:first-child {
-    /* To match the image, the items are inside the card,
-       so the first one doesn't need a top border. */
 }
 
 .order-item:last-child {
@@ -40,7 +36,8 @@
 }
 
 .order-item:hover {
-    background-color: #f8f9fa; /* Light hover effect */
+    background-color: #f8f9fa;
+    /* Light hover effect */
 }
 
 /* Left side details */
@@ -64,12 +61,14 @@
 /* Right side chevron icon */
 .order-item i {
     font-size: 1.5rem;
-    color: #adb5bd; /* Light grey for the icon */
+    color: #adb5bd;
+    /* Light grey for the icon */
     transition: transform 0.3s ease;
 }
 
 .order-item:hover i {
-    transform: translateX(5px); /*Slight move on hover */
+    transform: translateX(5px);
+    /*Slight move on hover */
 }
 
 
