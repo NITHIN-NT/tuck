@@ -4,7 +4,7 @@ product -> outside
 
 userfolder -> account
 
-email first_name last_name
+email first_name  validation
 
 loger
 

@@ -683,3 +683,201 @@
     /* Lighter, grayed-out color */
     /* The <del> tag automatically adds the line-through */
 }
+
+/* ==================== NEW: PRODUCT OFFER TAG ==================== */
+
+.product-offer-tag {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+    /* Ensures it's above the image */
+
+    background-color: #000;
+    color: #fff;
+
+    padding: 6px 12px;
+    border-radius: 20px;
+    /* High value for a pill shape */
+
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    /* Prevents it from being selected when user is interacting with image */
+    pointer-events: none;
+}
+
+/* ... keep all your other CSS rules ... */
+/* =================================================================== */
+/* 📱 RESPONSIVE DESIGN (MOBILE-FIRST)                               */
+/* =================================================================== */
+
+/* Apply these styles for tablets and phones (768px wide and smaller) */
+@media (max-width: 768px) {
+
+    /* --- Main Layout --- */
+    .product-detail-container {
+        /* Stack gallery and info vertically instead of side-by-side */
+        grid-template-columns: 1fr;
+        gap: 30px;
+        /* Reduce the gap for mobile */
+        padding-top: 20px;
+        padding-bottom: 30px;
+    }
+
+    /* --- Typography --- */
+    .product-info h1 {
+        font-size: 26px;
+        /* Make the main title smaller */
+    }
+
+    .product-price-container .offer-price {
+        font-size: 24px;
+        /* Make price slightly smaller */
+    }
+
+    .product-price-container del {
+        font-size: 18px;
+    }
+
+    /* --- Gallery --- */
+    .gallery-thumbnails {
+        /* Keep 4 thumbnails, but reduce the gap */
+        gap: 10px;
+    }
+
+    /* --- Reviews --- */
+    .customer-reviews-container h2,
+    .related-products-container h2 {
+        font-size: 22px;
+        /* Make section titles smaller */
+        margin-bottom: 30px;
+    }
+
+    .reviews-summary {
+        /* Stack the rating and the "Write Review" button */
+        flex-direction: column;
+        align-items: flex-start;
+        /* Align them to the left */
+        gap: 25px;
+        padding: 20px;
+    }
+
+    .average-rating .rating-value {
+        font-size: 40px;
+        /* Reduce the giant "4.5" */
+    }
+
+    .average-rating .stars {
+        font-size: 18px;
+    }
+
+    #btn-write-review {
+        width: 100%;
+        /* Make the button full-width */
+        text-align: center;
+    }
+
+    /* --- Related Products --- */
+    .related-products-grid {
+        /* On mobile, your original 'auto-fit' will become one column. */
+        /* We can force two columns and reduce the gap. */
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .product-card-info {
+        padding: 15px;
+    }
+
+    .product-card-name {
+        font-size: 15px;
+    }
+
+    /* --- Image Modal --- */
+    .image-modal {
+        padding-top: 40px;
+    }
+
+    .image-modal .close-modal {
+        top: 15px;
+        right: 20px;
+        font-size: 35px;
+    }
+
+    .product-offer-tag {
+        top: 10px;
+        left: 10px;
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+}
+
+/* Optional: For very small phones (375px and smaller) */
+@media (max-width: 375px) {
+    .product-info h1 {
+        font-size: 22px;
+    }
+
+    /* Make the quantity selector smaller */
+    .quantity-selector .btn-quantity {
+        padding: 10px 12px;
+    }
+
+    .quantity-selector #quantity-display {
+        padding: 0 15px;
+    }
+
+    .image-modal {
+        padding-top: 0;
+        /* Remove top padding for full screen */
+        background-color: rgba(0, 0, 0, 0.95);
+        /* Slightly darker background */
+    }
+
+    .image-modal .modal-content {
+        max-width: 100%;
+        /* Take full width */
+        max-height: 100vh;
+        /* Take full viewport height */
+        height: 100%;
+        /* Ensure it fills the height if image is smaller */
+        object-fit: contain;
+        /* Keep the image fully visible */
+        margin: 0;
+        /* Remove auto margins */
+        border-radius: 0;
+        /* Remove border-radius for full screen */
+        box-shadow: none;
+        /* Remove box shadow */
+    }
+
+    .image-modal .close-modal {
+        z-index: 40;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #fff;
+        font-size: 38px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+}
+
+/* Optional: For very small phones (375px and smaller) */
+@media (max-width: 375px) {
+    /* ... all your other small-screen rules ... */
+
+    /* ADD THIS RULE (or modify the one above) */
+    .product-offer-tag {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+}
