@@ -13,7 +13,7 @@ from django.db.models import Count,Sum
 
 from .forms import AdminLoginForm,AdminForgotPasswordEmailForm,AdminSetNewPassword,AdminVerifyOTPForm
 from .decorators import superuser_required
-from userFolder.products.models import Product,Category,ProductVariant
+from products.models import Product,Category,ProductVariant
 # Create your views here.
 @never_cache
 def admin_login(request):
