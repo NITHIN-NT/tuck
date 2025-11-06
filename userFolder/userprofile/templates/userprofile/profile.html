@@ -5,7 +5,6 @@
 
 {% block extra_styles %}
     <link rel="stylesheet" href="{% static 'css/userprofile/profile.css' %}">
-    <!-- Using Boxicons for icons, as seen in your template -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 {% endblock extra_styles %}
 
@@ -16,25 +15,20 @@
         
         <div class="profile-user-card">
             
-            <!-- NEW: Wrapper to contain avatar and edit button -->
             <div class="avatar-wrapper">
                 {% if user.profile_image %}
-                    <!-- If user has a profile image, display it -->
                     <img src="{{ user.profile_image.url }}" alt="User Avatar" class="avatar">
                 {% else %}
-                    <!-- Fallback to initials if no profile image -->
                     <div class="avatar-initials">
                         <span>{{ user.first_name|slice:":2"|upper }}</span>
                     </div>
                 {% endif %}
                 
-                <!-- NEW: Edit link with pencil icon -->
                 <a href="#" class="avatar-edit-link">
                     <i class='bx bxs-pencil'></i>
                 </a>
             </div>
             
-            <!-- Assuming user has first_name and last_name -->
             <h3>{{ user.first_name }} {{ user.last_name }}</h3>
             <p>{{ user.email }}</p>
         </div>
@@ -65,16 +59,15 @@
                         <span>Order History</span>
                     </a>
                 </li>
+                
+                <li class="desktop-logout-li">
+                    <a href="{% url "logout" %}" class="logout-link">
+                        <i class='bx bx-log-out'></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
             </ul>
         </nav>
-
-        <div class="profile-logout">
-            <a href="{% url "logout" %}" class="logout-link">
-                <i class='bx bx-log-out'></i>
-                <span>Logout</span>
-            </a>
-        </div>
-
     </aside>
 
     <section class="profile-content">
@@ -98,12 +91,10 @@
                     </div>
                     <div>
                         <dt>Phone Number</dt>
-                        <!-- Added a check in case phone is optional -->
                         <dd>{% if user.phone %}+91 {{ user.phone }}{% else %}Not provided{% endif %}</dd>
                     </div>
                     <div>
                         <dt>Member Since</dt>
-                        <!-- Format the date for better readability -->
                         <dd>{{ user.created_at|date:"F d, Y" }}</dd>
                     </div>
                 </dl>
@@ -136,8 +127,12 @@
 
         </div>
 
+        <a href="{% url "logout" %}" class="mobile-logout-link">
+            <i class='bx bx-log-out'></i>
+            <span>Logout</span>
+        </a>
+
     </section>
 
 </div>
 {% endblock content %}
-
