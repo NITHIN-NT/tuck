@@ -437,8 +437,7 @@
     /* Right padding for the 'x' button */
     font-size: 15px;
     border: 1px solid #ccc;
-    border-bottom-left-radius: 25px;
-    border-top-left-radius: 25px;
+    border-radius: 25px;
     box-sizing: border-box;
     /* Ensures padding doesn't affect width */
 }
@@ -533,4 +532,251 @@
     /* optional: adds a subtle underline */
     padding-bottom: 5px;
     /* space above the underline */
+}
+
+/* ============================================================= */
+/* ============================================================= */
+/* ============ NEW: RESPONSIVE & MOBILE STYLES ================ */
+/* ============================================================= */
+/* ============================================================= */
+
+/*
+  This is our "breakpoint".
+  Any screen WIDER than 991px will use the Desktop styles.
+  Any screen NARROWER than 991px will use the Mobile styles.
+*/
+@media (max-width: 991px) {
+
+    /* --- 1. Main Layout --- */
+
+    .products-page-container {
+        /* On mobile, stack everything vertically */
+        flex-direction: column;
+    }
+
+    /* --- 2. Desktop Sidebar (Hiding) --- */
+
+    .products-sidebar {
+        /* This transforms the sidebar into an off-canvas modal */
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 300px;
+        /* A good width for a mobile filter menu */
+        max-width: 80%;
+        /* Don't let it get too wide on tablets */
+
+        background-color: #fff;
+        z-index: 1001;
+        /* Above the overlay */
+        padding: 20px;
+        overflow-y: auto;
+        /* Allows scrolling if filters are long */
+
+        /* Hide it by default */
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .products-sidebar.is-open {
+        /* This class (added by JS) slides it into view */
+        transform: translateX(0);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* --- 3. Mobile-Only Headers --- */
+
+    .mobile-filter-header {
+        /* This is the "Sort | Filter" bar from your image */
+        display: flex;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 24px;
+    }
+
+    .mobile-nav-btn {
+        flex: 1;
+        /* Each button takes 50% width */
+        text-align: center;
+        padding: 14px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .mobile-nav-divider {
+        width: 1px;
+        background-color: #eee;
+    }
+
+    .sidebar-mobile-header {
+        /* This is the "Filters [X]" header inside the modal */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .sidebar-mobile-header h4 {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .btn-close-modal {
+        background: none;
+        border: none;
+        font-size: 32px;
+        font-weight: 300;
+        color: #555;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .sidebar-desktop-header {
+        /* Hide the "Filters" title that was for desktop */
+        display: none;
+    }
+
+    /* --- 4. Mobile Sort Modal (Bottom Sheet) --- */
+
+    #sort-modal-mobile {
+        /* This is the modal that slides up from the bottom */
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        z-index: 1001;
+        padding: 20px 20px 30px 20px;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+        box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.1);
+
+        /* Hide it by default */
+        transform: translateY(100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #sort-modal-mobile.is-open {
+        /* This class (added by JS) slides it up */
+        transform: translateY(0);
+    }
+
+    #sort-modal-mobile .filter-list {
+        /* Re-use the filter list styles for our sort options */
+        gap: 16px;
+        /* A bit more spacing for mobile */
+    }
+
+    .desktop-sort-group {
+        /* Hide the desktop <select> dropdown */
+        display: none;
+    }
+
+    /* --- 5. Background Overlay --- */
+
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        /* Semi-transparent black */
+        z-index: 1000;
+        /* Below the modals, above the content */
+
+        /* Hide it by default */
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    #overlay.is-open {
+        /* Show it when a modal is open */
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* --- 6. Grid & Search Adjustments --- */
+
+    .products-grid-header {
+        /* Make search bar full width on mobile */
+        margin-bottom: 20px;
+    }
+
+    .search-input-container {
+        max-width: 100%;
+    }
+
+    .products-grid {
+        /* Adjust grid for smaller screens */
+        /* Show 2 columns, each at least 150px wide */
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px;
+    }
+
+    .product-details h5 {
+        font-size: 14px;
+    }
+
+    .product-price {
+        font-size: 13px;
+    }
+
+    .product-actions i {
+        font-size: 18px;
+    }
+
+}
+
+/* ================================================================== */
+/* ============ STYLES FOR DESKTOP (The "min-width" query) ========== */
+/* ================================================================== */
+
+/*
+  These styles apply ONLY to screens WIDER than 991px.
+  We use this to HIDE the new mobile-only elements on desktop.
+*/
+@media (min-width: 992px) {
+
+    .mobile-filter-header {
+        display: none;
+    }
+
+    .sidebar-mobile-header {
+        display: none;
+    }
+
+    #sort-modal-mobile {
+        display: none;
+    }
+
+    #overlay {
+        display: none !important;
+    }
+
+    /* Just in case, ensure the sidebar is not a modal */
+    .products-sidebar {
+        position: static;
+        transform: none;
+        height: auto;
+        width: auto;
+        max-width: none;
+        background-color: transparent;
+        z-index: 1;
+        padding: 0;
+        overflow-y: visible;
+        box-shadow: none;
+    }
+
 }
