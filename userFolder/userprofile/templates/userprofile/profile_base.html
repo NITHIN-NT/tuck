@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/userprofile/profile_base.css' %}">
+    {% block profile_extra_style %}
+    
+    {% endblock profile_extra_style %}
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+{% endblock extra_styles %}
+
+{% block content %}
+<div class="profile-container">
+
+    <aside class="profile-sidebar">
+        
+        <div class="profile-user-card">
+            
+            <div class="avatar-wrapper">
+                {% if user.profile_image %}
+                    <img src="{{ user.profile_image.url }}" alt="User Avatar" class="avatar">
+                {% else %}
+                    <div class="avatar-initials">
+                        <span>{{ user.first_name|slice:":2"|upper }}</span>
+                    </div>
+                {% endif %}
+                
+                <a href="#" class="avatar-edit-link">
+                    <i class='bx bxs-pencil'></i>
+                </a>
+            </div>
+            
+            <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+            <p>{{ user.email }}</p>
+        </div>
+
+        <nav class="profile-nav">
+            <ul>
+                <li>
+                    <a href="#" class="active">
+                        <i class='bx bx-user'></i>
+                        <span>Personal Information</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-map'></i>
+                        <span>Addresses</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-credit-card'></i>
+                        <span>Payment Methods</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class='bx bx-receipt'></i>
+                        <span>Order History</span>
+                    </a>
+                </li>
+                
+                <li class="desktop-logout-li">
+                    <a href="{% url "logout" %}" class="logout-link">
+                        <i class='bx bx-log-out'></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <section class="profile-content">
+        
+       {% block profile_content %}
+       
+       {% endblock profile_content %}
+
+        <div class="profile-stats-row">
+            
+            <div class="stat-card">
+                <i class='bx bx-wallet'></i>
+                <div class="stat-info">
+                    <h4>Wallet Balance</h4>
+                    <p class="stat-value">₹ 500</p>
+                </div>
+                <a href="#" class="stat-link">
+                    See details <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+            
+            <div class="stat-card">
+                <i class='bx bxs-group'></i>
+                <div class="stat-info">
+                    <h4>Total Referrals</h4>
+                    <p class="stat-value">12</p>
+                </div>
+                <a href="#" class="stat-link">
+                    See details <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+
+        </div>
+
+        <a href="{% url "logout" %}" class="mobile-logout-link">
+            <i class='bx bx-log-out'></i>
+            <span>Logout</span>
+        </a>
+
+    </section>
+
+</div>
+{% endblock content %}
