@@ -10,10 +10,10 @@ from django.views import View
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from django.db.models import Count,Sum
-
 from .forms import AdminLoginForm,AdminForgotPasswordEmailForm,AdminSetNewPassword,AdminVerifyOTPForm
 from .decorators import superuser_required
 from products.models import Product,Category,ProductVariant
+
 # Create your views here.
 @never_cache
 def admin_login(request):
@@ -168,6 +168,18 @@ class AdminUserView(LoginRequiredMixin,ListView):
     template_name = 'users/home_user.html'
     context_object_name = 'Users'
     ordering =['date_joined']
+
+
+def toggle_user_block(request,id):
+    user = get_object_or_404(CustomUser,id=id)
+    user.is_active = not user.is_active
+
+    user.save()
+
+    status =  "Unblocked" if user.is_active  else "Blocked"
+    messages.warning(request,f"{{user.email}} is {status} Successfuly")
+
+    return redirect('admin_user')
 
 def admin_user_edit(request):
     return render(request,'users/edit_user.html')

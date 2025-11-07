@@ -6,7 +6,7 @@ from django.db import transaction
 from django.utils.text import slugify
 
 # Replace 'store' with the name of your app where models are located
-from userFolder.products.models import Category, Product, ProductImage, Size, ProductVariant
+from products.models import Category, Product, ProductImage, Size, ProductVariant
 
 class Command(BaseCommand):
     help = 'Loads products from a JSON file into the database'

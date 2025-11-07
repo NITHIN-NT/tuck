@@ -12,8 +12,7 @@ urlpatterns = [
     path('strap/',AdminHome.as_view(),name='admin_home'),
 
     path('users/',AdminUserView.as_view(),name='admin_user'),
-    path('users/edit',views.admin_user_edit,name='admin_user_edit'),
-    path('users/add',views.admin_user_add,name='admin_user_add'),
+    path('user/block/<int:id>',views.toggle_user_block,name='admin_user_block'),
 
     path('products/',AdminProductsView.as_view(),name='admin_products'),
     path('products/add',AdminProductAdd.as_view(),name='admin_product_add'),

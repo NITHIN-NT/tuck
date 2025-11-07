@@ -12,9 +12,6 @@
         <div class="page-header">
             <h1>User Management</h1>
         </div>
-        <a href="{% url "admin_user_add" %}" class="btn btn-primary">
-            <i class="fa-solid fa-plus"></i> Add User
-        </a>
     </div>
 
     <div class="card users-table-card">
@@ -42,9 +39,11 @@
         <table class="data-table">
             <thead>
                 <tr>
+                    <th>user ID</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
+                    <th>Staff</th>
                     <th>Status</th>
                     <th>Last Login</th>
                     <th>Actions</th>
@@ -53,15 +52,21 @@
             <tbody>
                 {% for user in Users %}
                 <tr>
+                    <td>{{user.id}}</td>
                     <td>{{user.first_name}}</td>
                     <td>{{user.email}}</td>
                     <td>{{user.phone}}</td>
+                    <td>{{user.is_staff}}</td>
+                    <td>
+                        {% if user.is_active %}
+                            <span class="status-badge status-active">Not Blocked</span>
+                        {% else %}
+                            <span class="status-badge status-blocked">Blocked</span>
+                        {% endif %}
+                    </td>
                     <td>{{user.last_login}}</td>
-                    <td><span class="status-badge status-active">{{user.is_active}}</span></td>
                     <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                        <a href="{% url "admin_user_block" user.id %}" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
                     </td>
                     
                 </tr>
