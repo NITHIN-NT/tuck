@@ -252,6 +252,7 @@ body {
 /* Stats Row */
 .profile-stats-row {
     display: grid;
+    /* This is set to two columns */
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
 }
@@ -320,6 +321,88 @@ body {
 
 .stat-link i {
     vertical-align: middle;
+}
+/* ================================================== */
+/* --- ADD-ON: REFERRAL CARD STYLES --- */
+/* ================================================== */
+
+/* This card borrows the base styles from .stat-card 
+  (background, radius, shadow, padding)
+  to ensure it matches perfectly.
+*/
+.referral-card {
+    /* --- 1. Copied from .stat-card for consistency --- */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    
+    /* --- 2. Internal layout for the card --- */
+    display: flex;
+    flex-direction: column;
+
+    /* --- 3. CSS CHANGE --- */
+    /* margin-top: 2rem; <-- This line was REMOVED */
+}
+
+.referral-card h4 {
+    margin: 0 0 4px 0;
+    font-size: 1rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.referral-card p {
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+    color: #777;
+    flex-grow: 1; /* Pushes input group down if card stretches */
+}
+
+.referral-input-group {
+    display: flex;
+    width: 100%;
+}
+
+.referral-link-input {
+    flex-grow: 1;
+    font-family: "Menlo", "Courier New", monospace;
+    font-size: 0.85rem;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px 0 0 8px; /* Rounded on the left */
+    background-color: #f9f9f9;
+    color: #333;
+    outline: none;
+    border-right: none;
+    /* Ensure it doesn't overflow */
+    min-width: 0;
+}
+
+.copy-link-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    color: #fff;
+    background-color: #000;
+    border: 1px solid #000;
+    border-radius: 0 8px 8px 0; /* Rounded on the right */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap; /* Prevents "Copy" from wrapping */
+}
+
+.copy-link-btn:hover {
+    background-color: #333;
+}
+
+/* This is the "Copied!" feedback state */
+.copy-link-btn.copied {
+    background-color: #28a745;
+    border-color: #28a745;
 }
 
 /* ================================================== */
@@ -430,8 +513,14 @@ body {
     }
 
     .profile-stats-row {
+        /* This switches the grid to 1 column on mobile */
         grid-template-columns: 1fr;
         gap: 1.5rem;
+    }
+
+    /* Mobile margin for referral card */
+    .referral-card {
+        /* margin-top: 1.5rem; <-- This line was REMOVED */
     }
 }
 
@@ -456,7 +545,7 @@ body {
     .profile-content {
         padding: 0 0.5rem 1rem 0.5rem;
     }
-    .profile-card-header, .profile-card-body, .stat-card {
+    .profile-card-header, .profile-card-body, .stat-card, .referral-card {
         padding: 1rem;
     }
 }

@@ -1,8 +1,10 @@
 {% extends "./profile_base.html" %}
 {% load static %}
+
 {% block profile_extra_style %}
-    <link rel="stylesheet" href="css/userprofile/profile.css">
+    <link rel="stylesheet" href="{% static "css/userprofile/profile.css" %}">
 {% endblock profile_extra_style %}
+
 
 {% block profile_content %}
        <div class="profile-card">
@@ -33,7 +35,9 @@
                 </dl>
             </div>
         </div>
+
         <div class="profile-stats-row">
+            
             <div class="stat-card">
                 <i class='bx bxs-group'></i>
                 <div class="stat-info">
@@ -44,5 +48,64 @@
                     See details <i class='bx bx-right-arrow-alt'></i>
                 </a>
             </div>
-        </div>
-{% endblock profile_content %} 
+            
+            <div class="referral-card">
+                <h4>Your Referral Code</h4>
+                <p>Share this code to earn rewards.</p>
+                <div class="referral-input-group">
+                    <input type="text" 
+                           class="referral-link-input" 
+                           id="referralLink"
+                           value="23402342" 
+                           readonly>
+                    <button class="copy-link-btn" id="copyBtn">
+                        <i class='bx bx-copy' id="copyIcon"></i>
+                        <span id="copyText">Copy</span>
+                    </button>
+                </div>
+            </div>
+
+        </div> 
+{% endblock profile_content %}
+{% block profile_extra_scripts %}
+<script>
+// Wait for the DOM to be fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+    
+    // Get references to the elements
+    const copyButton = document.getElementById("copyBtn");
+    const referralInput = document.getElementById("referralLink");
+    const copyText = document.getElementById("copyText");
+    const copyIcon = document.getElementById("copyIcon");
+
+    if (copyButton) {
+        copyButton.addEventListener("click", () => {
+            // 1. Select the text in the input field
+            referralInput.select();
+            referralInput.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                // 2. Use the modern 'navigator.clipboard' API to copy
+                navigator.clipboard.writeText(referralInput.value);
+
+                // 3. Provide visual feedback to the user
+                copyText.textContent = "Copied!";
+                copyIcon.className = 'bx bx-check'; // Change icon to a checkmark
+                copyButton.classList.add("copied");  // Add 'copied' class for green background
+
+                // 4. Revert the button back to its original state after 2 seconds
+                setTimeout(() => {
+                    copyText.textContent = "Copy";
+                    copyIcon.className = 'bx bx-copy';
+                    copyButton.classList.remove("copied");
+                }, 2000);
+
+            } catch (err) {
+                console.error("Failed to copy text: ", err);
+                // You could show an error message to the user here
+            }
+        });
+    }
+});
+</script>
+{% endblock profile_extra_scripts %}

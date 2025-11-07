@@ -196,7 +196,12 @@
                     {% if user.is_authenticated %}
                         <a href="{% url "profile_view_user" %}" class="mobile-menu-user">
                             <i class='bx bxs-user-circle'></i>
-                            <span>My Account</span>
+                            {% if user.first_name %}
+                                <span>{{User.first_name}}</span>
+                            {% else %}
+                                <span>Account</span>
+                            {% endif %}
+
                         </a>
                     {% else %}
                         <a href="{% url "login" %}" class="mobile-menu-login">
