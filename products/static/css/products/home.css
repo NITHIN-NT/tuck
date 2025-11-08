@@ -1,40 +1,88 @@
 /* ==================== HERO SECTION ==================== */
 .hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 60px 20px;
+    padding: 100px 20px;
+    min-height: 70vh;
+    /* Gives the section height */
+    color: #fff;
+    /* Makes all text inside white */
     margin-bottom: 40px;
+
+    /* This creates the animated gradient background */
+    background: linear-gradient(-45deg, #333, #001f3f, #222, #001f3f);
+    background: url("images/d2cad9f9-4d7f-48f9-90ae-fec006b2c505.jpg");
+    background-size: 400% 400%;
+    animation: animatedGradient 15s ease infinite;
+
+    /* These are the curved border styles */
+    border-radius: 50px;
+    /* This is the stronger curve you asked for */
+    margin-left: 20px;
+    /* Adds space on the left */
+    margin-right: 20px;
+    /* Adds space on the right */
+}
+
+/* This animation creates the "auto-changing" effect */
+@keyframes animatedGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
 }
 
 .hero-content h1 {
-    font-size: 32px;
-    font-weight: 600;
+    font-size: 48px;
+    /* Bigger, like the screenshot */
+    font-weight: 700;
     margin-bottom: 16px;
-    letter-spacing: -0.5px;
+    letter-spacing: -1px;
 }
 
 .hero-content p {
-    font-size: 16px;
-    color: #555;
+    font-size: 18px;
+    /* Slightly bigger */
+    color: rgba(255, 255, 255, 0.9);
+    /* Not pure white */
     margin-bottom: 32px;
     line-height: 1.6;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
+/* Your .btn-primary class is already black */
 .btn-primary {
     display: inline-block;
     background-color: #000;
     color: #fff;
-    padding: 12px 24px;
-    font-size: 15px;
+    padding: 14px 32px;
+    /* A bit larger */
+    font-size: 16px;
     font-weight: 500;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    border-radius: 6px;
+    /* Slightly rounded */
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .btn-primary:hover {
     background-color: #333;
+    transform: translateY(-2px);
+    /* Adds a little lift */
 }
 
 /* ==================== GENERAL SECTION STYLING ==================== */
@@ -62,14 +110,11 @@
     justify-content: center;
     overflow: hidden;
     position: relative;
-    /* This is required for the shield */
     aspect-ratio: 3 / 4;
     background-color: #f5f5f5;
     border-radius: 8px;
 }
 
-/* ▼▼▼ THIS IS THE "BLACK SHIELD" YOU ASKED FOR ▼▼▼ */
-/* It creates a dark overlay on top of the image */
 .category-card:not(.category-text-card)::after {
     content: '';
     position: absolute;
@@ -78,13 +123,8 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.35);
-    /* Adjust 0.35 to make it darker or lighter */
     z-index: 1;
-    /* Sits *on top* of the image */
 }
-
-/* ▲▲▲ END OF NEW "BLACK SHIELD" RULE ▲▲▲ */
-
 
 .category-card span {
     position: absolute;
@@ -92,12 +132,9 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
-    /* Sits *on top* of the shield */
     color: #fff;
     font-size: 20px;
     font-weight: 600;
-    /* ▼▼▼ 'text-shadow' REMOVED FROM HERE ▼▼▼ */
-    /* text-shadow: 1px 1px 3px rgba(0,0,0,0.4); (No longer needed) */
 }
 
 .category-card img {
@@ -105,7 +142,6 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s ease;
-    /* z-index: 0; (This is the default) */
 }
 
 .category-card:hover img {
@@ -122,16 +158,13 @@
     color: #333;
     transition: background-color 0.3s ease;
     aspect-ratio: 3 / 4;
-    /* Match other cards */
 }
 
-/* Make sure text in text-card doesn't get shield text styles */
 .category-text-card span {
     color: #333;
     text-shadow: none;
     font-size: 18px;
     z-index: 2;
-    /* Still good practice */
 }
 
 .category-text-card:hover {
@@ -164,7 +197,6 @@
     object-fit: cover;
 }
 
-/* Product Card Icons (Wishlist, Quick View) */
 .product-card-icons {
     position: absolute;
     top: 12px;
@@ -203,7 +235,6 @@
     border-color: #000;
 }
 
-/* Product Info Text */
 .product-info {
     text-align: left;
 }
@@ -239,22 +270,35 @@
 /* Tablet and larger phones */
 @media (max-width: 768px) {
 
-    /* --- Hero Section --- */
+    /* --- Hero Section (Mobile) --- */
     .hero-section {
-        padding: 40px 15px;
+        padding: 60px 20px;
+        min-height: 50vh;
         margin-bottom: 30px;
+
+        /* These are the mobile curved border styles */
+        margin-left: 10px;
+        /* Smaller margin for mobile */
+        margin-right: 10px;
+        /* Smaller margin for mobile */
+        border-radius: 30px;
+        /* This is the stronger mobile curve */
     }
 
     .hero-content h1 {
-        font-size: 28px;
+        font-size: 32px;
         /* Smaller font for mobile */
     }
 
     .hero-content p {
-        font-size: 15px;
-        max-width: 100%;
-        /* Allow full width */
+        font-size: 16px;
     }
+
+    .btn-primary {
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+
 
     /* --- General Section --- */
     .home-section {
@@ -295,7 +339,7 @@
         transform: none;
     }
 
-    /* Hide "Quick view" icon on mobile to match screenshot */
+    /* Hide "Quick view" icon on mobile */
     .product-card-icons button[aria-label="Quick view"] {
         display: none;
     }

@@ -8,13 +8,21 @@
 {% endblock extra_styles %}
 
 {% block content %}
+
+{% comment %} 
+  ▼▼▼ THIS IS THE UPDATED HERO SECTION ▼▼▼ 
+{% endcomment %}
 <section class="hero-section">
     <div class="hero-content">
-        <h1>Premium Men's Fashion & Accessories</h1>
-        <p>Timeless men's fashion, premium quality craftsmanship, and curated style for every occasion.</p>
-        <a href="/products" class="btn-primary">Shop Men's Collection</a>
+        <h1>Effortless Style, Arrived.</h1>
+        <p>Discover our new Spring collection.</p>
+        {% comment %} <a href="/products" class="btn-primary">Shop Now</a> {% endcomment %}
     </div>
 </section>
+{% comment %} 
+  ▲▲▲ END OF UPDATED HERO SECTION ▲▲▲ 
+{% endcomment %}
+
 
 {% if new_arrivals %}
 <section class="home-section">
@@ -52,6 +60,7 @@
         {% endfor %}
     </div>
 </section>
+
 {% if featured_products %}
 <section class="home-section">
     <h2 class="section-title">Featured Products</h2>
