@@ -202,82 +202,6 @@ img {
     padding-right: 40px;
 }
 
-/* ==================== TOASTR.JS STYLES ==================== */
-#toast-container > div {
-    border-radius: 999px;
-    opacity: 1;
-    box-shadow: none;
-    border: 1px solid #e0e0e0;
-    padding: 10px 20px;
-    margin-bottom: 10px;
-    background-color: #ffffff !important;
-    color: #333333 !important;
-}
-
-/* Specific Toast Colors */
-#toast-container > .toast-success {
-    background-color: #8cc152 !important;
-    color: #ffffff !important;
-}
-#toast-container > .toast-error {
-    background-color: #da4453 !important;
-    color: #ffffff !important;
-}
-#toast-container > .toast-warning {
-    background-color: #f6bb42 !important;
-    color: #ffffff !important;
-}
-#toast-container > .toast-info {
-    background-color: #4a89dc !important;
-    color: #ffffff !important;
-}
-
-.toast-title {
-    font-weight: 600;
-    font-size: 16px;
-    color: inherit !important;
-}
-.toast-message {
-    font-size: 14px;
-    color: inherit !important;
-}
-
-.toast-close-button {
-    color: #000 !important;
-    opacity: 0.7 !important;
-    font-size: 20px !important;
-    text-shadow: none !important;
-    margin-left: 15px;
-}
-.toast-close-button:hover {
-    opacity: 1 !important;
-    color: #000 !important;
-}
-#toast-container > .toast-success .toast-close-button,
-#toast-container > .toast-error .toast-close-button,
-#toast-container > .toast-warning .toast-close-button,
-#toast-container > .toast-info .toast-close-button {
-    color: #fff !important;
-    opacity: 0.8 !important;
-}
-#toast-container > .toast-success .toast-close-button:hover,
-#toast-container > .toast-error .toast-close-button:hover,
-#toast-container > .toast-warning .toast-close-button:hover,
-#toast-container > .toast-info .toast-close-button:hover {
-    color: #fff !important;
-    opacity: 1 !important;
-}
-.toast-progress {
-    background-color: rgba(0, 0, 0, 0.1);
-    height: 3px;
-    opacity: 0.4;
-}
-#toast-container > .toast-success .toast-progress,
-#toast-container > .toast-error .toast-progress,
-#toast-container > .toast-warning .toast-progress,
-#toast-container > .toast-info .toast-progress {
-    background-color: rgba(255, 255, 255, 0.25);
-}
 
 /* ==================== OFFER CAROUSEL ==================== */
 .offer-carousel {
@@ -293,23 +217,28 @@ img {
     font-size: 0.95rem;
     font-weight: 500;
 }
+
 .offer-track {
     display: inline-block;
     padding-left: 100%;
     animation: scrollOffers 40s linear infinite;
 }
+
 .offer-item {
     display: inline-block;
     margin-right: 80px;
 }
+
 @keyframes scrollOffers {
     0% {
         transform: translateX(0);
     }
+
     100% {
         transform: translateX(-100%);
     }
 }
+
 .offer-carousel:hover .offer-track {
     animation-play-state: paused;
 }
@@ -361,10 +290,11 @@ img {
 }
 
 /* Toggle */
-.menu-toggle:checked ~ .mobile-menu {
+.menu-toggle:checked~.mobile-menu {
     transform: translateX(0);
 }
-.menu-toggle:checked ~ .mobile-menu-overlay {
+
+.menu-toggle:checked~.mobile-menu-overlay {
     opacity: 1;
     visibility: visible;
 }
@@ -375,6 +305,7 @@ img {
     margin-bottom: 20px;
     border-bottom: 1px solid #eee;
 }
+
 .mobile-menu-header a {
     display: flex;
     align-items: center;
@@ -383,20 +314,24 @@ img {
     font-weight: 600;
     color: #111;
 }
+
 .mobile-menu-header a i {
     font-size: 1.5rem;
     color: #444;
 }
+
 .mobile-menu-divider {
     border: none;
     border-top: 1px solid #eee;
     margin: 15px 0;
 }
+
 .mobile-menu-links {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
+
 .mobile-menu-links li a {
     display: flex;
     align-items: center;
@@ -408,11 +343,13 @@ img {
     color: #333;
     transition: background-color 0.2s ease, color 0.2s ease;
 }
+
 .mobile-menu-links li a:hover,
 .mobile-menu-links li a:focus {
     background-color: #f4f4f4;
     color: #000;
 }
+
 .mobile-menu-links li a i {
     font-size: 1.3rem;
     width: 25px;
@@ -422,6 +359,7 @@ img {
 
 /* Hide mobile items on desktop */
 @media (min-width: 769px) {
+
     .menu-icon,
     .mobile-menu,
     .mobile-menu-overlay {
@@ -467,7 +405,7 @@ img {
     }
 
     /* ✅ Hide hamburger when menu is open */
-    .menu-toggle:checked ~ .menu-icon {
+    .menu-toggle:checked~.menu-icon {
         display: none !important;
     }
 
@@ -493,4 +431,128 @@ img {
     .offer-item {
         margin-right: 50px;
     }
+}
+
+/* ==================== TOASTR.JS STYLES (NEW CLEAN STYLE) ==================== */
+#toast-container>div {
+    /* --- Base Styling --- */
+    background-color: #ffffff !important;
+    color: #333333 !important;
+    opacity: 1 !important;
+    font-family: inherit;
+    /* Inherits "Barlow Condensed" from body */
+
+    /* --- Shape & Shadow (Your Request) --- */
+    padding: 12px 18px 12px 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    /* "dropbox" shadow */
+    border: none;
+    /* Remove old border */
+
+    /* --- Color Indicator (Your Request) --- */
+    border-left: 5px solid #cccccc;
+    /* Default border color */
+}
+
+/* --- Font Styles --- */
+.toast-title {
+    font-family: inherit !important;
+    font-weight: 600 !important;
+    /* Semibold */
+    font-size: 16px !important;
+    color: #333 !important;
+    /* Default title color */
+}
+
+.toast-message {
+    font-family: inherit !important;
+    font-weight: 400 !important;
+    /* Regular */
+    font-size: 14px !important;
+    color: #555 !important;
+    /* Slightly lighter for message */
+}
+
+/* --- Close Button --- */
+.toast-close-button {
+    color: #999 !important;
+    text-shadow: none !important;
+    font-size: 24px !important;
+    opacity: 0.7 !important;
+    margin-left: 15px;
+}
+
+.toast-close-button:hover {
+    color: #333 !important;
+    opacity: 1 !important;
+}
+
+/* --- Progress Bar --- */
+.toast-progress {
+    height: 3px;
+    opacity: 1;
+    background-color: #cccccc;
+    /* Default progress bar */
+}
+
+/* This rule moves the entire toast container down */
+#toast-container.toast-top-right {
+    top: 60px !important;
+    /* Default is 12px. Increase this value to move it lower. */
+}
+
+/* --- Style Variations (Color as Indication) --- */
+
+/* Success */
+#toast-container>.toast-success {
+    border-left-color: #4CAF50;
+}
+
+#toast-container>.toast-success .toast-title {
+    color: #4CAF50 !important;
+}
+
+#toast-container>.toast-success .toast-progress {
+    background-color: #4CAF50;
+}
+
+/* Error */
+#toast-container>.toast-error {
+    border-left-color: #E53935;
+}
+
+#toast-container>.toast-error .toast-title {
+    color: #E53935 !important;
+}
+
+#toast-container>.toast-error .toast-progress {
+    background-color: #E53935;
+}
+
+/* Warning */
+#toast-container>.toast-warning {
+    border-left-color: #FB8C00;
+}
+
+#toast-container>.toast-warning .toast-title {
+    color: #FB8C00 !important;
+}
+
+#toast-container>.toast-warning .toast-progress {
+    background-color: #FB8C00;
+}
+
+/* Info */
+#toast-container>.toast-info {
+    border-left-color: #1E88E5;
+}
+
+#toast-container>.toast-info .toast-title {
+    color: #1E88E5 !important;
+}
+
+#toast-container>.toast-info .toast-progress {
+    background-color: #1E88E5;
 }
