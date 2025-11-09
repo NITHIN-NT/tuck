@@ -1,0 +1,316 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Admin - {% if product %}Edit Product{% else %}Add Product{% endif %}</title>
+{% endblock title %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/products/add_product.css' %}">
+{% endblock extra_css %}
+
+
+{% block content %}
+<div class="form-container">
+    <div class="form-header">
+        <a href="{% url "admin_products" %}" class="back-link" title="Back to products">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div>
+            <h2>{% if product %}Edit Product{% else %}Add Product{% endif %}</h2>
+            <p>{% if product %}Update the product listing{% else %}Create a new product listing{% endif %}</p>
+        </div>
+    </div>
+
+    {% if product_form.non_field_errors or formset.non_field_errors or formset_images.non_field_errors %}
+        <div class="form-errors">
+            {{ product_form.non_field_errors }}
+            {{ formset.non_field_errors }}
+            {{ formset_images.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <form action="" method="POST" enctype="multipart/form-data" class="product-form" id="product-form">
+        {% csrf_token %}
+
+        <div class="form-main">
+            
+            <div class="form-left">
+                <div class="form-group">
+                    <label for="{{ product_form.name.id_for_label }}">Product Name</label>
+                    {{ product_form.name }}
+                    {{ product_form.name.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ product_form.category.id_for_label }}">Category</label>
+                    {{ product_form.category }}
+                    {{ product_form.category.errors }}
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ product_form.base_price.id_for_label }}">Base Price (₹)</label>
+                        {{ product_form.base_price }}
+                        {{ product_form.base_price.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ product_form.offer_price.id_for_label }}">Offer Price (₹)</label>
+                        {{ product_form.offer_price }}
+                        {{ product_form.offer_price.errors }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ product_form.description.id_for_label }}">Description</label>
+                    {{ product_form.description }}
+                    {{ product_form.description.errors }}
+                </div>
+            </div>
+
+            <div class="form-right">
+                <div class="form-group card-style">
+                    <label>Product Flags</label>
+                    <div class="checkbox-group">
+                        {{ product_form.is_featured }}
+                        <label for="{{ product_form.is_featured.id_for_label }}">Is Featured</label>
+                    </div>
+                    <div class="checkbox-group">
+                        {{ product_form.is_selective }}
+                        <label for="{{ product_form.is_selective.id_for_label }}">Is Selective</label>
+                    </div>
+                    <div class="checkbox-group">
+                        {{ product_form.is_most_demanded }}
+                        <label for="{{ product_form.is_most_demanded.id_for_label }}">Is Most Demanded</label>
+                    </div>
+                    <div class="checkbox-group">
+                        {{ product_form.is_blocked }}
+                        <label for="{{ product_form.is_blocked.id_for_label }}">Is Block</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dynamic-section variants-section">
+            <h3>Product Variants</h3>
+            <p>Add sizes, prices, and stock for each product variant.</p>
+            
+            {{ formset.management_form }}
+
+            <div id="variants-container" class="dynamic-rows-container">
+                {% for form in formset %}
+                <div class="dynamic-row">
+                    {% if form.instance.pk %}{{ form.id }}{% endif %} <div class="form-group">
+                        <label>Size</label>
+                        {{ form.size }}
+                        {{ form.size.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label>Price (₹)</label>
+                        {{ form.price }}
+                        {{ form.price.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label>Stock</label>
+                        {{ form.stock }}
+                        {{ form.stock.errors }}
+                    </div>
+                    <button type="button" class="btn-remove-row" title="Remove variant">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                    <div style="display:none;">{{ form.DELETE }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button type="button" id="add-variant-btn" class="btn btn-secondary">
+                <i class="fa-solid fa-plus"></i> Add Variant
+            </button>
+        </div>
+
+
+        <div class="dynamic-section gallery-section">
+            <h3>Product Gallery Images</h3>
+            <p>Add additional images for the product gallery.</p>
+            
+            {{ formset_images.management_form }}
+            
+            <div id="gallery-container" class="dynamic-rows-container">
+                {% for form in formset_images %}
+                <div class="dynamic-row">
+                    {% if form.instance.pk %}{{ form.id }}{% endif %}
+                    <div class="form-group" style="flex: 2;">
+                        <label>Image File</label>
+                        {{ form.extra_image }}
+                        {{ form.extra_image.errors }}
+                        
+                        {% if form.instance.extra_image %}
+                            <img src="{{ form.instance.extra_image.url }}" height="50" alt="Gallery image">
+                        {% endif %}
+                    </div>
+                    <div class="form-group" style="flex: 3;">
+                        <label>Alt Text (Optional)</label>
+                        {{ form.alt_text }}
+                        {{ form.alt_text.errors }}
+                    </div>
+                    <button type="button" class="btn-remove-row" title="Remove image">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                    <div style="display:none;">{{ form.DELETE }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button type="button" id="add-image-btn" class="btn btn-secondary">
+                <i class="fa-solid fa-plus"></i> Add Image
+            </button>
+        </div>
+
+        <div class="form-footer">
+            <button type="button" class="btn btn-cancel">Cancel</button>
+            <button type="submit" class="btn btn-save">Save Product</button>
+        </div>
+    </form>
+</div>
+
+
+<template id="variant-row-template">
+    <div class="dynamic-row">
+        <div class="form-group">
+            <label>Size</label>
+            {{ formset.empty_form.size }}
+        </div>
+        <div class="form-group">
+            <label>Price (₹)</label>
+            {{ formset.empty_form.price }}
+        </div>
+        <div class="form-group">
+            <label>Stock</label>
+            {{ formset.empty_form.stock }}
+        </div>
+        <button type="button" class="btn-remove-row" title="Remove variant">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+        </div>
+</template>
+
+<template id="image-row-template">
+    <div class="dynamic-row">
+        <div class="form-group" style="flex: 2;">
+            <label>Image File</label>
+            {{ formset_images.empty_form.extra_image }}
+        </div>
+        <div class="form-group" style="flex: 3;">
+            <label>Alt Text (Optional)</label>
+            {{ formset_images.empty_form.alt_text }}
+        </div>
+        <button type="button" class="btn-remove-row" title="Remove image">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+    </div>
+</template>
+
+{% endblock content %}
+{% block extraJs %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    /**
+     * A helper function to add a new form row from a template.
+     * @param {string} containerId - The ID of the container to add the row to.
+     * @param {string} templateId - The ID of the <template> tag.
+     * @param {string} prefix - The formset prefix (e.g., 'variants', 'images').
+     */
+    function addFormRow(containerId, templateId, prefix) {
+        const container = document.getElementById(containerId);
+        const template = document.getElementById(templateId);
+        
+        // Find the 'TOTAL_FORMS' input for this formset
+        const totalFormsInput = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+        if (!totalFormsInput) {
+            console.error(`Could not find TOTAL_FORMS input for prefix: ${prefix}`);
+            return;
+        }
+
+        // Get the current number of forms
+        let newIndex = parseInt(totalFormsInput.value, 10);
+
+        // Get the template's HTML
+        let newRowHtml = template.innerHTML;
+
+        // Replace all instances of '__prefix__' with the new index
+        // This is the most important part!
+        newRowHtml = newRowHtml.replace(/__prefix__/g, newIndex);
+
+        // Create a new div, set its HTML, and add it to the container
+        const newRow = document.createElement('div');
+        newRow.innerHTML = newRowHtml;
+        // We add the .dynamic-row class to the wrapper we just created
+        newRow.firstElementChild.classList.add('dynamic-row', 'new-row');
+        container.appendChild(newRow.firstElementChild);
+
+        // Increment the TOTAL_FORMS count
+        totalFormsInput.value = newIndex + 1;
+    }
+
+    // --- Section for Product Variants ---
+    document.getElementById('add-variant-btn').addEventListener('click', function() {
+        addFormRow('variants-container', 'variant-row-template', 'variants');
+    });
+
+    // --- Section for Gallery Images ---
+    document.getElementById('add-image-btn').addEventListener('click', function() {
+        addFormRow('gallery-container', 'image-row-template', 'images');
+    });
+
+    // --- Event Listener for Removing Rows ---
+    document.getElementById('product-form').addEventListener('click', function(e) {
+        const removeButton = e.target.closest('.btn-remove-row');
+        if (!removeButton) return;
+
+        const rowToRemove = removeButton.closest('.dynamic-row');
+        if (!rowToRemove) return;
+
+        // Check if this is an *existing* form (it will have a DELETE checkbox)
+        const deleteCheckbox = rowToRemove.querySelector('input[type="checkbox"][id$="-DELETE"]');
+
+        if (deleteCheckbox) {
+            // This is an existing form. Check the box and hide the row.
+            deleteCheckbox.checked = true;
+            rowToRemove.style.display = 'none';
+        } else {
+            rowToRemove.remove();
+
+        }
+    });
+
+    // --- Main Image Preview (Your original code was good) ---
+    // Note: This needs a file input with id 'product_images' in your
+    // `AdminProductAddForm` to work.
+    const imageInput = document.getElementById('product_images'); // e.g., {{ product_form.main_images }}
+    const previewContainer = document.getElementById('image-preview-container');
+
+    if (imageInput && previewContainer) {
+        imageInput.addEventListener('change', function() {
+            previewContainer.innerHTML = ''; // Clear existing previews
+            if (this.files) {
+                Array.from(this.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        let div = document.createElement('div');
+                        div.classList.add('image-preview');
+                        div.innerHTML = `
+                            <img src="${e.target.result}" alt="${file.name}">
+                            <span>${file.name}</span>
+                        `;
+                        previewContainer.appendChild(div);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        });
+    }
+
+});
+</script>
+{% endblock extraJs %}

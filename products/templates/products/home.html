@@ -22,7 +22,7 @@
 {% comment %} 
   ▲▲▲ END OF UPDATED HERO SECTION ▲▲▲ 
 {% endcomment %}
-
+{% comment %} 
 
 {% if new_arrivals %}
 <section class="home-section">
@@ -31,9 +31,21 @@
         {% for new_arrival in new_arrivals %}
         <div class="product-card">
             <div class="product-image-container">
+                {% if new_arrival.slug %}
                 <a href="{% url 'Product_card_view' new_arrival.slug %}">
-                    <img src="{{ new_arrival.image_url }}" alt="{{ new_arrival.name }}">
+                    {% if new_arrival.image_url %}
+                        <img src="{{ new_arrival.image_url }}" alt="{{ new_arrival.name }}">
+                    {% else %}
+                        <img src="{{ new_arrival.image }}" alt="{{ new_arrival.name }}">                    
+                    {% endif %}
                 </a>
+                {% else %}
+                    {% if new_arrival.image_url %}
+                        <img src="{{ new_arrival.image_url }}" alt="{{ new_arrival.name }}">
+                    {% else %}
+                        <img src="{{ new_arrival.image }}" alt="{{ new_arrival.name }}">                    
+                    {% endif %}
+                {% endif %}
                 <div class="product-card-icons">
                     <button aria-label="Add to wishlist"><i class='bx bx-heart'></i></button>
                     <button aria-label="Quick view"><i class='bx bx-search'></i></button>
@@ -47,15 +59,17 @@
         {% endfor %}
     </div>
 </section>
-{% endif %}
+{% endif %} {% endcomment %}
 
 <section class="home-section">
     <h2 class="section-title">Shop By Category</h2>
     <div class="category-grid">
-        {% for category in categories %}
-        <a href="{% url "Product_card_view" category.slug %}" class="category-card">
-            <span>{{category.category.name}}</span>
-            <img src="{{category.image_url}}" alt="{{category.name}}">
+        {% for category_data in categories_for_template %}
+        <a href="{% url 'products_page_user' %}?category={{ category_data.id }}" class="category-card">
+            <span>{{ category_data.name }}</span>
+            {% if category_data.image_url %}
+            <img src="{{ category_data.image_url }}" alt="{{ category_data.alt_text }}">
+            {% endif %}
         </a>
         {% endfor %}
     </div>
@@ -68,9 +82,13 @@
         {% for featured_product in featured_products %}
         <div class="product-card">
             <div class="product-image-container">
+                {% if featured_product.slug %}
                 <a href="{% url 'Product_card_view' featured_product.slug %}">
                     <img src="{{ featured_product.image_url }}" alt="{{ featured_product.name }}">
                 </a>
+                {% else %}
+                <img src="{{ featured_product.image_url }}" alt="{{ featured_product.name }}">
+                {% endif %}
                 <div class="product-card-icons">
                     <button aria-label="Add to wishlist"><i class='bx bx-heart'></i></button>
                     <button aria-label="Quick view"><i class='bx bx-search'></i></button>
@@ -86,7 +104,7 @@
 </section>
 {% endif %}
 
-{% comment %} {% if most_demanded %}
+{% if most_demanded %}
 <section class="home-section">
     <h2 class="section-title">Most Demanded Accessories</h2>
     <div class="product-grid">
@@ -109,6 +127,6 @@
         {% endfor %}
     </div>
 </section>
-{% endif %} {% endcomment %}
+{% endif %} 
 
 {% endblock content %}

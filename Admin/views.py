@@ -1,18 +1,24 @@
-from django.shortcuts import render,redirect,get_object_or_404
+from .decorators import superuser_required
 from django.template.loader import render_to_string 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.contrib.auth import authenticate,login,logout
+from django.shortcuts import render,redirect,get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
 from accounts.models import CustomUser,EmailOTP
+from django.db import transaction
 from django.core.mail import EmailMultiAlternatives 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.views.generic import TemplateView,ListView
+from django.views.generic.edit import CreateView
 from django.views import View
-from django.views.decorators.cache import never_cache
-from django.utils.decorators import method_decorator
 from django.db.models import Count,Sum
-from .forms import AdminLoginForm,AdminForgotPasswordEmailForm,AdminSetNewPassword,AdminVerifyOTPForm
-from .decorators import superuser_required
+from .forms import (AdminLoginForm,AdminForgotPasswordEmailForm,
+                    AdminSetNewPassword,AdminVerifyOTPForm,
+                    AdminProductAddForm,VariantFormSet,ImageFormSet)
 from products.models import Product,Category,ProductVariant
+from django.urls import reverse_lazy
 
 # Create your views here.
 @never_cache
@@ -160,7 +166,6 @@ class AdminHome(LoginRequiredMixin,TemplateView):
         context['total_revenue'] = '02'
         return context
 
-
 '''User View Start Here Add Edit View '''
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class AdminUserView(LoginRequiredMixin,ListView):
@@ -180,12 +185,6 @@ def toggle_user_block(request,id):
     messages.warning(request,f"{{user.email}} is {status} Successfuly")
 
     return redirect('admin_user')
-
-def admin_user_edit(request):
-    return render(request,'users/edit_user.html')
-
-def admin_user_add(request):
-    return render(request,'users/add_user.html')
 
 '''User View End Here'''
 
@@ -222,27 +221,64 @@ class AdminProductsView(LoginRequiredMixin,ListView):
         context['category_filter'] = self.request.GET.get('category', '')
         return context
     
-class AdminProductAdd(View):
-    template_name = 'products/product_add.html'
+@login_required
+@user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
+@transaction.atomic
+def manage_product(request,id=None):
+    product = None
+    if id:
+        product = get_object_or_404(Product,id=id)
 
-    def get(self,request):
-        return render(request,self.template_name)
+    if request.method == "POST":
+        product_form = AdminProductAddForm(request.POST,request.FILES,instance=product)
+        formset = VariantFormSet(request.POST,instance=product,prefix = 'variants')
+        formset_images = ImageFormSet(request.POST,request.FILES,instance=product,prefix='images')
+
+        if product_form.is_valid() and formset.is_valid() and formset_images.is_valid():
+
+            product = product_form.save()
+
+            formset.instance = product
+            formset_images.instance = product
+
+            formset.save()
+            formset_images.save()
+            
+            messages.success(request,"Product saved successfully.")
+            return redirect('admin_products')
+        else:
+            print("Product Form Errors:", product_form.errors)
+            print("Variant Formset Errors:", formset.errors)
+            print("Image Formset Errors:", formset_images.errors)
+            messages.error(request, "Please fix the errors below.")
+    else:
+        product_form = AdminProductAddForm(instance=product)
+        formset = VariantFormSet(instance=product, prefix='variants')
+        formset_images = ImageFormSet(instance=product, prefix='images')
 
 
+    context = {
+        'product_form' : product_form,
+        'formset' : formset,
+        'formset_images' : formset_images,
+        'product':product
+    }
+    return render(request,'products/product_add_edit.html',context)
 
-
+@login_required
+@user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
+@transaction.atomic
+def delete_product(request,id=None):
+    product = get_object_or_404(Product,id=id)
+    product.delete()
+    messages.success(request,'Product Deleted Successfully')
+    return redirect('admin_products')
 '''Product View End Here'''
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class AdminCategoryView(ListView):
     model = Category
     template_name = 'categorys/category.html'
     context_object_name = 'categorys'
-
-# def admin_user_edit(request):
-#     return render(request,'users/edit_user.html')
-
-# def admin_user_add(request):
-#     return render(request,'users/add_user.html')
 
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class StockManagementView(ListView):

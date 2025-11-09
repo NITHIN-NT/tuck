@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import inlineformset_factory
+from  products.models import Product,ProductVariant,ProductImage,Size,Category
 
 class AdminLoginForm(forms.Form):
     email = forms.EmailField(
@@ -43,3 +45,93 @@ class AdminSetNewPassword(forms.Form):
             raise forms.ValidationError("The two password fields didn't match.")
             
         return cleaned_data
+class AdminProductAddForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = [
+            'name', 
+            'category', 
+            'base_price', 
+            'offer_price', 
+            'description', 
+            'is_featured', 
+            'is_selective', 
+            'is_most_demanded', 
+            'is_blocked'
+
+        ]
+        widgets = {
+            'name': forms.TextInput(attrs={  
+                'id': 'product_name',  
+                'required': True
+            }),
+            'category': forms.Select(attrs={
+                'id': 'category', 
+                'required': True
+            }),
+            'base_price': forms.NumberInput(attrs={
+                'id': 'base_price', 
+                'step': '0.01', 
+                'required': True
+            }),
+            'offer_price': forms.NumberInput(attrs={
+                'id': 'offer_price', 
+                'step': '0.01'
+            }),
+            'description': forms.Textarea(attrs={
+                'id': 'description', 
+                'rows': 6
+            }),
+            # Checkboxes
+            'is_featured': forms.CheckboxInput(attrs={'id': 'is_featured'}),
+            'is_selective': forms.CheckboxInput(attrs={'id': 'is_selective'}),
+            'is_most_demanded': forms.CheckboxInput(attrs={'id': 'is_most_demanded'}),
+            'is_blocked': forms.CheckboxInput(attrs={'id': 'is_blocked'}),
+        }
+
+
+class VariantForm(forms.ModelForm):
+    size = forms.ModelChoiceField(
+        queryset=Size.objects.all(),
+        widget=forms.Select(attrs={'class': 'variant-size', 'required': True})
+    )
+
+    class Meta:
+        model = ProductVariant
+        fields = ['size', 'price', 'stock']
+        widgets = {
+            'price': forms.NumberInput(attrs={'class': 'variant-price', 'step': '0.01', 'required': True}),
+            'stock': forms.NumberInput(attrs={'class': 'variant-stock', 'min': '0', 'required': True}),
+        }
+
+class ImageForm(forms.ModelForm):
+    extra_image = forms.ImageField(
+        widget=forms.FileInput(attrs={'class': 'gallery-image', 'required': True, 'accept': 'image/*'}),
+        label="Image File" 
+    )
+    alt_text = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'gallery-alt-text', 'placeholder': 'Describe the image'}),
+        required=False 
+    )
+    class Meta:
+        model = ProductImage
+        fields = ['extra_image','alt_text'] 
+
+# --- Formsets ---
+VariantFormSet = inlineformset_factory(
+    Product, 
+    ProductVariant, 
+    form=VariantForm, 
+    extra=1,
+    can_delete=True,
+    can_delete_extra=True
+)
+
+ImageFormSet = inlineformset_factory(
+    Product, 
+    ProductImage, 
+    form=ImageForm, 
+    extra=1,
+    can_delete=True,
+    can_delete_extra=True
+)
