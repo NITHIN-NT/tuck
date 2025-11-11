@@ -1,25 +1,30 @@
-from .decorators import superuser_required
-from django.template.loader import render_to_string 
-from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from django.contrib.auth import authenticate,login,logout
-from django.shortcuts import render,redirect,get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.forms import inlineformset_factory
-from accounts.models import CustomUser,EmailOTP
-from django.db import transaction
-from django.core.mail import EmailMultiAlternatives 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 from django.views.generic import TemplateView,ListView
 from django.views.generic.edit import CreateView
 from django.views import View
+
+from django.template.loader import render_to_string 
+
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+
 from django.db.models import Count,Sum
+from django.db import transaction
+
+from django.core.mail import EmailMultiAlternatives 
+from django.forms import inlineformset_factory
+from django.utils.decorators import method_decorator
+from django.shortcuts import render,redirect,get_object_or_404
+
+from .decorators import superuser_required
 from .forms import (AdminLoginForm,AdminForgotPasswordEmailForm,
                     AdminSetNewPassword,AdminVerifyOTPForm,VariantForm,ImageForm,
                     AdminProductAddForm,VariantFormSet,ImageFormSet)
+
+from accounts.models import CustomUser,EmailOTP
 from products.models import Product,Category,ProductVariant,ProductImage
-from django.urls import reverse_lazy
 
 # Create your views here.
 @never_cache
@@ -34,7 +39,7 @@ def admin_login(request):
                 login(request, user)
                 return redirect('admin_home')
             else:
-                messages.error(request, "Invalid email or password, or you don't have admin access.")
+                messages.error(request, "Invalid email or password, or you don't have admin access.",extra_tags='admin')
                 return redirect('admin_login')
     else:
         form = AdminLoginForm()
@@ -50,11 +55,11 @@ def admin_forgot (request):
             try:
                 user = CustomUser.objects.get(email=email)
             except CustomUser.DoesNotExist:
-                messages.error(request,'No User Found With this email')
+                messages.error(request,'No User Found With this email',extra_tags='admin')
                 return redirect('admin_login')
 
             if not user.is_superuser:
-                messages.error(request, 'Access denied. Only admins can reset password here.')
+                messages.error(request, 'Access denied. Only admins can reset password here.',extra_tags='admin')
                 return redirect('admin_login')
 
 
@@ -75,22 +80,22 @@ def admin_forgot (request):
                 msg.attach_alternative(html_message,"text/html")
                 msg.send()
                 request.session['reset_admin_email'] = user.email
-                messages.success(request,f'An OTP has been Sent to {email}')
+                messages.success(request,f'An OTP has been Sent to {email}',extra_tags='admin')
                 return redirect('admin_otp_verification')
             
             except Exception as e :
                 print("Email sending failed:", e)
-                messages.error(request, 'There was an error sending the email. Please try again later.')
+                messages.error(request, 'There was an error sending the email. Please try again later.',extra_tags='admin')
                 return redirect('admin_forgot_password')
     return render(request,'adminAuth/forgot-password.html',{'form':form})
 
 def admin_otp_verification (request):
     if not request.session.get('reset_admin_email'):
-        messages.error(request,'You are Not autherized to access this page.')
+        messages.error(request,'You are Not autherized to access this page.',extra_tags='admin')
         return redirect('admin_login')
     email = request.session.get('reset_admin_email')
     if not email :
-        messages.error(request,'Your Session has expired. Please Start Over')
+        messages.error(request,'Your Session has expired. Please Start Over',extra_tags='admin')
         return redirect('admin_forgot_password')
     if request.method =='POST':
         form = AdminVerifyOTPForm(request.POST)
@@ -101,7 +106,7 @@ def admin_otp_verification (request):
             try:
                 email_otp = EmailOTP.objects.filter(user=user).latest('created_at')
             except EmailOTP.DoesNotExist:
-                messages.error(request,'No OTP found,Please request New One')
+                messages.error(request,'No OTP found,Please request New One',extra_tags='admin')
                 return redirect('admin_forgot_password')
 
             if email_otp.otp == otp_from_form and email_otp.is_valid():
@@ -109,25 +114,25 @@ def admin_otp_verification (request):
 
                 request.session['admin_reset_password_allowed'] = True
 
-                messages.success(request,'OTP verified successfully. Please set your new password')
+                messages.success(request,'OTP verified successfully. Please set your new password',extra_tags='admin')
                 return redirect('admin_reset')
             elif not email_otp.is_valid():
-                messages.error(request,'Your OTP has expired. Please request a new one.')
+                messages.error(request,'Your OTP has expired. Please request a new one.',extra_tags='admin')
             else:
-                messages.error(request,'Invalid or expired OTP. Please try again.')
+                messages.error(request,'Invalid or expired OTP. Please try again.',extra_tags='admin')
     else:
         form = AdminVerifyOTPForm()
     return render(request,'adminAuth/otp-verification.html',{'form':form})
 
 def admin_reset(request):
     if not request.session.get('admin_reset_password_allowed') or not request.session.get('reset_admin_email'):
-        messages.error(request,'You are not authorized to access this page. Please verify your OTP first.')
+        messages.error(request,'You are not authorized to access this page. Please verify your OTP first.',extra_tags='admin')
         return redirect('admin_forgot_password')
     
     email = request.session.get('reset_admin_email')
 
     if not email or not request.session.get('admin_reset_password_allowed'):
-        messages.error(request,'Your session has expired. Please start over.')
+        messages.error(request,'Your session has expired. Please start over.',extra_tags='admin')
         return redirect('admin_forgot_password')
     
     if request.method == 'POST':
@@ -138,7 +143,7 @@ def admin_reset(request):
 
             user.set_password(new_password)
             user.save()
-            messages.success(request,'Your password has been reset successfully. Please log in.')
+            messages.success(request,'Your password has been reset successfully. Please log in.',extra_tags='admin')
             try:
                 del request.session['reset_admin_email']
                 del request.session['admin_reset_password_allowed']
@@ -184,9 +189,9 @@ def toggle_user_block(request,id):
 
     status =  True if user.is_active  else False
     if status:
-        messages.success(request,f"{user.email} is Unblockd Successfuly")
+        messages.success(request,f"{user.email} is Unblockd Successfuly",extra_tags='admin')
     else:
-        messages.error(request,f"{user.email} is Blocked Successfuly")
+        messages.error(request,f"{user.email} is Blocked Successfuly",extra_tags='admin')
     # messages.warning(request,f"{user.email} is {status} Successfuly")
 
     return redirect('admin_user')
@@ -269,7 +274,7 @@ def manage_product(request,id=None):
             formset.save()
             formset_images.instance = product
             formset_images.save()
-            messages.success(request,f"{product.name} saved successfully.",extra_tags='admin')
+            messages.success(request,f"{product.name} is Added/Edited Successfuly.",extra_tags='admin')
             return redirect('admin_products')
         else:
 
@@ -299,7 +304,7 @@ def manage_product(request,id=None):
 def delete_product(request,id=None):
     product = get_object_or_404(Product,id=id)
     product.delete()
-    messages.success(request,f'{product.name} Deleted Successfully')
+    messages.success(request,f'{product.name} Deleted Successfully',extra_tags='admin')
     return redirect('admin_products')
 
 

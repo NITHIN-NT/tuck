@@ -302,23 +302,17 @@
                 var toastType = '{{ message.tags }}';
                 var messageText = '{{ message|safe }}'; // '|safe' is important if your messages have HTML
 
-                switch (toastType) {
-                    case 'success':
-                        toastr.success(messageText);
-                        break;
-                    case 'error':
-                        toastr.error(messageText);
-                        break;
-                    case 'warning':
-                        toastr.warning(messageText);
-                        break;
-                    case 'info':
-                        toastr.info(messageText);
-                        break;
-                    default:
-                        // Default to 'info' if tag is something else
-                        toastr.info(messageText);
-                        break;
+                if (toastType.includes('success')) {
+                    toastr.success(messageText);
+                } else if (toastType.includes('error')) {
+                    toastr.error(messageText);
+                } else if (toastType.includes('warning')) {
+                    toastr.warning(messageText);
+                } else if (toastType.includes('info')) {
+                    toastr.info(messageText);
+                } else {
+                    // Default to 'info' if tag is something else
+                    toastr.info(messageText);
                 }
             {% endfor %}
         {% endif %}

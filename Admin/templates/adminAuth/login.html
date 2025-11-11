@@ -29,9 +29,13 @@
 
                     {% if messages %}
                         <div class="messages">
-                            {% for message in messages %}
-                                <p class="message {{ message.tags }}">{{ message }}</p>
-                            {% endfor %}
+                                {% for message in messages %}
+                                    {% if admin in message %}
+                                        {% if adminlogin in messages%}
+                                            <p class="message {{ message.tags }}">{{ message }}</p>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
                         </div>
                     {% endif %}
 

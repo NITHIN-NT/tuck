@@ -31,32 +31,32 @@
             
           <ul class="sidebar-nav">
                 <li>
-                    <a href="{% url "admin_home" %}" class="{% if request.resolver_match.url_name == "admin_home" %}active{% endif %}">
+                    <a href="{% url 'admin_home' %}" class="{% if request.resolver_match.url_name == 'admin_home' %}active{% endif %}">
                         <i class="fa-solid fa-house"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url "admin_user" %}" class="{% if request.resolver_match.url_name == "admin_user" or request.resolver_match.url_name == "admin_user_edit" or request.resolver_match.url_name == "admin_user_add" %}active{% endif %}">
+                    <a href="{% url 'admin_user' %}" class="{% if request.resolver_match.url_name == 'admin_user' or request.resolver_match.url_name == 'admin_user_edit' or request.resolver_match.url_name == 'admin_user_add' %}active{% endif %}">
                         <i class="fa-solid fa-users-gear"></i>
                         <span>Users</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url "admin_category" %}" class="{% if request.resolver_match.url_name == "admin_category" or request.resolver_match.url_name == "admin_category_edit" or request.resolver_match.url_name == "admin_category_add" %}active{% endif %}">
+                    <a href="{% url 'admin_category' %}" class="{% if request.resolver_match.url_name == 'admin_category' or request.resolver_match.url_name == 'admin_category_edit' or request.resolver_match.url_name == 'admin_category_add' %}active{% endif %}">
                         <i class="fa-solid fa-grip"></i>
                         <span>Categories</span>
                     </a>
                 </li>
                 <li>
-                     <a href="{% url "admin_products" %}" class="{% if request.resolver_match.url_name == "admin_products" or request.resolver_match.url_name == "admin_products_edit" or request.resolver_match.url_name == "admin_products_add" %}active{% endif %}">
+                     <a href="{% url 'admin_products' %}" class="{% if request.resolver_match.url_name == 'admin_products' or request.resolver_match.url_name == 'admin_products_edit' or request.resolver_match.url_name == 'admin_products_add' %}active{% endif %}">
                         <i class="fa-solid fa-tag"></i> 
                         <span>Products</span>
                     </a>
                 </li>
                 
                 <li>
-                    <a href="{% url "stock_mangement" %}"> <i class="fa-solid fa-boxes-stacked"></i>
+                    <a href="{% url 'stock_mangement' %}"> <i class="fa-solid fa-boxes-stacked"></i>
                         <span>Stock</span>
                     </a>
                 </li>
@@ -87,7 +87,7 @@
             </ul>
             
             <div class="sidebar-footer">
-                <a href="{% url "admin_logout" %}">
+                <a href="{% url 'admin_logout' %}">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     <span>Logout</span>
                 </a>
@@ -98,8 +98,8 @@
             
             <header class="topbar">
                 <div class="topbar-search">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="search" placeholder="Search users, products, orders...">
+                    {% comment %} <i class="fa-solid fa-magnifying-glass"></i> {% endcomment %}
+                    {% comment %} <input  type="search" placeholder="Search users, products, orders..."> {% endcomment %}
                 </div>
                 
                 <div class="topbar-right">
@@ -108,62 +108,61 @@
                     </button>
                     <div class="user-profile">
                         <div class="user-avatar">A</div>
-                        <span>Admin</span>
+                        <span>{{user.email}}</span>
                     </div>
                 </div>
             </header>
             
             <main class="content-area">
-                
                 {% block content %}
                 {% endblock content %}
-                
             </main>
         </div>
         
     </div>
 
-</body>
+    {% block extraJs %}{% endblock extraJs %}
 
-{% block extraJs %}
+</body>
+</html>
+
 <script>
     // Set toastr options (optional)
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-        };
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+    };
     
-        // 4. Loop through the Django messages and show them
-        {% if messages %}
-            {% for message in messages %}
-                // Use the message 'tags' to determine the toast type
-                // (e.g., 'success', 'error', 'warning', 'info')
-                
-                var toastType = '{{ message.tags }}';
-                var messageText = '{{ message|safe }}'; // '|safe' is important if your messages have HTML
 
-                switch (toastType) {
-                    case 'success':
-                        toastr.success(messageText);
-                        break;
-                    case 'error':
-                        toastr.error(messageText);
-                        break;
-                    case 'warning':
-                        toastr.warning(messageText);
-                        break;
-                    case 'info':
-                        toastr.info(messageText);
-                        break;
-                    default:
-                        // Default to 'info' if tag is something else
-                        toastr.info(messageText);
-                        break;
-                }
-            {% endfor %}
-        {% endif %}
-    </script>
-    {% endblock extraJs %}
+    // 4. Loop through the Django messages and show them
+    {% if messages %}
+        {% for message in messages %}
+            // Use the message 'tags' to determine the toast type
+            // (e.g., 'success', 'error', 'warning', 'info')
+            
+            var toastType = '{{ message.tags }}';
+            var messageText = '{{ message|safe }}'; // '|safe' is important if your messages have HTML
 
-</html>
+            console.log("Message Tags: '" + toastType + "'");
+            switch (toastType) {
+                case 'admin success':
+                    toastr.success(messageText);
+                    break;
+                case 'admin error':
+                    toastr.error(messageText);
+                    break;
+                case 'admin warning':
+                    toastr.warning(messageText);
+                    break;
+                case 'admin info':
+                    toastr.info(messageText);
+                    break;
+                default:
+                // Default to 'info' if tag is something else
+                    toastr.info(messageText);
+                    break;
+            }
+        {% endfor %}
+    {% endif %}
+</script>
