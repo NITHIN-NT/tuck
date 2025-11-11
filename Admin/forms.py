@@ -45,92 +45,88 @@ class AdminSetNewPassword(forms.Form):
             raise forms.ValidationError("The two password fields didn't match.")
             
         return cleaned_data
+
 class AdminProductAddForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'name', 
-            'category', 
-            'base_price', 
-            'offer_price', 
-            'description', 
-            'is_featured', 
-            'is_selective', 
-            'is_most_demanded', 
-            'is_blocked'
-
+            'name', 'category', 'base_price', 'image', 'offer_price',
+            'description', 'is_featured', 'is_selective',
+            'is_most_demanded', 'is_active',
         ]
         widgets = {
-            'name': forms.TextInput(attrs={  
-                'id': 'product_name',  
-                'required': True
-            }),
-            'category': forms.Select(attrs={
-                'id': 'category', 
-                'required': True
-            }),
-            'base_price': forms.NumberInput(attrs={
-                'id': 'base_price', 
-                'step': '0.01', 
-                'required': True
-            }),
-            'offer_price': forms.NumberInput(attrs={
-                'id': 'offer_price', 
-                'step': '0.01'
-            }),
-            'description': forms.Textarea(attrs={
-                'id': 'description', 
-                'rows': 6
-            }),
-            # Checkboxes
+            'name': forms.TextInput(attrs={'id': 'product_name', 'required': True}),
+            'category': forms.Select(attrs={'id': 'category', 'required': True}),
+            'image': forms.FileInput(attrs={'id': 'main_product_image', 'accept': 'image/*'}),
+            'base_price': forms.NumberInput(attrs={'id': 'base_price', 'step': '0.01', 'required': True}),
+            'offer_price': forms.NumberInput(attrs={'id': 'offer_price', 'step': '0.01'}),
+            'description': forms.Textarea(attrs={'id': 'description', 'rows': 6}),
             'is_featured': forms.CheckboxInput(attrs={'id': 'is_featured'}),
             'is_selective': forms.CheckboxInput(attrs={'id': 'is_selective'}),
             'is_most_demanded': forms.CheckboxInput(attrs={'id': 'is_most_demanded'}),
-            'is_blocked': forms.CheckboxInput(attrs={'id': 'is_blocked'}),
+            'is_active': forms.CheckboxInput(attrs={'id': 'is_active'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['offer_price'].required = False
+        if self.instance and self.instance.pk:
+            self.fields['image'].required = False
+        else:
+            self.fields['image'].required = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+        base = cleaned_data.get('base_price')
+        offer = cleaned_data.get('offer_price')
+        if offer and base and offer >= base:
+            self.add_error('offer_price', "Offer price must be less than base price.")
+        return cleaned_data
 
 
 class VariantForm(forms.ModelForm):
     size = forms.ModelChoiceField(
-        queryset=Size.objects.all(),
+        queryset=Size.objects.all().order_by('size'),
         widget=forms.Select(attrs={'class': 'variant-size', 'required': True})
     )
 
     class Meta:
         model = ProductVariant
-        fields = ['size', 'price', 'stock']
+        fields = ['size', 'stock']
         widgets = {
-            'price': forms.NumberInput(attrs={'class': 'variant-price', 'step': '0.01', 'required': True}),
             'stock': forms.NumberInput(attrs={'class': 'variant-stock', 'min': '0', 'required': True}),
         }
 
+
 class ImageForm(forms.ModelForm):
-    extra_image = forms.ImageField(
-        widget=forms.FileInput(attrs={'class': 'gallery-image', 'required': True, 'accept': 'image/*'}),
-        label="Image File" 
+    image = forms.ImageField(
+        widget=forms.FileInput(attrs={'class': 'gallery-image', 'accept': 'image/*'}),
+        label="Image File",
+        required=False
     )
     alt_text = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'gallery-alt-text', 'placeholder': 'Describe the image'}),
-        required=False 
+        required=False
     )
+
     class Meta:
         model = ProductImage
-        fields = ['extra_image','alt_text'] 
+        fields = ['image', 'alt_text']
 
-# --- Formsets ---
+
+# Formsets
 VariantFormSet = inlineformset_factory(
-    Product, 
-    ProductVariant, 
-    form=VariantForm, 
+    Product, ProductVariant,
+    form=VariantForm,
     extra=1,
+    min_num=1,
     can_delete=True,
     can_delete_extra=True
 )
 
 ImageFormSet = inlineformset_factory(
-    Product, 
-    ProductImage, 
-    form=ImageForm, 
+    Product, ProductImage,
+    form=ImageForm,
     extra=1,
     can_delete=True,
     can_delete_extra=True

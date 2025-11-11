@@ -14,11 +14,11 @@
         <div class="gallery-main img-zoom-container">
 
             <span class="product-offer-tag">30% OFF</span>
-            <img src="{{ product.image_url }}" alt="{{ product.name }}" id="main-product-image">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" id="main-product-image">
         </div>
         <div class="gallery-thumbnails">
             {% for image in images_list_limited %}
-            <img src="{{ image.image_url }}" alt="{{ product.name }}" class="thumbnail-img" data-image="{{ image.image_url }}">
+            <img src="{{ image.image.url }}" alt="{{ product.name }}" class="thumbnail-img" data-image="{{ image.image.url }}">
             {% endfor %}
         </div>
     </div>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="option-buttons size-buttons">
                     {% for size in sizes %}
-                        <button class="btn-size" data-size="{{ size }}">{{ size }}</button>
+                        <button class="btn-size" data-size="{{ size }}">{{ size.size }}</button>
                     {% endfor %}
                 </div>
             </div>
@@ -136,7 +136,7 @@
             {% for related_product in related_products %}
                 <a href="{% url 'Product_card_view' related_product.slug %}" class="product-card">
                     <div class="product-card-image">
-                        <img src="{{ related_product.image_url }}" alt="{{ related_product.name }}">
+                        <img src="{{ related_product.image.url }}" alt="{{ related_product.name }}">
                     </div>
                     <div class="product-card-info">
                         <h3 class="product-card-name">{{ related_product.name }}</h3>
@@ -151,7 +151,7 @@
             {% for random_product in random_products %}
                 <a href="{% url 'Product_card_view' random_product.slug %}" class="product-card">
                     <div class="product-card-image">
-                        <img src="{{ random_product.image_url }}" alt="{{ random_product.name }}">
+                        <img src="{{ random_product.image.url }}" alt="{{ random_product.name }}">
                     </div>
                     <div class="product-card-info">
                         <h3 class="product-card-name">{{ random_product.name }}</h3>

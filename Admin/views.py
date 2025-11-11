@@ -5,6 +5,7 @@ from django.views.decorators.cache import never_cache
 from django.contrib.auth import authenticate,login,logout
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.forms import inlineformset_factory
 from accounts.models import CustomUser,EmailOTP
 from django.db import transaction
 from django.core.mail import EmailMultiAlternatives 
@@ -15,9 +16,9 @@ from django.views.generic.edit import CreateView
 from django.views import View
 from django.db.models import Count,Sum
 from .forms import (AdminLoginForm,AdminForgotPasswordEmailForm,
-                    AdminSetNewPassword,AdminVerifyOTPForm,
+                    AdminSetNewPassword,AdminVerifyOTPForm,VariantForm,ImageForm,
                     AdminProductAddForm,VariantFormSet,ImageFormSet)
-from products.models import Product,Category,ProductVariant
+from products.models import Product,Category,ProductVariant,ProductImage
 from django.urls import reverse_lazy
 
 # Create your views here.
@@ -181,8 +182,12 @@ def toggle_user_block(request,id):
 
     user.save()
 
-    status =  "Unblocked" if user.is_active  else "Blocked"
-    messages.warning(request,f"{{user.email}} is {status} Successfuly")
+    status =  True if user.is_active  else False
+    if status:
+        messages.success(request,f"{user.email} is Unblockd Successfuly")
+    else:
+        messages.error(request,f"{user.email} is Blocked Successfuly")
+    # messages.warning(request,f"{user.email} is {status} Successfuly")
 
     return redirect('admin_user')
 
@@ -216,54 +221,77 @@ class AdminProductsView(LoginRequiredMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categorys"] = Category.objects.all()
+        context['categorys'] = Category.objects.all()
         context['search_query'] = self.request.GET.get('search', '')
         context['category_filter'] = self.request.GET.get('category', '')
+        query_params = self.request.GET.copy()
+        if 'page' in query_params:
+            del query_params['page']
+        
+        context['query_params'] = query_params.urlencode()
         return context
     
 @login_required
 @user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
 @transaction.atomic
 def manage_product(request,id=None):
-    product = None
-    if id:
-        product = get_object_or_404(Product,id=id)
+    '''    
+    This Function is used to Manage Product 
+    Both add and edit Products is Done by this
+    '''
 
+    product = get_object_or_404(Product,id=id) if id else None
+    extra_forms = 1 if product is  None else 0
+    VariantFormSet = inlineformset_factory(
+        Product, ProductVariant,
+        form=VariantForm,
+        extra=extra_forms,
+        min_num=1,
+        can_delete=True,
+        can_delete_extra=True
+    )
+
+    ImageFormSet = inlineformset_factory(
+        Product, ProductImage,
+        form=ImageForm,
+        extra=extra_forms,
+        can_delete=True,
+        can_delete_extra=True
+    )
     if request.method == "POST":
         product_form = AdminProductAddForm(request.POST,request.FILES,instance=product)
         formset = VariantFormSet(request.POST,instance=product,prefix = 'variants')
         formset_images = ImageFormSet(request.POST,request.FILES,instance=product,prefix='images')
-
+    
         if product_form.is_valid() and formset.is_valid() and formset_images.is_valid():
-
             product = product_form.save()
-
             formset.instance = product
-            formset_images.instance = product
-
             formset.save()
+            formset_images.instance = product
             formset_images.save()
-            
-            messages.success(request,"Product saved successfully.")
+            messages.success(request,f"{product.name} saved successfully.",extra_tags='admin')
             return redirect('admin_products')
         else:
+
             print("Product Form Errors:", product_form.errors)
             print("Variant Formset Errors:", formset.errors)
+            print("Variant Formset Non-Form Errors:", formset.non_form_errors())
             print("Image Formset Errors:", formset_images.errors)
-            messages.error(request, "Please fix the errors below.")
+            print("Image Formset Non-Form Errors:", formset_images.non_form_errors())
+            messages.error(request, "Please fix the errors below.",extra_tags='admin')
     else:
         product_form = AdminProductAddForm(instance=product)
         formset = VariantFormSet(instance=product, prefix='variants')
         formset_images = ImageFormSet(instance=product, prefix='images')
-
-
     context = {
         'product_form' : product_form,
         'formset' : formset,
         'formset_images' : formset_images,
         'product':product
     }
+    
     return render(request,'products/product_add_edit.html',context)
+
 
 @login_required
 @user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
@@ -271,8 +299,10 @@ def manage_product(request,id=None):
 def delete_product(request,id=None):
     product = get_object_or_404(Product,id=id)
     product.delete()
-    messages.success(request,'Product Deleted Successfully')
+    messages.success(request,f'{product.name} Deleted Successfully')
     return redirect('admin_products')
+
+
 '''Product View End Here'''
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class AdminCategoryView(ListView):

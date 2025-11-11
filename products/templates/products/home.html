@@ -67,9 +67,7 @@
         {% for category_data in categories_for_template %}
         <a href="{% url 'products_page_user' %}?category={{ category_data.id }}" class="category-card">
             <span>{{ category_data.name }}</span>
-            {% if category_data.image_url %}
-            <img src="{{ category_data.image_url }}" alt="{{ category_data.alt_text }}">
-            {% endif %}
+            <img src="{{ category_data.image.url}}" alt="{{ category_data.alt_text }}">
         </a>
         {% endfor %}
     </div>
@@ -80,25 +78,27 @@
     <h2 class="section-title">Featured Products</h2>
     <div class="product-grid">
         {% for featured_product in featured_products %}
-        <div class="product-card">
-            <div class="product-image-container">
-                {% if featured_product.slug %}
-                <a href="{% url 'Product_card_view' featured_product.slug %}">
-                    <img src="{{ featured_product.image_url }}" alt="{{ featured_product.name }}">
-                </a>
-                {% else %}
-                <img src="{{ featured_product.image_url }}" alt="{{ featured_product.name }}">
-                {% endif %}
-                <div class="product-card-icons">
-                    <button aria-label="Add to wishlist"><i class='bx bx-heart'></i></button>
-                    <button aria-label="Quick view"><i class='bx bx-search'></i></button>
+            <div class="product-card">
+                <div class="product-image-container">
+                    {% if featured_product.slug %}
+                    <a href="{% url 'Product_card_view' featured_product.slug %}">
+                        {% if featured_product.image %}
+                        <img src="{{ featured_product.image.url }}" alt="{{ featured_product.name }}">
+                        {% else %}
+                        <div class="image-placeholder"></div>
+                        {% endif %}
+                    </a>
+                    <div class="product-card-icons">
+                        <button aria-label="Add to wishlist"><i class='bx bx-heart'></i></button>
+                        <button aria-label="Quick view"><i class='bx bx-search'></i></button>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name"><a href="#">{{ featured_product.name }}</a></h3>
+                    <p class="product-price">{{ featured_product.price }}</p>
                 </div>
             </div>
-            <div class="product-info">
-                <h3 class="product-name"><a href="#">{{ featured_product.name }}</a></h3>
-                <p class="product-price">{{ featured_product.price }}</p>
-            </div>
-        </div>
         {% endfor %}
     </div>
 </section>
@@ -112,7 +112,11 @@
         <div class="product-card">
             <div class="product-image-container">
                 <a href="{% url 'Product_card_view' most_demand.slug %}">
-                    <img src="{{ most_demand.image_url }}" alt="{{ most_demand.name }}">
+                    {% if most_demand.image %}
+                    <img src="{{ most_demand.image.url }}" alt="{{ most_demand.name }}">
+                    {% else %}
+                    <div class="image-placeholder"></div>
+                    {% endif %}
                 </a>
                 <div class="product-card-icons">
                     <button aria-label="Add to wishlist"><i class='bx bx-heart'></i></button>

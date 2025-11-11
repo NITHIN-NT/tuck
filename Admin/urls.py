@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
 from .views import AdminProductsView,AdminCategoryView,AdminUserView,AdminHome,StockManagementView
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
 
     path('',views.admin_login,name='admin_login'),
@@ -27,3 +30,6 @@ urlpatterns = [
     path('stock/',StockManagementView.as_view(),name='stock_mangement')
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

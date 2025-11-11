@@ -60,7 +60,9 @@
                 {% for product in products %}
                     <tr>
                         <td>
-                            <img src="{{product.image_url}}" alt="Product" class="product-table-image">
+                            {% if product.image %}
+                                <img src="{{product.image.url}}" alt="Product" class="product-table-image">
+                            {% endif %}
                         </td>
                         <td>{{product.name}}</td>
                         <td>{{product.category}}</td>
@@ -82,25 +84,24 @@
             </tbody>
         </table>
     </div>
-    <section class='pagination-container'>
+<section class='pagination-container'>
         <div class="pagination">
             
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+                <a href="?page={{ page_obj.previous_page_number }}&{{ query_params }}">&lt;</a>
             {% else %}
                 <span class="disabled">&lt;</span>
             {% endif %}
 
-            {% for i in custom_page_range %}
-                {% if page_obj.number == i %}
+            {% for i in custom_page_range %} {% if page_obj.number == i %}
                     <span class="current">{{ i }}</span>
                 {% else %}
-                    <a href="?page={{ i }}">{{ i }}</a>
+                    <a href="?page={{ i }}&{{ query_params }}">{{ i }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                <a href="?page={{ page_obj.next_page_number }}&{{ query_params }}">&gt;</a>
             {% else %}
                 <span class="disabled">&gt;</span>
             {% endif %}
@@ -145,30 +146,11 @@
         window.location.href = "{% url 'admin_products' %}";
     });
 
-    toggleClearButton();
-}); // Check on page load
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // --- Clear Search Button Logic ---
-    const searchInput = document.getElementById('search-input');
-    const clearBtn = document.getElementById('clear-search-btn');
-
-    function toggleClearButton() {
-        if (searchInput.value.length > 0) {
-            clearBtn.style.display = 'block';
-        } else {
-            clearBtn.style.display = 'none';
-        }
-    }
-
-    searchInput.addEventListener('input', toggleClearButton);
-
-    clearBtn.addEventListener('click', function() {
-        window.location.href = "{% url 'admin_products' %}";
-    });
-
     toggleClearButton(); // Check on page load
-
+    
+    // --- THIS IS WHERE THE DUPLICATE BLOCK WAS ---
+    // I have removed it.
+    
     // --- NEW: Delete Modal Logic ---
     const deleteModal = document.getElementById('delete-modal');
     if (deleteModal) {

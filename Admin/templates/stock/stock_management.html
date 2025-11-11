@@ -53,7 +53,7 @@
         <td><i class="fa-solid fa-chevron-right toggle-icon"></i></td>
         <td>
             <div class="product-cell">
-                <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
                 <span>{{ product.name }}</span>
             </div>
         </td>
@@ -86,10 +86,6 @@
         </td>
         
         <td>
-            <div class="action-icons">
-                <button><i class="fa-solid fa-pencil"></i></button>
-                <button><i class="fa-solid fa-trash"></i></button>
-            </div>
         </td>
     </tr>
     {% endfor %}

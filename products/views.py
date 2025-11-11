@@ -38,12 +38,12 @@ class HomePageView(TemplateView):
         categories = Category.objects.all().prefetch_related('products')[:4]
         categories_for_template = []
         for category in categories:
-            product = category.products.first()
+            product = category.products.filter(image__isnull=False).first()
             if product:
                 categories_for_template.append({
                     'id': category.id,
                     'name': category.name,
-                    'image_url': product.image_url,
+                    'image': product.image,
                     'alt_text': product.name,
                 })
 
