@@ -72,9 +72,35 @@
                             <span class="status-badge status-active">In Stock</span>
                         </td>
                         <td class="action-buttons">
-                            <a href="{% url "admin_product_edit" product.id%}" class="btn-action btn-edit" title="Edit" onclick="event.stopPropagation();"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a href="{% url "admin_products_dlt" product.id%}" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                            <a href="{% url 'admin_product_edit' product.id %}" 
+                            class="btn-action btn-edit" 
+                            title="Edit" 
+                            onclick="event.stopPropagation();">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+
+                            <a href="{% url 'admin_products_dlt' product.id %}" 
+                            class="btn-action btn-delete" 
+                            title="Delete">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </a>
+
+                            {% if product.is_active %}
+                                <a href="{% url 'admin_product_block' product.id %}" 
+                                class="btn-action btn-edit" 
+                                title="Block">
+                                    <i class="fas fa-ban"></i>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'admin_product_block' product.id %}" 
+                                class="btn-action btn-edit" 
+                                title="Unblock">
+                                    <i class="fas fa-check-circle"></i>
+                                </a>
+                            {% endif %}
                         </td>
+                        <td>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>

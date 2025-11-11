@@ -297,7 +297,6 @@ def manage_product(request,id=None):
     
     return render(request,'products/product_add_edit.html',context)
 
-
 @login_required
 @user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
 @transaction.atomic
@@ -307,7 +306,24 @@ def delete_product(request,id=None):
     messages.success(request,f'{product.name} Deleted Successfully',extra_tags='admin')
     return redirect('admin_products')
 
+@login_required
+@user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
+@transaction.atomic
+def toggle_product_block(request,id):
+    '''
+    This Function is used to Block and Unblock Products
+    '''
+    product = get_object_or_404(Product,id=id)
+    product.is_active = not product.is_active
 
+    product.save()
+
+    status =  True if product.is_active  else False
+    if status:
+        messages.success(request,f"{product.name} is Unblockd Successfuly",extra_tags='admin')
+    else:
+        messages.error(request,f"{product.name} is Blocked Successfuly",extra_tags='admin')
+    return redirect('admin_products')
 '''Product View End Here'''
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class AdminCategoryView(ListView):

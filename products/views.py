@@ -25,20 +25,19 @@ def home_page_view(request):
 
 class HomePageView(TemplateView):
     template_name = 'products/home.html'
-
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = Product.objects.select_related('category').order_by('?')[:4]
-        featured_products = Product.objects.filter(is_featured=True).order_by('?')[:4]
-        most_demanded = Product.objects.filter(is_most_demanded=True).order_by('?')[:4]
+        
+        products = Product.objects.select_related('category').filter(is_active=True).order_by('?')[:4]
+        featured_products = Product.objects.filter(is_featured=True,is_active=True).order_by('?')[:4]
+        most_demanded = Product.objects.filter(is_most_demanded=True,is_active=True).order_by('?')[:4]
         today = timezone.now().date()
-        new_arrivals = Product.objects.filter(created_at__date=today).order_by('?')[:4]
+        new_arrivals = Product.objects.filter(created_at__date=today,is_active=True).order_by('?')[:4]
         
         categories = Category.objects.all().prefetch_related('products')[:4]
         categories_for_template = []
         for category in categories:
-            product = category.products.filter(image__isnull=False).first()
+            product = category.products.filter(is_active=True, image__isnull=False).first()
             if product:
                 categories_for_template.append({
                     'id': category.id,
@@ -60,7 +59,7 @@ class AboutView(TemplateView):
 
 def product_list_view(request):
     categories = Category.objects.all().order_by('name')
-    products = Product.objects.all().order_by('name')
+    products = Product.objects.filter(is_active=True).order_by('name')
 
     selected_category_id = request.GET.get('category')
     selected_price = request.GET.get('price_range')
@@ -71,17 +70,14 @@ def product_list_view(request):
     if selected_sort == 'newest':
         products = products.order_by('-created_at')
     elif selected_sort == 'price-low-high':
-        products = products.order_by('price')
+        products = products.order_by('offer_price')
     elif selected_sort == 'price-high-low':
-        products = products.order_by('-price')
+        products = products.order_by('-offer_price')
     elif selected_sort == 'name-asc':
         products = products.order_by('name')
     elif selected_sort == 'name-desc':
         products = products.order_by('-name')
-    elif selected_sort == 'popularity':
-        products = products.order_by('-popularity_score')
-    elif selected_sort == 'rating':
-        products = products.order_by('-average_rating')
+    
     elif selected_sort == 'featured':
         products = products.order_by('-is_featured', '-created_at')
 
@@ -102,7 +98,7 @@ def product_list_view(request):
         products = products.filter(name__icontains=search)
 
     # Price Range
-    price_range = Product.objects.aggregate(
+    price_range = Product.objects.filter(is_active=True).aggregate(
         min_amount=Min('offer_price'),
         max_amount=Max('offer_price')
     )
@@ -147,29 +143,24 @@ class ProductDetailedView(DetailView):
         model = Product
         template_name = 'products/product_detail.html'
         context_object_name = 'product'
-        slug_field = 'slug' # Product.objects.get(slug='nike-shoes')
+        slug_field = 'slug' 
         slug_url_kwarg = 'slug'
 
         def get_queryset(self):
             query_set =  super().get_queryset() 
-            return query_set.select_related('category').prefetch_related('variants__size','images') 
+            return query_set.filter(is_active=True).select_related('category').prefetch_related('variants__size','images') 
 
-        
         def get_context_data(self, **kwargs): 
             context = super().get_context_data(**kwargs)
             product = self.object
-
-            all_images = product.images.all()
-            context["images_list_limited"] = all_images[:4] 
-
-            context["sizes"] = product.variants.all().select_related('size')
-
+            all_images = product.images.all() 
+            context['images_list_limited'] = all_images[:4] 
+            context['sizes'] = product.variants.all().select_related('size')
             product_category = product.category
             
-            related_products = Product.objects.filter(category=product_category).select_related('category').exclude(pk=product.pk)
-            random_products = Product.objects.all().order_by('?')
+            related_products = Product.objects.filter(category=product_category,is_active=True).select_related('category').exclude(pk=product.pk)
+            random_products = Product.objects.filter(is_active=True).order_by('?')
             context['related_products'] = related_products[:4]
             context['random_products'] = random_products[:4]
-            
             
             return context

@@ -20,6 +20,7 @@ urlpatterns = [
     path('products/',AdminProductsView.as_view(),name='admin_products'),
     path('products/add',views.manage_product,name='admin_product_add'),
     path('products/edit/<int:id>',views.manage_product,name='admin_product_edit'),
+    path('products/block/<int:id>',views.toggle_product_block,name='admin_product_block'),
     path('products/dlt/<int:id>',views.delete_product,name='admin_products_dlt'),
 
 
