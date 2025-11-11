@@ -147,6 +147,11 @@ class SendOTPView(View):
         form = ForgotPasswordEmailForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
+            user = CustomUser.objects.filter(email=email)
+            if user.filter(is_superuser=True):
+                messages.error(request,'You are not authorized to change the password from this interface.')
+                return redirect('Home_page_user')
+            print('worked herer')
 
             try:
                 user = CustomUser.objects.get(email=email)
