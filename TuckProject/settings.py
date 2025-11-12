@@ -139,7 +139,8 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'SCOPE': [
             'profile',
-            'email'
+            'email',
+            'https://www.googleapis.com/auth/user.phonenumbers.read'
             ],
         'AUTH_PARAMS': {'access_type': 'online'},
         'OAUTH_PKCE_ENABLED': True,

@@ -1,42 +1,30 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+import logging
+logger = logging.getLogger(__name__)
 
-'''
-class CustomAccountAdapter(DefaultAccountAdapter):
-    """
-    Custom adapter to modify default user signup/login behavior.
-    """
-    def get_login_redirect_url(self, request):
-        """
-        Redirect to home page after login
-        """
-        return reverse("Home_page_user")
-
-    def save_user(self, request, user, form, commit=True):
-        user =  super().save_user(request, user, form, commit=False)
-        user.first_name = form.cleaned_data.get('first_name')
-        user.last_name = form.cleaned_data.get('last_name')
-        user.phone = form.cleaned_data.get('phone')
-        user.is_active = True
-
-        if commit:
-            user.save()
-        return user
-    
-    def is_open_for_signup(self, request):
-        return True
-'''
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
-    def save_user(self,request,sociallogin,form=None):
+    '''
+        This Adapter is used to auto Active the Google authenticated users 
+        Saving their Data to the database .
+    '''
+    def save_user(self, request, sociallogin, form=None):
         user = sociallogin.user
         extra_data = sociallogin.account.extra_data
+        logger.info(f"Social login extra_data: {extra_data}")
 
-        user.first_name = extra_data.get('first_name','')   
-        user.last_name = extra_data.get('last_name','')
+        user.first_name = extra_data.get('given_name', '')
+        user.last_name = extra_data.get('family_name', '')
+        user.profile = extra_data.get('picture', '')
+
+        phone_numbers = extra_data.get('phoneNumbers', [])
+        if phone_numbers:
+            user.phone = phone_numbers[0].get('value')
 
         user.is_active = True
+
         user.save()
-        return super().save_user(request,sociallogin,form)
+        return user
 
 
 

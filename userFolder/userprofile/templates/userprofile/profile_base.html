@@ -20,8 +20,8 @@
         <div class="profile-user-card">
             
             <div class="avatar-wrapper">
-                {% if user.profile_image %}
-                    <img src="{{ user.profile_image.url }}" alt="User Avatar" class="avatar">
+                {% if user.profile %}
+                    <img src="{{ user.profile }}" alt="User Avatar" class="avatar">
                 {% else %}
                     <div class="avatar-initials">
                         <span>{{ user.first_name|slice:":2"|upper }}</span>
