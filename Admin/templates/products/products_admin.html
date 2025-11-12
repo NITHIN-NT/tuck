@@ -76,26 +76,26 @@
                             class="btn-action btn-edit" 
                             title="Edit" 
                             onclick="event.stopPropagation();">
-                                <i class="fa-solid fa-pen-to-square"></i>
+                                <i class="fa-solid fa-pen-to-square"></i> edit
                             </a>
 
                             <a href="{% url 'admin_products_dlt' product.id %}" 
                             class="btn-action btn-delete" 
                             title="Delete">
-                                <i class="fa-solid fa-trash-can"></i>
+                                <i class="fa-solid fa-trash-can"></i> Delete
                             </a>
 
                             {% if product.is_active %}
                                 <a href="{% url 'admin_product_block' product.id %}" 
                                 class="btn-action btn-edit" 
                                 title="Block">
-                                    <i class="fas fa-ban"></i>
+                                    <i class="fas fa-ban"></i> Block
                                 </a>
                             {% else %}
                                 <a href="{% url 'admin_product_block' product.id %}" 
                                 class="btn-action btn-edit" 
                                 title="Unblock">
-                                    <i class="fas fa-check-circle"></i>
+                                    <i class="fas fa-check-circle"></i> Unblock
                                 </a>
                             {% endif %}
                         </td>

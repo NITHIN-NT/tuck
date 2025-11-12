@@ -56,20 +56,20 @@
                         <span class="status-badge status-{% if category.is_active %}active{% else %}blocked{% endif %}">{% if category.is_active %}Active{% else %}blocked{% endif %}</span>
                     </td>
                     <td class="action-buttons">
-                        <a href="{% url "admin_category_edit" category.id%}" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="{% url "admin_category_edit" category.id%}" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i> edit</a>
                         
                         {% comment %} {% endcomment %}
                         {% if category.is_active %}
                                 <a href="{% url 'admin_category_block' category.id %}" 
                                 class="btn-action btn-block" 
                                 title="Block">
-                                    <i class="fas fa-times"></i>
+                                    <i class="fas fa-times"></i> Block
                                 </a>
                         {% else %}
                             <a href="{% url 'admin_category_block' category.id %}" 
                             class="btn-action btn-unblock"  
                             title="Unblock">
-                                <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-check-circle"></i> Unblock
                             </a>
                         {% endif %}
                         

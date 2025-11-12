@@ -223,6 +223,9 @@ class AdminUserView(LoginRequiredMixin,ListView):
         context['user_status'] = self.request.GET.get('userStatus', '')
         return context  
 
+@login_required
+@user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
+@transaction.atomic
 def toggle_user_block(request,id):
     user = get_object_or_404(CustomUser,id=id)
     user.is_active = not user.is_active
@@ -467,7 +470,25 @@ def admin_category_add(request):
     return render(request,'categorys/admin_category_form.html')
 
 def admin_category_edit(request,id=None):
-    return render(request,'categorys/admin_category_form.html')
+    category = get_object_or_404(Category,id=id)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+    
+        if Category.objects.filter(name=name).exclude(id=id).exists():
+            messages.error(request,'Category Already Exists',extra_tags='admin')
+            return redirect('admin_category_add')
+        
+        category.name = name
+        category.description = description
+        category.save()
+        messages.success(request,f'{name} Category updated Successfuly',extra_tags='admin')
+        return redirect('admin_category')
+
+    context = {
+        'category' : category
+    }
+    return render(request,'categorys/admin_category_form.html',context)
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class StockManagementView(ListView):
     model = Product
