@@ -231,20 +231,25 @@
 
 /* --- UPDATED STYLE (Block = Red) --- */
 .btn-action.btn-block {
-    color: #e53e3e; /* Red */
+    color: #e53e3e;
+    /* Red */
 }
 
 .btn-action.btn-block:hover {
-    color: #c53030; /* Dark Red */
+    color: #c53030;
+    /* Dark Red */
 }
+
 /* --- END UPDATED STYLE --- */
 
 .btn-action.btn-unblock {
-    color: #0a875a; /* Dark Green (to match active status) */
+    color: #0a875a;
+    /* Dark Green (to match active status) */
 }
 
 .btn-action.btn-unblock:hover {
-    color: #065f40; /* Darker Green */
+    color: #065f40;
+    /* Darker Green */
 }
 
 .btn-action.btn-delete {
@@ -342,13 +347,15 @@
 /* .btn-warning class removed as it's no longer used */
 
 .btn-success {
-    background-color: #0a875a; /* Dark Green */
+    background-color: #0a875a;
+    /* Dark Green */
     color: #fff;
     border-color: #0a875a;
 }
 
 .btn-success:hover {
-    background-color: #065f40; /* Darker Green */
+    background-color: #065f40;
+    /* Darker Green */
     border-color: #065f40;
 }
 

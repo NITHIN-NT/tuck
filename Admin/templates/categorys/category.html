@@ -13,7 +13,7 @@
             <h1>Category Management</h1>
             <p>Organize your products into categories</p>
         </div>
-        <a href="#" class="btn btn-primary">
+        <a href="{% url "admin_category_add" %}" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i>
             Add Category
         </a>
@@ -56,7 +56,7 @@
                         <span class="status-badge status-{% if category.is_active %}active{% else %}blocked{% endif %}">{% if category.is_active %}Active{% else %}blocked{% endif %}</span>
                     </td>
                     <td class="action-buttons">
-                        <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="{% url "admin_category_edit" category.id%}" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
                         
                         {% comment %} {% endcomment %}
                         {% if category.is_active %}
@@ -72,7 +72,6 @@
                                 <i class="fas fa-check-circle"></i>
                             </a>
                         {% endif %}
-                        {% comment %} {% endcomment %}
                         
                     </td>
                 </tr>
@@ -81,7 +80,6 @@
                     <td>No Data</td>
                 </tr>
                 {% endfor %}
-                
                 
 
             </tbody>

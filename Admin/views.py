@@ -430,6 +430,44 @@ def toggle_category_block(request,id=None):
         messages.error(request,f"{category.name} & related <strong>{count}</strong> Products is Blocked Successfuly",extra_tags='admin')
     return redirect('admin_category')
 
+@login_required
+@user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
+@transaction.atomic
+def admin_category_add(request):
+    '''
+        This is used to add new Categorys
+    '''
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        if not name:
+            messages.error(request, 'Name is required.',extra_tags='admin')
+            return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
+
+        if len(name) > 100:
+            messages.error(request, 'Name is too long (max 100 characters).',extra_tags='admin')
+            return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
+
+        if Category.objects.filter(name=name):
+            messages.error(request,'Category Already Exists',extra_tags='admin')
+            return redirect('admin_category_add')
+        
+        if not description:
+            messages.error(request, 'Description is required.',extra_tags='admin')
+            return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
+
+        if len(description) > 200:
+            messages.error(request, 'Description is too long (max 200 characters) .',extra_tags='admin')
+            return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
+
+        Category.objects.create(name=name,description=description)
+
+        messages.success(request,f'{name} Category Added Successfuly',extra_tags='admin')
+        return redirect('admin_category')
+    return render(request,'categorys/admin_category_form.html')
+
+def admin_category_edit(request,id=None):
+    return render(request,'categorys/admin_category_form.html')
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class StockManagementView(ListView):
     model = Product
