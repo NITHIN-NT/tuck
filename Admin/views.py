@@ -372,12 +372,18 @@ class AdminCategoryView(ListView):
     model = Category
     template_name = 'categorys/category.html'
     context_object_name = 'categorys'
-    paginate_by = 8
+    paginate_by = 10
     ordering = ['-created_at']
 
     def get_queryset(self):
         queryset =  super().get_queryset()
         search = self.request.GET.get('search','')
+        category_status = self.request.GET.get('category_status','')
+        if category_status == 'active':
+            queryset = queryset.filter(is_active=True)
+        elif category_status == 'blocked':
+            queryset = queryset.filter(is_active=False)
+
         if search:
             queryset = queryset.filter(name__icontains=search)
 
@@ -398,7 +404,7 @@ class AdminCategoryView(ListView):
         if 'page' in query_params:
             del query_params['page']
         context['search'] = self.request.GET.get('search','')
-
+        context['status'] = self.request.GET.get('category_status','')
         return context
 
 @login_required

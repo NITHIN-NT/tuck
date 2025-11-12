@@ -26,9 +26,14 @@
                     <i class="fa-solid fa-search"></i>
                     <input type="text" name="search" placeholder="Search categories..." value={{search}}>
                 </div>
-                
+                <div class="filters">
+                    <select name="category_status" class='filter-dropdown'>
+                        <option value="" {% if status == "" %}selected{% endif %}>All Status </option>
+                        <option value="active" {% if status == "active" %}selected{% endif %}>Active</option>
+                        <option value="blocked"{% if status == "blocked" %}selected{% endif %}>Blocked</option>
+                    </select>
+                </div>
                 <a href="{% url "admin_category" %}" class="btn btn-secondary">Clear</a>
-                
                 <button type.="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
@@ -52,19 +57,23 @@
                     </td>
                     <td class="action-buttons">
                         <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                        
+                        {% comment %} {% endcomment %}
                         {% if category.is_active %}
                                 <a href="{% url 'admin_category_block' category.id %}" 
-                                class="btn-action btn-edit" 
+                                class="btn-action btn-block" 
                                 title="Block">
                                     <i class="fas fa-ban"></i>
                                 </a>
                         {% else %}
                             <a href="{% url 'admin_category_block' category.id %}" 
-                            class="btn-action btn-edit" 
+                            class="btn-action btn-unblock"  
                             title="Unblock">
                                 <i class="fas fa-check-circle"></i>
                             </a>
                         {% endif %}
+                        {% comment %} {% endcomment %}
+                        
                         <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
                     </td>
                 </tr>
@@ -110,4 +119,80 @@
             
     </div>
 </section>
+<div class="modal-overlay" id="confirmation-modal-overlay">
+    <div class="modal-content" id="confirmation-modal">
+        <h2>Confirm Action</h2><br>
+        <p>Are you sure you want to perform this action?</p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="modal-btn-cancel">Cancel</button>
+            <a href="#" class="btn" id="modal-btn-confirm">Confirm</a>
+        </div>
+    </div>
+</div>
 {% endblock content %}
+{% block extraJs %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Get all the elements
+    const modalOverlay = document.getElementById('confirmation-modal-overlay');
+    const modalTitle = modalOverlay.querySelector('h2');
+    const modalText = modalOverlay.querySelector('p');
+    const confirmBtn = document.getElementById('modal-btn-confirm');
+    const cancelBtn = document.getElementById('modal-btn-cancel');
+    
+    // Find all links that should trigger the modal
+    const actionLinks = document.querySelectorAll('.btn-action.btn-block, .btn-action.btn-delete, .btn-action.btn-unblock');
+
+    // Function to close the modal
+    function closeModal() {
+        modalOverlay.classList.remove('show');
+    }
+
+    // Add click listener to all action links
+    actionLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Stop the link from navigating
+            e.preventDefault();
+
+            // Get info from the link
+            const action = this.title; // "Block", "Unblock", or "Delete"
+            const url = this.href;
+
+            // 1. Update modal text and title
+            modalTitle.textContent = `${action} Category`;
+            modalText.textContent = `Are you sure you want to ${action.toLowerCase()} this category?`;
+
+            // 2. Update the confirm button's link and style
+            confirmBtn.href = url;
+            confirmBtn.textContent = action;
+            
+            // START: Corrected Button Logic (Block = Red)
+            // Clear old styles (removed btn-warning)
+            confirmBtn.classList.remove('btn-danger', 'btn-success');
+
+            if (action === 'Delete' || action === 'Block') {
+                confirmBtn.classList.add('btn-danger'); // Use 'btn-danger' for both
+            } else if (action === 'Unblock') {
+                confirmBtn.classList.add('btn-success');
+            }
+            // END: Corrected Button Logic
+
+            // 3. Show the modal
+            modalOverlay.classList.add('show');
+        });
+    });
+
+    // Add click listeners to close the modal
+    cancelBtn.addEventListener('click', closeModal);
+    
+    modalOverlay.addEventListener('click', function(e) {
+        // Only close if the click is on the overlay background
+        if (e.target === modalOverlay) {
+            closeModal();
+        }
+    });
+
+});
+</script>
+{% endblock extraJs %}

@@ -5,12 +5,14 @@
     align-items: center;
     margin-bottom: 24px;
 }
+
 .page-header h1 {
     font-size: 28px;
     font-weight: 700;
     margin: 0;
     color: #1a202c;
 }
+
 .page-header p {
     margin: 4px 0 0;
     font-size: 16px;
@@ -22,26 +24,31 @@
 .btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center; /* Centers text/icon */
+    justify-content: center;
+    /* Centers text/icon */
     padding: 10px 16px;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 600;
     gap: 8px;
-    border: 1px solid transparent; /* Set base border */
+    border: 1px solid transparent;
+    /* Set base border */
     cursor: pointer;
-    font-family: 'Inter', sans-serif; 
+    font-family: 'Inter', sans-serif;
     font-size: 14px;
     transition: all 0.2s ease;
-    line-height: 1.4; /* Ensures consistent height */
+    line-height: 1.4;
+    /* Ensures consistent height */
 }
 
 /* Primary button (Purple) - Used for "Add Category" and "Search" */
 .btn-primary {
-    background-color: #6b46c1; /* Purple */
+    background-color: #6b46c1;
+    /* Purple */
     color: #fff;
     border-color: #6b46c1;
 }
+
 .btn-primary:hover {
     background-color: #553c9a;
     border-color: #553c9a;
@@ -51,16 +58,19 @@
 .btn-secondary {
     background-color: #fff;
     color: #4a5568;
-    border: 1px solid #cbd5e0; /* Grey border */
+    border: 1px solid #cbd5e0;
+    /* Grey border */
 }
+
 .btn-secondary:hover {
-    background-color: #f7fafc; /* Lightest grey hover */
+    background-color: #f7fafc;
+    /* Lightest grey hover */
     border-color: #adb5bd;
 }
 
 
 /* --- Main Content Card --- */
-.data-table-card { 
+.data-table-card {
     background-color: #ffffff;
     border-radius: 12px;
     border: 1px solid #e2e8f0;
@@ -78,11 +88,13 @@
     flex-wrap: wrap;
     gap: 16px;
 }
+
 .search-bar {
     position: relative;
     flex-grow: 1;
     min-width: 250px;
 }
+
 .search-bar input[type="text"] {
     width: 100%;
     padding: 10px 16px 10px 40px;
@@ -91,9 +103,11 @@
     font-size: 14px;
     font-family: 'Inter', sans-serif;
 }
+
 .search-bar input[type="text"]::placeholder {
     color: #a0aec0;
 }
+
 .search-bar .fa-search {
     position: absolute;
     left: 14px;
@@ -102,10 +116,12 @@
     color: #a0aec0;
     font-size: 14px;
 }
+
 .filters {
     display: flex;
     gap: 12px;
 }
+
 .filter-dropdown {
     padding: 10px 14px;
     border: 1px solid #cbd5e0;
@@ -123,9 +139,11 @@
     border-collapse: collapse;
     font-size: 14px;
 }
+
 .data-table thead tr {
-    border-bottom: 1px solid #e2e8f0; 
+    border-bottom: 1px solid #e2e8f0;
 }
+
 .data-table thead th {
     padding: 12px 16px;
     text-align: left;
@@ -135,12 +153,15 @@
     font-size: 12px;
     letter-spacing: 0.5px;
 }
+
 .data-table tbody tr {
     border-bottom: 1px solid #e2e8f0;
 }
+
 .data-table tbody tr:last-child {
     border-bottom: none;
 }
+
 .data-table tbody td {
     padding: 16px;
     vertical-align: middle;
@@ -164,17 +185,26 @@
     font-weight: 600;
     display: inline-block;
 }
+
 .status-badge.status-active {
-    background-color: #e6f7f0; /* Light green */
-    color: #0a875a;          /* Dark green */
+    background-color: #e6f7f0;
+    /* Light green */
+    color: #0a875a;
+    /* Dark green */
 }
+
 .status-badge.status-blocked {
-    background-color: #fdeeee; /* Light red */
-    color: #e53e3e;          /* Dark red */
+    background-color: #fdeeee;
+    /* Light red */
+    color: #e53e3e;
+    /* Dark red */
 }
+
 .status-badge.status-low {
-    background-color: #fefcbf; /* Light yellow */
-    color: #b7791f;          /* Dark yellow */
+    background-color: #fefcbf;
+    /* Light yellow */
+    color: #b7791f;
+    /* Dark yellow */
 }
 
 /* --- Action Buttons --- */
@@ -183,26 +213,45 @@
     align-items: center;
     gap: 20px;
 }
+
 .btn-action {
     font-size: 16px;
     text-decoration: none;
     transition: color 0.2s ease;
 }
+
 .btn-action.btn-edit {
-    color: #6b46c1; /* Purple */
+    color: #6b46c1;
+    /* Purple */
 }
+
 .btn-action.btn-edit:hover {
-    color: #553c9a; 
+    color: #553c9a;
 }
+
+/* --- UPDATED STYLE (Block = Red) --- */
 .btn-action.btn-block {
-    color: #d69e2e; /* Gold/Yellow */
-}
-.btn-action.btn-block:hover {
-    color: #b7791f;
-}
-.btn-action.btn-delete {
     color: #e53e3e; /* Red */
 }
+
+.btn-action.btn-block:hover {
+    color: #c53030; /* Dark Red */
+}
+/* --- END UPDATED STYLE --- */
+
+.btn-action.btn-unblock {
+    color: #0a875a; /* Dark Green (to match active status) */
+}
+
+.btn-action.btn-unblock:hover {
+    color: #065f40; /* Darker Green */
+}
+
+.btn-action.btn-delete {
+    color: #e53e3e;
+    /* Red */
+}
+
 .btn-action.btn-delete:hover {
     color: #c53030;
 }
@@ -275,4 +324,91 @@
     border-color: #eee;
     /* Faded grey border */
     cursor: default;
+}
+
+/* --- Buttons (Additions for Modal) --- */
+.btn-danger {
+    background-color: #e53e3e;
+    /* Red */
+    color: #fff;
+    border-color: #e53e3e;
+}
+
+.btn-danger:hover {
+    background-color: #c53030;
+    border-color: #c53030;
+}
+
+/* .btn-warning class removed as it's no longer used */
+
+.btn-success {
+    background-color: #0a875a; /* Dark Green */
+    color: #fff;
+    border-color: #0a875a;
+}
+
+.btn-success:hover {
+    background-color: #065f40; /* Darker Green */
+    border-color: #065f40;
+}
+
+
+/* --- Confirmation Modal --- */
+.modal-overlay {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.modal-overlay.show {
+    display: flex;
+    /* Show the modal */
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.show .modal-content {
+    transform: translateY(0);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a202c;
+}
+
+.modal-content p {
+    font-size: 16px;
+    color: #4a5568;
+    margin-bottom: 24px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
 }
