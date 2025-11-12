@@ -77,7 +77,6 @@ def product_list_view(request):
         products = products.order_by('name')
     elif selected_sort == 'name-desc':
         products = products.order_by('-name')
-    
     elif selected_sort == 'featured':
         products = products.order_by('-is_featured', '-created_at')
 

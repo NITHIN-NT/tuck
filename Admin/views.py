@@ -6,12 +6,14 @@ from django.views import View
 from django.template.loader import render_to_string 
 
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 from django.db.models import Count,Sum
 from django.db import transaction
+from django.db.models import Q
 
 from django.core.mail import EmailMultiAlternatives 
 from django.forms import inlineformset_factory
@@ -178,8 +180,49 @@ class AdminUserView(LoginRequiredMixin,ListView):
     model = CustomUser
     template_name = 'users/home_user.html'
     context_object_name = 'Users'
-    ordering =['date_joined']
+    ordering =['-date_joined']
+    paginate_by = 10
 
+    def get_queryset(self):
+        queryset =  super().get_queryset()
+
+        search_query = self.request.GET.get('search_input','')
+        user_status = self.request.GET.get('userStatus', '')
+        if user_status == 'active':
+           queryset = queryset.filter(is_active=True)
+        elif user_status == 'blocked':
+            queryset =queryset.filter(is_active=False)
+
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(first_name__icontains=search_query)|
+                Q(email__icontains=search_query) |
+                Q(phone__icontains=search_query))
+            
+        return queryset
+    
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = context.get('paginator')
+        page_obj = context.get('page_obj')
+
+        if paginator and page_obj:
+            context['custom_page_range'] = paginator.get_elided_page_range(
+                number=page_obj.number,
+                on_each_side=5,  
+                on_ends=1        
+            )
+        query_params = self.request.GET.copy()
+        if 'page' in query_params:
+            del query_params['page']
+
+        context['search_input'] = self.request.GET.get('search_input','')
+        context['user_status'] = self.request.GET.get('userStatus', '')
+        return context
+    
 
 def toggle_user_block(request,id):
     user = get_object_or_404(CustomUser,id=id)
@@ -345,8 +388,4 @@ class StockManagementView(ListView):
             'variants',         
             'variants__size'    
         )
-    
-
-
-    
     

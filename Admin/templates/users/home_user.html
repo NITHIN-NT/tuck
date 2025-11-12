@@ -15,26 +15,31 @@
     </div>
 
     <div class="card users-table-card">
-        
-        <div class="table-toolbar">
-            <div class="search-bar">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" placeholder="Search users...">
+        <form action="" method='get'>
+            
+            <div class="table-toolbar">
+                <div class="search-bar">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" name='search_input' placeholder="Search users..." value="{{ search_input }}">
+                </div>
+                <div class="filters">
+                    <select class="userStatus" name="userStatus">
+                        <option value="" {% if user_status == "" %}selected{% endif %}>
+                            All Status
+                        </option>
+                        <option value="active" {% if user_status == "active" %}selected{% endif %}>
+                            Active
+                        </option>
+                        <option value="blocked" {% if user_status == "blocked" %}selected{% endif %}>
+                            Blocked
+                        </option>
+                    </select>
+                </div>
+                <button type="clear" class="btn btn-primary"><a href="{% url "admin_user" %}">clear</a></button>
+                <button type="submit" class="btn btn-primary">Filter</button>
             </div>
-            <div class="filters">
-                <select class="filter-dropdown">
-                    <option value="">All Roles</option>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                    <option value="manager">Manager</option>
-                </select>
-                <select class="filter-dropdown">
-                    <option value="">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="blocked">Blocked</option>
-                </select>
-            </div>
-        </div>
+        </form>
+
 
         <table class="data-table">
             <thead>
@@ -90,6 +95,36 @@
         </table>
     </div>
 
+<section class='pagination-container'>
+    <div class="pagination">
+
+        {% comment %} Previous Page Link {% endcomment %}
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&{{ query_params }}">&lt;</a>
+        {% else %}
+            <span class="disabled">&lt;</span>
+        {% endif %}
+
+        {% comment %} Page Number Links {% endcomment %}
+        {% for i in custom_page_range %}
+            {% if i == paginator.ELLIPSIS %}
+                <span class="ellipsis">{{ i }}</span>
+            {% elif page_obj.number == i %}
+                <span class="current">{{ i }}</span>
+            {% else %}
+                <a href="?page={{ i }}&{{ query_params }}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% comment %} Next Page Link {% endcomment %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&{{ query_params }}">&gt;</a>
+        {% else %}
+            <span class="disabled">&gt;</span>
+        {% endif %}
+            
+    </div>
+</section>
     </div> <div id="confirmation-modal" class="modal-backdrop" style="display: none;">
         <div class="modal-content">
             <div class="modal-body">
@@ -111,7 +146,6 @@
             </div>
         </div>
     </div>
-
 {% endblock content %}
 {% block extraJs %}
     <script>

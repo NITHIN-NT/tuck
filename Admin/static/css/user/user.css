@@ -1,4 +1,4 @@
-/* Main Page Header (from your original HTML) */
+/* Main Page Header */
 .page-header-container {
     display: flex;
     justify-content: space-between;
@@ -14,8 +14,7 @@
     /* Darker text */
 }
 
-/* Add User Button (Assuming .btn-primary is defined elsewhere) */
-/* You might need to add styles for .btn-primary if not already done */
+/* Primary Button (e.g., 'Add User', 'Filter') */
 .btn-primary {
     background-color: #6b46c1;
     /* Purple from image */
@@ -93,7 +92,8 @@
     gap: 12px;
 }
 
-.filter-dropdown {
+/* This selector was corrected to target the <select> tag */
+.filters select {
     padding: 10px 14px;
     border: 1px solid #cbd5e0;
     border-radius: 8px;
@@ -183,7 +183,7 @@
     transition: color 0.2s ease;
 }
 
-/* Icon colors from the image */
+/* Icon colors */
 .btn-action.btn-edit {
     color: #6b46c1;
     /* Purple */
@@ -202,6 +202,14 @@
     color: #b7791f;
 }
 
+.btn-action.btn-unblock {
+    color: #22c55e;
+}
+
+.btn-action.btn-unblock:hover {
+    color: #16a34a;
+}
+
 .btn-action.btn-delete {
     color: #e53e3e;
     /* Red */
@@ -210,6 +218,76 @@
 .btn-action.btn-delete:hover {
     color: #c53030;
 }
+
+/* ==================== BUTTON-BASED PAGINATION ==================== */
+
+.pagination-container {
+    margin-top: 48px;
+    width: 100%;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    /* This creates the space between the buttons */
+}
+
+/* Base style for ALL pagination buttons */
+.pagination a,
+.pagination .current,
+.pagination .disabled {
+    display: inline-flex;
+    /* Helps center the text/arrow perfectly */
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    /* Makes the button square */
+    height: 40px;
+    /* Makes the button square */
+    border: 1px solid #ddd;
+    /* The light grey border */
+    border-radius: 6px;
+    /* The rounded corners */
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Ellipsis (...) */
+.pagination .ellipsis {
+    padding: 0 8px;
+    color: #aaa;
+}
+
+/* Style for the clickable links (<a>) on HOVER */
+.pagination a:hover {
+    background-color: #f5f5f5;
+    /* Light grey background on hover */
+    border-color: #bbb;
+}
+
+/* Style for the CURRENT page button */
+.pagination .current {
+    color: #000000;
+    border-color: #000000;
+    font-weight: 600;
+    cursor: default;
+    /* It's not clickable */
+}
+
+/* Style for the DISABLED arrow buttons */
+.pagination .disabled {
+    color: #aaa;
+    /* Faded grey text */
+    border-color: #eee;
+    /* Faded grey border */
+    cursor: default;
+}
+
 
 /*
 ========================================
@@ -411,14 +489,4 @@ MODAL STYLES
 .modal-type-unblock .btn-confirm:hover {
     background-color: #16a34a;
     /* hover:bg-green-700 */
-}
-
-/* --- Add this to your existing CSS --- */
-/* (This makes your 'btn-unblock' link green) */
-.btn-action.btn-unblock {
-    color: #22c55e;
-}
-
-.btn-action.btn-unblock:hover {
-    color: #16a34a;
 }
