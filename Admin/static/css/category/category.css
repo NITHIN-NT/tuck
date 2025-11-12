@@ -5,12 +5,14 @@
     align-items: center;
     margin-bottom: 24px;
 }
+
 .page-header h1 {
     font-size: 28px;
     font-weight: 700;
     margin: 0;
     color: #1a202c;
 }
+
 .page-header p {
     margin: 4px 0 0;
     font-size: 16px;
@@ -18,27 +20,57 @@
 }
 
 /* --- Buttons --- */
-.btn-primary {
-    background-color: #6b46c1; /* Purple */
-    color: #fff;
+/* Base button style for all buttons and links styled as buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* Centers text/icon */
     padding: 10px 16px;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 600;
-    display: inline-flex;
-    align-items: center;
     gap: 8px;
-    border: none;
+    border: 1px solid transparent;
+    /* Set base border */
     cursor: pointer;
-    font-family: 'Inter', sans-serif; 
-    font-size: 14px; 
-}
-.btn-primary:hover {
-    background-color: #553c9a;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    line-height: 1.4;
+    /* Ensures consistent height */
 }
 
+/* Primary button (Purple) - Used for "Add Category" and "Search" */
+.btn-primary {
+    background-color: #6b46c1;
+    /* Purple */
+    color: #fff;
+    border-color: #6b46c1;
+}
+
+.btn-primary:hover {
+    background-color: #553c9a;
+    border-color: #553c9a;
+}
+
+/* Secondary button (Grey) - Used for "Clear" */
+.btn-secondary {
+    background-color: #fff;
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
+    /* Grey border */
+}
+
+.btn-secondary:hover {
+    background-color: #f7fafc;
+    /* Lightest grey hover */
+    border-color: #adb5bd;
+}
+
+
 /* --- Main Content Card --- */
-.data-table-card { 
+.data-table-card {
     background-color: #ffffff;
     border-radius: 12px;
     border: 1px solid #e2e8f0;
@@ -56,11 +88,13 @@
     flex-wrap: wrap;
     gap: 16px;
 }
+
 .search-bar {
     position: relative;
     flex-grow: 1;
     min-width: 250px;
 }
+
 .search-bar input[type="text"] {
     width: 100%;
     padding: 10px 16px 10px 40px;
@@ -69,9 +103,11 @@
     font-size: 14px;
     font-family: 'Inter', sans-serif;
 }
+
 .search-bar input[type="text"]::placeholder {
     color: #a0aec0;
 }
+
 .search-bar .fa-search {
     position: absolute;
     left: 14px;
@@ -80,10 +116,12 @@
     color: #a0aec0;
     font-size: 14px;
 }
+
 .filters {
     display: flex;
     gap: 12px;
 }
+
 .filter-dropdown {
     padding: 10px 14px;
     border: 1px solid #cbd5e0;
@@ -101,9 +139,11 @@
     border-collapse: collapse;
     font-size: 14px;
 }
+
 .data-table thead tr {
-    border-bottom: 1px solid #e2e8f0; 
+    border-bottom: 1px solid #e2e8f0;
 }
+
 .data-table thead th {
     padding: 12px 16px;
     text-align: left;
@@ -113,12 +153,15 @@
     font-size: 12px;
     letter-spacing: 0.5px;
 }
+
 .data-table tbody tr {
     border-bottom: 1px solid #e2e8f0;
 }
+
 .data-table tbody tr:last-child {
     border-bottom: none;
 }
+
 .data-table tbody td {
     padding: 16px;
     vertical-align: middle;
@@ -142,17 +185,26 @@
     font-weight: 600;
     display: inline-block;
 }
+
 .status-badge.status-active {
-    background-color: #e6f7f0; /* Light green */
-    color: #0a875a;          /* Dark green */
+    background-color: #e6f7f0;
+    /* Light green */
+    color: #0a875a;
+    /* Dark green */
 }
+
 .status-badge.status-blocked {
-    background-color: #fdeeee; /* Light red */
-    color: #e53e3e;          /* Dark red */
+    background-color: #fdeeee;
+    /* Light red */
+    color: #e53e3e;
+    /* Dark red */
 }
+
 .status-badge.status-low {
-    background-color: #fefcbf; /* Light yellow */
-    color: #b7791f;          /* Dark yellow */
+    background-color: #fefcbf;
+    /* Light yellow */
+    color: #b7791f;
+    /* Dark yellow */
 }
 
 /* --- Action Buttons --- */
@@ -161,26 +213,106 @@
     align-items: center;
     gap: 20px;
 }
+
 .btn-action {
     font-size: 16px;
     text-decoration: none;
     transition: color 0.2s ease;
 }
+
 .btn-action.btn-edit {
-    color: #6b46c1; /* Purple */
+    color: #6b46c1;
+    /* Purple */
 }
+
 .btn-action.btn-edit:hover {
-    color: #553c9a; 
+    color: #553c9a;
 }
+
 .btn-action.btn-block {
-    color: #d69e2e; /* Gold/Yellow */
+    color: #d69e2e;
+    /* Gold/Yellow */
 }
+
 .btn-action.btn-block:hover {
     color: #b7791f;
 }
+
 .btn-action.btn-delete {
-    color: #e53e3e; /* Red */
+    color: #e53e3e;
+    /* Red */
 }
+
 .btn-action.btn-delete:hover {
     color: #c53030;
+}
+
+
+/* ==================== BUTTON-BASED PAGINATION ==================== */
+
+.pagination-container {
+    margin-top: 48px;
+    width: 100%;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    /* This creates the space between the buttons */
+}
+
+/* Base style for ALL pagination buttons */
+.pagination a,
+.pagination .current,
+.pagination .disabled {
+    display: inline-flex;
+    /* Helps center the text/arrow perfectly */
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    /* Makes the button square */
+    height: 40px;
+    /* Makes the button square */
+    border: 1px solid #ddd;
+    /* The light grey border */
+    border-radius: 6px;
+    /* The rounded corners */
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Ellipsis (...) */
+.pagination .ellipsis {
+    padding: 0 8px;
+    color: #aaa;
+}
+
+/* Style for the clickable links (<a>) on HOVER */
+.pagination a:hover {
+    background-color: #f5f5f5;
+    /* Light grey background on hover */
+    border-color: #bbb;
+}
+
+/* Style for the CURRENT page button */
+.pagination .current {
+    color: #000000;
+    border-color: #000000;
+    font-weight: 600;
+    cursor: default;
+    /* It's not clickable */
+}
+
+/* Style for the DISABLED arrow buttons */
+.pagination .disabled {
+    color: #aaa;
+    /* Faded grey text */
+    border-color: #eee;
+    /* Faded grey border */
+    cursor: default;
 }

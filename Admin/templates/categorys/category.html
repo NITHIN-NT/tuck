@@ -20,13 +20,18 @@
     </div>
 
     <div class="data-table-card">
-        
-        <div class="table-toolbar">
-            <div class="search-bar">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" name="search" placeholder="Search categories...">
+        <form method="get">
+            <div class="table-toolbar">
+                <div class="search-bar">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" name="search" placeholder="Search categories..." value={{search}}>
+                </div>
+                
+                <a href="{% url "admin_category" %}" class="btn btn-secondary">Clear</a>
+                
+                <button type.="submit" class="btn btn-primary">Search</button>
             </div>
-            </div>
+        </form>
 
         <table class="data-table">
             <thead>
@@ -43,11 +48,23 @@
                     <td>{{category.name}}</td>
                     <td>{{category.description}}</td>
                     <td>
-                        <span class="status-badge status-active">Active</span>
+                        <span class="status-badge status-{% if category.is_active %}active{% else %}blocked{% endif %}">{% if category.is_active %}Active{% else %}blocked{% endif %}</span>
                     </td>
                     <td class="action-buttons">
                         <a href="#" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href="#" class="btn-action btn-block" title="Block"><i class="fa-solid fa-ban"></i></a>
+                        {% if category.is_active %}
+                                <a href="{% url 'admin_category_block' category.id %}" 
+                                class="btn-action btn-edit" 
+                                title="Block">
+                                    <i class="fas fa-ban"></i>
+                                </a>
+                        {% else %}
+                            <a href="{% url 'admin_category_block' category.id %}" 
+                            class="btn-action btn-edit" 
+                            title="Unblock">
+                                <i class="fas fa-check-circle"></i>
+                            </a>
+                        {% endif %}
                         <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
                     </td>
                 </tr>
@@ -63,4 +80,34 @@
         </table>
     </div>
 
+<section class='pagination-container'>
+    <div class="pagination">
+
+        {% comment %} Previous Page Link {% endcomment %}
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&{{ query_params }}">&lt;</a>
+        {% else %}
+            <span class="disabled">&lt;</span>
+        {% endif %}
+
+        {% comment %} Page Number Links {% endcomment %}
+        {% for i in custom_page_range %}
+            {% if i == paginator.ELLIPSIS %}
+                <span class="ellipsis">{{ i }}</span>
+            {% elif page_obj.number == i %}
+                <span class="current">{{ i }}</span>
+            {% else %}
+                <a href="?page={{ i }}&{{ query_params }}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% comment %} Next Page Link {% endcomment %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&{{ query_params }}">&gt;</a>
+        {% else %}
+            <span class="disabled">&gt;</span>
+        {% endif %}
+            
+    </div>
+</section>
 {% endblock content %}

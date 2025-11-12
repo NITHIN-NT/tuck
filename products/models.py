@@ -8,6 +8,7 @@ def product_image_upload_to(instance, filename):
 class Category(models.Model):
     name = models.CharField(max_length=1024, unique=True)
     description = models.TextField()
+    is_active = models.BooleanField(default=True)
     class Meta:
         verbose_name_plural = "Categories"
         ordering = ['name']

@@ -221,8 +221,7 @@ class AdminUserView(LoginRequiredMixin,ListView):
 
         context['search_input'] = self.request.GET.get('search_input','')
         context['user_status'] = self.request.GET.get('userStatus', '')
-        return context
-    
+        return context  
 
 def toggle_user_block(request,id):
     user = get_object_or_404(CustomUser,id=id)
@@ -373,6 +372,34 @@ class AdminCategoryView(ListView):
     model = Category
     template_name = 'categorys/category.html'
     context_object_name = 'categorys'
+    paginate_by = 8
+
+    def get_queryset(self):
+        queryset =  super().get_queryset()
+        search = self.request.GET.get('search','')
+        if search:
+            queryset = queryset.filter(name__icontains=search)
+
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        paginator = context.get('paginator')
+        page_obj = context.get('page_obj')
+
+        if paginator and page_obj:
+            context['custom_page_range'] = paginator.get_elided_page_range(
+                number=page_obj.number,
+                on_each_side=5,  
+                on_ends=1        
+            )
+        query_params = self.request.GET.copy()
+        if 'page' in query_params:
+            del query_params['page']
+        context['search'] = self.request.GET.get('search','')
+
+        return context
+    
 
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class StockManagementView(ListView):

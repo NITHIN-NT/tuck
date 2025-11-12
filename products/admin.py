@@ -1,7 +1,9 @@
 from django.contrib import admin
 from .models import Category,Product,ProductImage,Size
 # Register your models here.
-admin.site.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name','description','is_active']
+admin.site.register(Category,CategoryAdmin)
 class ProductImageInline(admin.TabularInline): # or admin.StackedInline
     model = ProductImage
     extra = 1 
