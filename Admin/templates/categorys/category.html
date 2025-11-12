@@ -63,7 +63,7 @@
                                 <a href="{% url 'admin_category_block' category.id %}" 
                                 class="btn-action btn-block" 
                                 title="Block">
-                                    <i class="fas fa-ban"></i>
+                                    <i class="fas fa-times"></i>
                                 </a>
                         {% else %}
                             <a href="{% url 'admin_category_block' category.id %}" 
@@ -74,7 +74,6 @@
                         {% endif %}
                         {% comment %} {% endcomment %}
                         
-                        <a href="#" class="btn-action btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
                     </td>
                 </tr>
                 {% empty %}
