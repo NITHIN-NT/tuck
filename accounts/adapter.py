@@ -31,8 +31,7 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         user = sociallogin.user
         extra_data = sociallogin.account.extra_data
 
-
-        user.first_name = extra_data.get('first_name','')
+        user.first_name = extra_data.get('first_name','')   
         user.last_name = extra_data.get('last_name','')
 
         user.is_active = True

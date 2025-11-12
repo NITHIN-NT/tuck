@@ -10,10 +10,11 @@ from django.conf import settings
 
 # Create your views here.
 
-'''
-    User Creat/Login 
-'''
 def signup_view(request):
+    '''
+        This view handle the user signup . 
+        After your Entering the details user will re-direct to Verifcation
+    '''
     if request.method == 'POST':
         form = CustomUserRegisterForm(request.POST)
         if form.is_valid():
@@ -32,7 +33,6 @@ def signup_view(request):
 
             otp_code = EmailOTP.generate_otp()
             EmailOTP.objects.create(user=user,otp=otp_code)
-# Render the HTML email content                                                                                           
 
             plain_message = f"Your OTP code is {otp_code}"                                                                            
             html_message = render_to_string('accounts/email/otp_email.html', {'otp_code': otp_code})                                  
@@ -42,7 +42,7 @@ def signup_view(request):
                 msg = EmailMultiAlternatives(                                                                                             
                     body=plain_message,                                                                                                   
                     subject='Your OTP Verification Code',                                                                               
-                    from_email="TuckInda@gmail.com", # Use your DEFAULT_FROM_EMAIL or a specific one                                 
+                    from_email="secondstrap@gmail.com",
                     to=[email],                                                                                                           
                 )                                                                                                                         
                 msg.attach_alternative(html_message, "text/html")                                                                         
@@ -54,14 +54,17 @@ def signup_view(request):
 
             request.session['pending_user_id'] = user.id
             messages.info(request, "OTP sent to your email. Verify to continue.")
-            return redirect('verify_otp')
+            return redirect('activate_account')
         else:
             return render(request,'accounts/signup.html',{'form': form})
     else:
         form = CustomUserRegisterForm()
     return render(request, 'accounts/signup.html',{'form': form})
        
-def verify_otp_view(request):
+def activate_account(request):
+    '''
+        This view is verifying the OTP that user get
+    '''
     user_id = request.session.get('pending_user_id')
 
     if not user_id:
@@ -95,10 +98,49 @@ def verify_otp_view(request):
             return redirect('Home_page_user')
         else :
             messages.error(request,'Invalid or expired OTP. Please try again.')
-            return render(request, 'accounts/verify_otp.html', {'email': user.email})                   
-    return render(request, 'accounts/verify_otp.html', {'email': user.email})
+            return render(request, 'accounts/activate_account.html', {'email': user.email})
+                           
+    return render(request, 'accounts/activate_account.html', {'email': user.email})
+
+def resent_otp(request):
+    '''
+        This view is sending the OTP again
+    '''
+    user_id = request.session.get('pending_user_id')
+
+    if not user_id:
+        messages.error(request,'No pending Verification Found')
+        return redirect('signup')
+    
+    user = get_object_or_404(CustomUser,id=user_id)
+    email = user.email
+
+    otp_code = EmailOTP.generate_otp()
+    EmailOTP.objects.create(user=user,otp=otp_code)                                                                       
+
+    plain_message = f"Your OTP code is {otp_code}"                                                                            
+    html_message = render_to_string('accounts/email/otp_email.html', {'otp_code': otp_code})                                  
+                                                                                                                                                                                                                                      
+    try:
+        msg = EmailMultiAlternatives(                                                                                             
+            body=plain_message,                                                                                                   
+            subject='Your OTP Verification Code',                                                                               
+            from_email="SecondStrap@gmail.com", # 
+            to=[email],                                                                                                           
+        )                                                                                                                         
+        msg.attach_alternative(html_message, "text/html")                                                                         
+        msg.send()         
+    except Exception as e :
+        messages.error(request, 'There was an error sending the email. Please try again later.')
+        return redirect('signup')                   
+    
+    messages.success(request,"OTP is Re-sented.")
+    return redirect('activate_account')
 
 def login_view(request):
+    '''
+        This View is Login In the Acitve Users
+    '''
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -112,7 +154,7 @@ def login_view(request):
                     return redirect('Home_page_user')
                 else:
                     messages.error(request, "Please verify your email first.")
-                    return render(request,'accounts/verify_otp.html',{'form':form})
+                    return render(request,'accounts/acitve_account.html',{'form':form})
             else:
                 messages.error(request, "Invalid credentials. Please check your email and password.")
         else:
@@ -123,18 +165,15 @@ def login_view(request):
                         messages.error(request, f"{error}")
                     else:
                         messages.error(request, f"{field.replace('_', ' ').capitalize()}: {error}")
-            # Re-render the login page with the form and its errors
             return render(request, 'accounts/login.html', {'form': form})
-    else: # GET request
+    else: 
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
 
 def logout_view(request):
     logout(request)
     return redirect('Home_page_user')
-'''
-    Forgot Password
-'''
+
 class SendOTPView(View):
     '''
         This OTP View Is for forgot Password

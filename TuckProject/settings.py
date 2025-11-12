@@ -137,7 +137,10 @@ SOCIALACCOUNT_PROVIDERS = {
             'key': '',
             'FETCH_USERINFO': True,
         },
-        'SCOPE': ['profile', 'email'],
+        'SCOPE': [
+            'profile',
+            'email'
+            ],
         'AUTH_PARAMS': {'access_type': 'online'},
         'OAUTH_PKCE_ENABLED': True,
     }
