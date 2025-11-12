@@ -373,6 +373,7 @@ class AdminCategoryView(ListView):
     template_name = 'categorys/category.html'
     context_object_name = 'categorys'
     paginate_by = 8
+    ordering = ['-created_at']
 
     def get_queryset(self):
         queryset =  super().get_queryset()
@@ -399,7 +400,29 @@ class AdminCategoryView(ListView):
         context['search'] = self.request.GET.get('search','')
 
         return context
-    
+
+@login_required
+@user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
+@transaction.atomic
+def toggle_category_block(request,id=None):
+    '''
+    This is used to block a Category and related Products
+    '''
+    category = get_object_or_404(Category,id=id)
+    category.is_active = not category.is_active
+    category.save()
+
+    new_status = category.is_active
+    products = category.products.all()
+    count = products.count()
+    print(count)
+    products.update(is_active = new_status)
+    status =  True if category.is_active  else False
+    if status:
+        messages.success(request,f"{category.name} & related <strong>{count}</strong> Products is Unblockd Successfuly",extra_tags='admin')
+    else:
+        messages.error(request,f"{category.name} & related <strong>{count}</strong> Products is Blocked Successfuly",extra_tags='admin')
+    return redirect('admin_category')
 
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class StockManagementView(ListView):

@@ -9,6 +9,7 @@ class Category(models.Model):
     name = models.CharField(max_length=1024, unique=True)
     description = models.TextField()
     is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name_plural = "Categories"
         ordering = ['name']
