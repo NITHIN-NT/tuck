@@ -76,14 +76,14 @@
                                class="btn-action btn-block modal-trigger" 
                                title="Block"
                                data-username="{{ user.first_name }}">
-                               <i class="fa-solid fa-ban"></i>
+                               <i class="fa-solid fa-ban"></i> Block
                             </a>
                         {% else %}
                             <a href="{% url 'admin_user_block' user.id %}" 
                                class="btn-action btn-unblock modal-trigger" 
                                title="Unblock"
                                data-username="{{ user.first_name }}">
-                               <i class="fa-solid fa-check"></i>
+                               <i class="fa-solid fa-check"></i> Unblock
                             </a>
                         {% endif %}
                     </td>
