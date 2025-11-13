@@ -1,11 +1,15 @@
 import json
 import random
+import os
+import requests # <-- ADDED
 from decimal import Decimal
+from urllib.parse import urlparse # <-- ADDED
+
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from django.utils.text import slugify
+from django.core.files.base import ContentFile # <-- ADDED
 
-# Replace 'store' with the name of your app where models are located
+# Replace 'products' with the name of your app where models are located
 from products.models import Category, Product, ProductImage, Size, ProductVariant
 
 class Command(BaseCommand):
@@ -38,7 +42,6 @@ class Command(BaseCommand):
             self.stdout.write(f'Processing product {i+1}/{total_products}: {item.get("title", "N/A")}')
 
             # --- 1. Handle Price ---
-            # Skip products with a price of "0.00" or no price
             base_price_str = item.get('price', '0.00')
             if not base_price_str or float(base_price_str) == 0.0:
                 self.stdout.write(self.style.WARNING(f"Skipping product '{item.get('title')}' due to zero or missing price."))
@@ -46,7 +49,6 @@ class Command(BaseCommand):
                 continue
                 
             base_price = Decimal(base_price_str)
-            # Rule: Offer price is 10% off base price
             offer_price = base_price * Decimal('0.90') 
 
             # --- 2. Get or Create Category ---
@@ -68,26 +70,22 @@ class Command(BaseCommand):
                 skipped_count += 1
                 continue
             
-            # Use the first image as the main product image
             main_image_url = images_list[0]
 
             # --- 4. Create or Update Product ---
-            # We use update_or_create to make the script re-runnable
             product, created = Product.objects.update_or_create(
                 slug=item['handle'],
                 defaults={
                     'name': item['title'],
-                    'description': item['description'], # Rule: Load HTML description as-is
+                    'description': item['description'],
                     'base_price': base_price,
                     'offer_price': offer_price,
-                    'image_url': main_image_url,
-                    'image': None, # We populate image_url, not the ImageField (see note below)
+                    'alt_text': item['title'], # <-- SETTING ALT TEXT
                     'category': category,
-                    # Add some randomness for the boolean fields
                     'is_featured': random.choice([True, False]),
                     'is_selective': random.choice([True, False]),
                     'is_most_demanded': random.choice([True, False]),
-                    'is_blocked': False,
+                    'is_active': True, # <-- CHANGED from is_blocked
                 }
             )
             
@@ -96,38 +94,54 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(f"  Updated existing product: {product.name}")
 
+            # --- 4b. Download and Save Main Image ---
+            # Only download if the image field is currently empty
+            if not product.image:
+                try:
+                    response = requests.get(main_image_url)
+                    response.raise_for_status() # Raise exception for bad status codes
+                    
+                    filename = os.path.basename(urlparse(main_image_url).path)
+                    product.image.save(filename, ContentFile(response.content), save=True)
+                    self.stdout.write(f"  Saved main image: {filename}")
+                    
+                except Exception as e:
+                    self.stdout.write(self.style.WARNING(f"  Could not download main image for {product.name}: {e}"))
+
             # --- 5. Populate Product Images ---
-            # Delete old images for this product to avoid duplicates
             ProductImage.objects.filter(product=product).delete()
             for img_url in images_list:
-                ProductImage.objects.create(
-                    product=product,
-                    image_url=img_url,
-                    image=None # We populate image_url
-                )
+                try:
+                    response = requests.get(img_url)
+                    response.raise_for_status()
+                    
+                    # Create the ProductImage instance
+                    pi = ProductImage(product=product, alt_text=product.name)
+                    
+                    # Get filename and save the image
+                    filename = os.path.basename(urlparse(img_url).path)
+                    pi.image.save(filename, ContentFile(response.content), save=True)
+                    
+                except Exception as e:
+                    self.stdout.write(self.style.WARNING(f"  Could not download additional image {img_url}: {e}"))
+            
             self.stdout.write(f"  Added/Updated {len(images_list)} images for {product.name}")
 
             # --- 6. Populate Sizes and Variants ---
             size_variants_list = item.get('size_variants', [])
-            
-            # **Assumption**: If a product has no sizes (e.g., wallets, sunglasses),
-            # we assign a default "One Size" variant.
             if not size_variants_list:
                 size_variants_list = ["One Size"]
 
-            # Delete old variants for this product to avoid duplicates
             ProductVariant.objects.filter(product=product).delete()
 
             for size_name in size_variants_list:
-                # Get or create the Size object
                 size_obj, _ = Size.objects.get_or_create(size=size_name)
                 
-                # Create the ProductVariant
                 ProductVariant.objects.create(
                     product=product,
                     size=size_obj,
-                    price=base_price, # JSON doesn't have per-size price, so use main price
-                    stock=random.randint(50, 100) # Rule: Random stock 50-100
+                    stock=random.randint(50, 100)
+                    # <-- REMOVED price=base_price, as it's not in your model
                 )
             self.stdout.write(f"  Added/Updated {len(size_variants_list)} variants for {product.name}")
             processed_count += 1

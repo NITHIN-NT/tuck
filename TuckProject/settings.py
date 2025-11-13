@@ -72,11 +72,11 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "optional"
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_ADAPTER = 'accounts.adapter.CustomSocialAccountAdapter'
-
 '''
     MIDDLEWARE
 '''
@@ -185,19 +185,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-'''
-    CACHES
-'''
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",  # /1 is database 1
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
-
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
