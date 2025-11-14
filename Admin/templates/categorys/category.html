@@ -58,19 +58,26 @@
                     <td class="action-buttons">
                         <a href="{% url "admin_category_edit" category.id%}" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i> edit</a>
                         
-                        {% comment %} {% endcomment %}
                         {% if category.is_active %}
-                                <a href="{% url 'admin_category_block' category.id %}" 
-                                class="btn-action btn-block" 
-                                title="Block">
+                            <form action="{% url 'admin_category_block' category.id %}" method="POST" style="display:inline;" id="block-form-{{ category.id }}">
+                                {% csrf_token %}
+                                <button type="submit" 
+                                        class="btn-action btn-block modal-trigger" 
+                                        title="Block"
+                                        data-form-id="block-form-{{ category.id }}">
                                     <i class="fas fa-times"></i> Block
-                                </a>
+                                </button>
+                            </form>
                         {% else %}
-                            <a href="{% url 'admin_category_block' category.id %}" 
-                            class="btn-action btn-unblock"  
-                            title="Unblock">
-                                <i class="fas fa-check-circle"></i> Unblock
-                            </a>
+                            <form action="{% url 'admin_category_block' category.id %}" method="POST" style="display:inline;" id="unblock-form-{{ category.id }}">
+                                {% csrf_token %}
+                                <button type="submit" 
+                                        class="btn-action btn-unblock modal-trigger" 
+                                        title="Unblock"
+                                        data-form-id="unblock-form-{{ category.id }}">
+                                    <i class="fas fa-check-circle"></i> Unblock
+                                </button>
+                            </form>
                         {% endif %}
                         
                     </td>
@@ -116,76 +123,110 @@
             
     </div>
 </section>
+
 <div class="modal-overlay" id="confirmation-modal-overlay">
     <div class="modal-content" id="confirmation-modal">
         <h2>Confirm Action</h2><br>
         <p>Are you sure you want to perform this action?</p>
         <div class="modal-actions">
             <button type="button" class="btn btn-secondary" id="modal-btn-cancel">Cancel</button>
-            <a href="#" class="btn" id="modal-btn-confirm">Confirm</a>
+            <button type="button" class="btn" id="modal-btn-confirm">Confirm</button>
         </div>
     </div>
 </div>
 {% endblock content %}
+
 {% block extraJs %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     
     // Get all the elements
     const modalOverlay = document.getElementById('confirmation-modal-overlay');
+    if (!modalOverlay) return; // Stop if modal isn't on the page
+    
     const modalTitle = modalOverlay.querySelector('h2');
     const modalText = modalOverlay.querySelector('p');
-    const confirmBtn = document.getElementById('modal-btn-confirm');
+    // This is now a <button>, not an <a> tag
+    const confirmBtn = document.getElementById('modal-btn-confirm'); 
     const cancelBtn = document.getElementById('modal-btn-cancel');
     
-    // Find all links that should trigger the modal
-    const actionLinks = document.querySelectorAll('.btn-action.btn-block, .btn-action.btn-delete, .btn-action.btn-unblock');
+    // Find all buttons that trigger the modal
+    // This now targets the buttons inside the new forms
+    const triggerButtons = document.querySelectorAll('.modal-trigger');
 
     // Function to close the modal
     function closeModal() {
         modalOverlay.classList.remove('show');
+        // Clear formId from confirm button to be safe
+        if (confirmBtn) {
+            confirmBtn.dataset.formId = ''; 
+        }
     }
 
-    // Add click listener to all action links
-    actionLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Stop the link from navigating
+    // Add click listener to all trigger buttons
+    triggerButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // Stop the form from submitting immediately
             e.preventDefault();
 
-            // Get info from the link
-            const action = this.title; // "Block", "Unblock", or "Delete"
-            const url = this.href;
+            // Get info from the button's attributes
+            const action = this.title; // "Block" or "Unblock"
+            const formId = this.dataset.formId; // e.g., "block-form-1"
+
+            if (!formId) return; // Exit if no formId is found
 
             // 1. Update modal text and title
             modalTitle.textContent = `${action} Category`;
             modalText.textContent = `Are you sure you want to ${action.toLowerCase()} this category?`;
 
-            // 2. Update the confirm button's link and style
-            confirmBtn.href = url;
+            // 2. Store the formId on the confirm button
+            confirmBtn.dataset.formId = formId;
+            
+            // 3. Update the confirm button's text and style
             confirmBtn.textContent = action;
             
-            // START: Corrected Button Logic (Block = Red)
-            // Clear old styles (removed btn-warning)
+            // Clear old styles
             confirmBtn.classList.remove('btn-danger', 'btn-success');
 
-            if (action === 'Delete' || action === 'Block') {
-                confirmBtn.classList.add('btn-danger'); // Use 'btn-danger' for both
+            if (action === 'Block') {
+                confirmBtn.classList.add('btn-danger');
             } else if (action === 'Unblock') {
                 confirmBtn.classList.add('btn-success');
             }
-            // END: Corrected Button Logic
 
-            // 3. Show the modal
+            // 4. Show the modal
             modalOverlay.classList.add('show');
         });
     });
 
+    // --- NEW: Add click listener for the 'Confirm' <button> ---
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            const formId = this.dataset.formId;
+            if (formId) {
+                const formToSubmit = document.getElementById(formId);
+                if (formToSubmit) {
+                    formToSubmit.submit(); // Submit the form via POST
+                }
+            }
+        });
+    }
+
     // Add click listeners to close the modal
-    cancelBtn.addEventListener('click', closeModal);
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closeModal);
+    }
     
     modalOverlay.addEventListener('click', function(e) {
         // Only close if the click is on the overlay background
         if (e.target === modalOverlay) {
+            closeModal();
+        }
+    });
+
+    // Add 'Escape' key listener to close modal
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('show')) {
             closeModal();
         }
     });

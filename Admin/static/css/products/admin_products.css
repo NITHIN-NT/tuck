@@ -246,21 +246,22 @@
 }
 
 .btn-action.btn-block {
-  color: #d69e2e;
+  color: #ec2828;
   /* Gold/Yellow */
 }
 
 .btn-action.btn-block:hover {
-  color: #b7791f;
+  color: #b40000;
 }
 
-.btn-action.btn-delete {
-  color: #e53e3e;
-  /* Red */
+
+.btn-action.btn-unblock {
+  color: #00b21e;
+  /* Gold/Yellow */
 }
 
-.btn-action.btn-delete:hover {
-  color: #c53030;
+.btn-action.btn-unblock:hover {
+  color: #41c703;
 }
 
 /* ==================== BUTTON-BASED PAGINATION ==================== */

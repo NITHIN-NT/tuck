@@ -64,6 +64,8 @@ def admin_forgot (request):
                 messages.error(request, 'Access denied. Only admins can reset password here.',extra_tags='admin')
                 return redirect('admin_login')
 
+            if 'admin_reset_password_allowed' in request.session:
+                del request.session['admin_reset_password_allowed']
 
             otp_code = EmailOTP.generate_otp()
             EmailOTP.objects.create(user=user,otp=otp_code)
@@ -227,18 +229,20 @@ class AdminUserView(LoginRequiredMixin,ListView):
 @user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
 @transaction.atomic
 def toggle_user_block(request,id):
-    user = get_object_or_404(CustomUser,id=id)
-    user.is_active = not user.is_active
+    if request.method == 'POST':
+        user = get_object_or_404(CustomUser,id=id)
+        user.is_active = not user.is_active
 
-    user.save()
+        user.save()
 
-    status =  True if user.is_active  else False
-    if status:
-        messages.success(request,f"{user.email} is Unblockd Successfuly",extra_tags='admin')
+        status =  True if user.is_active  else False
+        if status:
+            messages.success(request,f"{user.email} is Unblockd Successfuly",extra_tags='admin')
+        else:
+            messages.error(request,f"{user.email} is Blocked Successfuly",extra_tags='admin')
+            return redirect('admin_user')
     else:
-        messages.error(request,f"{user.email} is Blocked Successfuly",extra_tags='admin')
-    # messages.warning(request,f"{user.email} is {status} Successfuly")
-
+        messages.warning(request,'Invalid request method.', extra_tags='admin')
     return redirect('admin_user')
 
 '''User View End Here'''
@@ -345,29 +349,24 @@ def manage_product(request,id=None):
 @login_required
 @user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
 @transaction.atomic
-def delete_product(request,id=None):
-    product = get_object_or_404(Product,id=id)
-    product.delete()
-    messages.success(request,f'{product.name} Deleted Successfully',extra_tags='admin')
-    return redirect('admin_products')
-
-@login_required
-@user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
-@transaction.atomic
 def toggle_product_block(request,id):
     '''
     This Function is used to Block and Unblock Products
     '''
-    product = get_object_or_404(Product,id=id)
-    product.is_active = not product.is_active
+    if request.method == 'POST':
+        product = get_object_or_404(Product,id=id)
+        product.is_active = not product.is_active
 
-    product.save()
+        product.save()
 
-    status =  True if product.is_active  else False
-    if status:
-        messages.success(request,f"{product.name} is Unblockd Successfuly",extra_tags='admin')
+        status =  True if product.is_active  else False
+        if status:
+            messages.success(request,f"{product.name} is Listed Successfuly",extra_tags='admin')
+        else:
+            messages.error(request,f"{product.name} is Unlisted Successfuly",extra_tags='admin')
     else:
-        messages.error(request,f"{product.name} is Blocked Successfuly",extra_tags='admin')
+        messages.error(request, 'Invalid request method.', extra_tags='admin')
+
     return redirect('admin_products')
 '''Product View End Here'''
 @method_decorator([never_cache,superuser_required],name='dispatch')
@@ -417,20 +416,23 @@ def toggle_category_block(request,id=None):
     '''
     This is used to block a Category and related Products
     '''
-    category = get_object_or_404(Category,id=id)
-    category.is_active = not category.is_active
-    category.save()
+    if request.method == 'POST':
+        category = get_object_or_404(Category,id=id)
+        category.is_active = not category.is_active
+        category.save()
 
-    new_status = category.is_active
-    products = category.products.all()
-    count = products.count()
-    print(count)
-    products.update(is_active = new_status)
-    status =  True if category.is_active  else False
-    if status:
-        messages.success(request,f"{category.name} & related <strong>{count}</strong> Products is Unblockd Successfuly",extra_tags='admin')
+        new_status = category.is_active
+        products = category.products.all()
+        count = products.count()
+        print(count)
+        products.update(is_active = new_status)
+        status =  True if category.is_active  else False
+        if status:
+            messages.success(request,f"{category.name} & related <strong>{count}</strong> Products is Unblockd Successfuly",extra_tags='admin')
+        else:
+            messages.error(request,f"{category.name} & related <strong>{count}</strong> Products is Blocked Successfuly",extra_tags='admin')
     else:
-        messages.error(request,f"{category.name} & related <strong>{count}</strong> Products is Blocked Successfuly",extra_tags='admin')
+        messages.error(request, 'Invalid request method.', extra_tags='admin')
     return redirect('admin_category')
 
 @login_required
@@ -451,9 +453,9 @@ def admin_category_add(request):
             messages.error(request, 'Name is too long (max 100 characters).',extra_tags='admin')
             return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
 
-        if Category.objects.filter(name=name):
-            messages.error(request,'Category Already Exists',extra_tags='admin')
-            return redirect('admin_category_add')
+        if Category.objects.filter(name=name).exists():
+            messages.error(request, 'Category Already Exists', extra_tags='admin')
+            return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
         
         if not description:
             messages.error(request, 'Description is required.',extra_tags='admin')
@@ -469,6 +471,9 @@ def admin_category_add(request):
         return redirect('admin_category')
     return render(request,'categorys/admin_category_form.html')
 
+@login_required
+@user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
+@transaction.atomic
 def admin_category_edit(request,id=None):
     category = get_object_or_404(Category,id=id)
     if request.method == 'POST':
