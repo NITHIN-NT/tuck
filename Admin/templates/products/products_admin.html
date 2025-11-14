@@ -75,21 +75,6 @@
                             </a>
 
                             {% if product.is_active %}
-<<<<<<< HEAD
-                                <a href="{% url 'admin_product_block' product.id %}" 
-                                class="btn-action btn-edit btn-block-toggle" 
-                                title="Block"
-                                data-action="block">
-                                    <i class="fas fa-ban"></i> Block
-                                </a>
-                            {% else %}
-                                <a href="{% url 'admin_product_block' product.id %}" 
-                                class="btn-action btn-edit btn-block-toggle" 
-                                title="Unblock"
-                                data-action="unblock">
-                                    <i class="fas fa-check-circle"></i> Unblock
-                                </a>
-=======
                                 <form action="{% url 'admin_product_block' product.id %}" method="POST" style="display:inline;" id="block-form-{{ product.id }}">
                                     {% csrf_token %}
                                     <button type="button" 
@@ -109,7 +94,6 @@
                                         <i class="fas fa-check-circle"></i> List
                                     </button>
                                 </form>
->>>>>>> bugfix
                             {% endif %}
                         </td>
                         <td>
