@@ -353,6 +353,7 @@ def toggle_product_block(request,id):
     '''
     This Function is used to Block and Unblock Products
     '''
+    print('hello')
     if request.method == 'POST':
         product = get_object_or_404(Product,id=id)
         product.is_active = not product.is_active
