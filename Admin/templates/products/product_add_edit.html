@@ -195,8 +195,21 @@
 <template id="image-empty-form">
     {{ formset_images.empty_form }}
 </template>
-{% endblock %}
 
+<div class="crop-modal" id="cropModal">
+    <div class="crop-container">
+        <h4>Crop & Resize Image</h4>
+        <div class="crop-image-container">
+            <img id="cropImage" style="max-width: 100%;">
+        </div>
+        <div class="crop-actions">
+            <button type="button" class="btn btn-primary" id="cropSave">Apply</button>
+            <button type="button" class="btn btn-secondary" id="cropCancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
 {% block extraJs %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -206,21 +219,22 @@ document.addEventListener('DOMContentLoaded', function() {
     function addFormRow(containerId, templateHtml, prefix) {
         const container = document.getElementById(containerId);
         const totalForms = document.querySelector(`#id_${prefix}-TOTAL_FORMS`);
-        const formIdx = parseInt(totalForms.value);
+        const formIdx = parseInt(totalForms.value, 10);
 
         let newFormHtml = templateHtml.replace(/__prefix__/g, formIdx);
-        newFormHtml = newFormHtml.replace(/<label[^>]*>.*?<\/label>/g, ''); // Remove labels from empty form
+        newFormHtml = newFormHtml.replace(/<label[^>]*>.*?<\/label>/g, ''); // optional
 
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = newFormHtml;
-        const newRow = tempDiv.firstElementChild;
-
-        // Wrap in dynamic-row
+        
         const rowWrapper = document.createElement('div');
         rowWrapper.className = 'dynamic-row';
-        rowWrapper.appendChild(newRow);
+        
+        // Add all child nodes from the template's content
+        while (tempDiv.firstChild) {
+            rowWrapper.appendChild(tempDiv.firstChild);
+        }
 
-        // Add remove button
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'btn-remove-row';
@@ -228,11 +242,12 @@ document.addEventListener('DOMContentLoaded', function() {
         removeBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
         rowWrapper.appendChild(removeBtn);
 
-        // Add hidden DELETE
-        const deleteInput = document.createElement('div');
-        deleteInput.style.display = 'none';
-        deleteInput.innerHTML = `<input type="checkbox" name="${prefix}-${formIdx}-DELETE" id="id_${prefix}-${formIdx}-DELETE">`;
-        rowWrapper.appendChild(deleteInput);
+        // Find the DELETE checkbox that's already in the empty_form template
+        const deleteCheckbox = rowWrapper.querySelector('input[type="checkbox"][name$="-DELETE"]');
+        if (deleteCheckbox) {
+            // Hide it, as it's part of the template
+            deleteCheckbox.parentElement.style.display = 'none';
+        }
 
         container.appendChild(rowWrapper);
         totalForms.value = formIdx + 1;
@@ -246,50 +261,175 @@ document.addEventListener('DOMContentLoaded', function() {
         addFormRow('gallery-container', imageTemplate, 'images');
     });
 
-    // Remove row
+    // Remove row (existing or new)
     document.getElementById('product-form').addEventListener('click', function(e) {
         const btn = e.target.closest('.btn-remove-row');
         if (!btn) return;
 
         const row = btn.closest('.dynamic-row');
         const deleteCheckbox = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
-        const idInput = row.querySelector('input[id^="id_"][id$="-id"]');
 
-        if (deleteCheckbox && idInput && idInput.value) {
-            // Existing object → mark for deletion
+        if (deleteCheckbox) {
             deleteCheckbox.checked = true;
             row.style.display = 'none';
         } else {
-            // New form → just remove
             row.remove();
-            // Update TOTAL_FORMS
-            const prefix = row.closest('.dynamic-rows-container').id.includes('variant') ? 'variants' : 'images';
-            const total = document.querySelector(`#id_${prefix}-TOTAL_FORMS`);
-            total.value = parseInt(total.value) - 1;
         }
     });
 
-    // Main image preview
-    // FIXED: Used the correct dynamic ID from the form
-    const mainImageInput = document.getElementById('{{ product_form.image.id_for_label }}'); 
-    if (mainImageInput) {
-        mainImageInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+    // ---- Image preview + cropper integration ----
+    let cropper = null;
+    let currentFileInput = null;
+    let currentPreviewImg = null;
 
-            let previewContainer = mainImageInput.closest('.form-group').querySelector('.image-preview');
+    const cropModal = document.getElementById('cropModal');
+    const cropImage = document.getElementById('cropImage');
+    const cropSaveBtn = document.getElementById('cropSave');
+    const cropCancelBtn = document.getElementById('cropCancel');
+
+    function openCropperForInput(fileInput, previewImg, dataURL) {
+        currentFileInput = fileInput;
+        currentPreviewImg = previewImg || null;
+        cropImage.src = dataURL;
+        cropModal.classList.add('active');
+
+        setTimeout(() => {
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(cropImage, {
+                aspectRatio: NaN,
+                viewMode: 1,
+                autoCropArea: 1,
+                movable: true,
+                zoomable: true,
+                rotatable: true,
+                scalable: true
+            });
+        }, 100);
+    }
+
+    function fileToDataURL(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onerror = () => reject(new Error('File read error'));
+            reader.onload = (e) => resolve(e.target.result);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function replaceFileInputWithBlob(inputEl, blob, fileName) {
+        const newFile = new File([blob], fileName, { type: blob.type || 'image/jpeg' });
+        const dt = new DataTransfer();
+        dt.items.add(newFile);
+        inputEl.files = dt.files;
+    }
+
+    function getOrCreatePreviewForInput(inputEl) {
+        // Find the existing preview for the main image
+        if (inputEl.id === '{{ product_form.image.id_for_label }}') {
+             let existingPreview = document.querySelector('.current-image-preview img');
+             if (existingPreview) return existingPreview;
+        }
+
+        // Find preview for gallery images
+        let fg = inputEl.closest('.form-group') || inputEl.parentElement;
+        
+        // Check for existing gallery preview (the `form.instance.image` one)
+        let galleryImg = fg.querySelector('img[height="50"]');
+        if (galleryImg) return galleryImg;
+
+        // Create a new preview element if one doesn't exist
+        let preview = fg.querySelector('.image-preview img');
+        if (!preview) {
+            let previewContainer = fg.querySelector('.image-preview');
             if (!previewContainer) {
                 previewContainer = document.createElement('div');
                 previewContainer.className = 'image-preview';
-                previewContainer.innerHTML = '<img style="max-width:100%; height:auto; border-radius:8px; margin:10px 0;">';
-                mainImageInput.before(previewContainer);
+                previewContainer.style.marginTop = '8px';
+                previewContainer.innerHTML = '<img style="border-radius:6px;">'; // Removed fixed size
+                inputEl.insertAdjacentElement('afterend', previewContainer);
+            }
+            preview = previewContainer.querySelector('img');
+        }
+        return preview;
+    }
+    
+    // Event delegation for ANY file input inside the form
+    document.getElementById('product-form').addEventListener('change', async function(e) {
+        const target = e.target;
+        if (!target || target.tagName.toLowerCase() !== 'input' || target.type !== 'file') return;
+
+        const file = target.files && target.files[0];
+        if (!file || !file.type.startsWith('image/')) return;
+
+        const previewImg = getOrCreatePreviewForInput(target);
+        const dataURL = await fileToDataURL(file);
+
+        if (previewImg) {
+            previewImg.src = dataURL;
+            previewImg.style.display = 'block';
+            previewImg.style.height = 'auto'; // Unset any fixed height
+
+            // *** NEW: Check if this is the MAIN image input or a GALLERY input ***
+            if (target.id === '{{ product_form.image.id_for_label }}') {
+                previewImg.style.maxWidth = '100%'; // Main image
+            } else {
+                previewImg.style.maxWidth = '100px'; // Gallery images
+            }
+        }
+        
+        openCropperForInput(target, previewImg, dataURL);
+    });
+
+    // Save cropped image back to input
+    cropSaveBtn.addEventListener('click', function() {
+        if (!cropper || !currentFileInput) return;
+
+        cropper.getCroppedCanvas().toBlob((blob) => {
+            if (!blob) {
+                console.error('Cropper produced no blob');
+                return;
             }
 
-            const reader = new FileReader();
-            reader.onload = (e) => previewContainer.querySelector('img').src = e.target.result;
-            reader.readDataURL(file);
-        });
-    }
+            const originalFile = (currentFileInput.files && currentFileInput.files[0]) || null;
+            const filename = originalFile ? originalFile.name : `cropped_${Date.now()}.jpg`;
+
+            replaceFileInputWithBlob(currentFileInput, blob, filename);
+
+            if (currentPreviewImg) {
+                const url = URL.createObjectURL(blob);
+                currentPreviewImg.src = url;
+                currentPreviewImg.style.display = 'block';
+                currentPreviewImg.style.height = 'auto'; // Unset any fixed height
+
+                // *** NEW: Check if this was the MAIN image input or a GALLERY input ***
+                if (currentFileInput && currentFileInput.id === '{{ product_form.image.id_for_label }}') {
+                    currentPreviewImg.style.maxWidth = '100%'; // Main image
+                } else {
+                    currentPreviewImg.style.maxWidth = '100px'; // Gallery images
+                }
+            }
+
+            cropper.destroy();
+            cropper = null;
+            cropModal.classList.remove('active');
+
+        }, 'image/jpeg', 0.9);
+    });
+
+    cropCancelBtn.addEventListener('click', function() {
+        if (cropper) cropper.destroy();
+        cropper = null;
+        cropModal.classList.remove('active');
+    });
+
+    cropModal.addEventListener('click', (e) => {
+        if (e.target === cropModal) {
+            if (cropper) cropper.destroy();
+            cropper = null;
+            cropModal.classList.remove('active');
+        }
+    });
+    // ---- end cropper integration ----
 });
 </script>
 {% endblock %}
