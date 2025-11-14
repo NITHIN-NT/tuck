@@ -34,7 +34,7 @@ class HomePageView(TemplateView):
         today = timezone.now().date()
         new_arrivals = Product.objects.filter(created_at__date=today,is_active=True).order_by('?')[:4]
         
-        categories = Category.objects.all().prefetch_related('products')[:4]
+        categories = Category.objects.filter(is_active=True).prefetch_related('products')[:4]
         categories_for_template = []
         for category in categories:
             product = category.products.filter(is_active=True, image__isnull=False).first()
@@ -58,7 +58,7 @@ class AboutView(TemplateView):
     template_name ='products/about.html'
 
 def product_list_view(request):
-    categories = Category.objects.all().order_by('name')
+    categories = Category.objects.filter(is_active=True).order_by('name')
     products = Product.objects.filter(is_active=True).order_by('name')
 
     selected_category_id = request.GET.get('category')
