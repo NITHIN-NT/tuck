@@ -131,3 +131,27 @@ ImageFormSet = inlineformset_factory(
     can_delete=True,
     can_delete_extra=True
 )
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+      model = Category
+      fields = ['name','description']
+
+    def clean_name(self):
+        name = self.cleaned_data.get("name")
+        if not name:
+            raise forms.ValidationError("Please enter the Name !")
+
+        if Category.objects.filter(name__icontains=name).exists():
+            raise forms.ValidationError("Category Already Exists")
+        return name
+
+    def clean_description(self):
+        description = self.cleaned_data.get("description")
+
+        if not description:
+            raise forms.ValidationError('Please Enter a Proper Description !')
+
+        if len(description) > 200:
+            raise forms.ValidationError('Description needs to be shorter than 200 characters.')
+        return description

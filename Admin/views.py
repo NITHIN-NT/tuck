@@ -23,7 +23,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from .decorators import superuser_required
 from .forms import (AdminLoginForm,AdminForgotPasswordEmailForm,
                     AdminSetNewPassword,AdminVerifyOTPForm,VariantForm,ImageForm,
-                    AdminProductAddForm,VariantFormSet,ImageFormSet)
+                    AdminProductAddForm,VariantFormSet,ImageFormSet , CategoryForm)
 
 from accounts.models import CustomUser,EmailOTP
 from products.models import Product,Category,ProductVariant,ProductImage
@@ -467,33 +467,17 @@ def admin_category_add(request):
         This is used to add new Categorys
     '''
     if request.method == 'POST':
-        name = request.POST.get('name')
-        description = request.POST.get('description')
-        if not name:
-            messages.error(request, 'Name is required.',extra_tags='admin')
-            return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
+        form = CategoryForm(request.POST)
 
-        if len(name) > 100:
-            messages.error(request, 'Name is too long (max 100 characters).',extra_tags='admin')
-            return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
-
-        if Category.objects.filter(name=name).exists():
-            messages.error(request, 'Category Already Exists', extra_tags='admin')
-            return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
-        
-        if not description:
-            messages.error(request, 'Description is required.',extra_tags='admin')
-            return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
-
-        if len(description) > 200:
-            messages.error(request, 'Description is too long (max 200 characters) .',extra_tags='admin')
-            return render(request, 'categorys/admin_category_form.html', {'name': name, 'description': description})
-
-        Category.objects.create(name=name,description=description)
-
-        messages.success(request,f'{name} Category Added Successfuly',extra_tags='admin')
-        return redirect('admin_category')
-    return render(request,'categorys/admin_category_form.html')
+        if form.is_valid():
+            category = form.save()
+            messages.success(request,f'{category.name} Category Added Successfuly',extra_tags='admin')
+            return redirect('admin_category')
+        else:
+            messages.error(request,"Please Fix the Errors",extra_tags='admin')
+            return render(request,'categorys/admin_category_form.html',{'form' : form})
+    form = CategoryForm()
+    return render(request,'categorys/admin_category_form.html',{'form' : form})
 
 @login_required
 @user_passes_test(lambda user: user.is_superuser,login_url='admin_login')

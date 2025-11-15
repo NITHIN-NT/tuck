@@ -37,7 +37,8 @@
     padding: 0.75rem;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Important for 100% width */
+    box-sizing: border-box;
+    /* Important for 100% width */
     font-size: 1rem;
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
@@ -45,7 +46,8 @@
 /* Focus state for fields */
 .form-container input[type="text"]:focus,
 .form-container textarea:focus {
-    border-color: #007bff; /* Example primary color */
+    border-color: #007bff;
+    /* Example primary color */
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
     outline: none;
 }
@@ -53,8 +55,10 @@
 /* Container for action buttons */
 .form-actions {
     display: flex;
-    justify-content: flex-end; /* Aligns buttons to the right */
-    gap: 0.75rem; /* Space between buttons */
+    justify-content: flex-end;
+    /* Aligns buttons to the right */
+    gap: 0.75rem;
+    /* Space between buttons */
     margin-top: 1.5rem;
 }
 
@@ -70,12 +74,14 @@
 }
 
 .form-actions button:active {
-    transform: scale(0.98); /* Slight press effect */
+    transform: scale(0.98);
+    /* Slight press effect */
 }
 
 /* Save Button (Primary) */
 .btn-save {
-    background-color: #000000; /* Blue */
+    background-color: #000000;
+    /* Blue */
     color: white;
 }
 
@@ -85,10 +91,15 @@
 
 /* Back Button (Secondary) */
 .btn-back {
-    background-color: #6c757d; /* Gray */
+    background-color: #6c757d;
+    /* Gray */
     color: white;
 }
 
 .btn-back:hover {
     background-color: #5a6268;
+}
+
+.field-error {
+    color: red;
 }
