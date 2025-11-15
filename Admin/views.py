@@ -1,12 +1,9 @@
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView,ListView
-from django.views.generic.edit import CreateView
-from django.views import View
 
 from django.template.loader import render_to_string 
 
 from django.contrib import messages
-from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -15,7 +12,6 @@ from django.db.models import Count,Sum
 from django.db import transaction
 from django.db.models import Q
 
-from django.core.mail import EmailMultiAlternatives 
 from django.forms import inlineformset_factory
 from django.utils.decorators import method_decorator
 from django.shortcuts import render,redirect,get_object_or_404
@@ -24,6 +20,7 @@ from .decorators import superuser_required,redirect_if_authenticated
 from .forms import (AdminLoginForm,AdminForgotPasswordEmailForm,
                     AdminSetNewPassword,AdminVerifyOTPForm,VariantForm,ImageForm,
                     AdminProductAddForm,VariantFormSet,ImageFormSet , CategoryForm)
+from .utils import send_html_mail
 
 from accounts.models import CustomUser,EmailOTP
 from products.models import Product,Category,ProductVariant,ProductImage
@@ -73,18 +70,15 @@ def admin_forgot (request):
             EmailOTP.objects.create(user=user,otp=otp_code)
 
             subject = 'Admin Reset Password One-Time-Password '
-            plain_message = f"Your OTP code for password Rest is :{otp_code}"
-            html_message = render_to_string('email/admin_otp_email.html', {'otp_code': otp_code}) 
-
+            
             try:
-                msg = EmailMultiAlternatives(
-                    body=plain_message,
+                send_html_mail(
                     subject=subject,
-                    from_email ='TuckInda@gmail.com',
-                    to=[email],
+                    template_name='email/admin_otp_email.html',
+                    context={'otp_code': otp_code},
+                    to_email=email,
+                    plain_text=f"Your OTP code for password Rest is :{otp_code}"
                 )
-                msg.attach_alternative(html_message,"text/html")
-                msg.send()
                 request.session['reset_admin_email'] = user.email
                 messages.success(request,f'An OTP has been Sent to {email}',extra_tags='admin')
                 return redirect('admin_otp_verification')
