@@ -60,8 +60,8 @@
 
                         <div class="form-options">
                             <div class="remember-me">
-                                <input type="checkbox" id="remember" name="remember">
-                                <label for="remember">Remember me</label>
+                                {% comment %} <input type="checkbox" id="remember" name="remember">
+                                <label for="remember">Remember me</label> {% endcomment %}
                             </div>
                             <a href="{% url "admin_forgot_password" %}" class="forgot-password">Forgot Password?</a>
                         </div>
@@ -77,6 +77,27 @@
         </div>
 
     </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const togglePassword = document.querySelector(".toggle-password");
+    const passwordInput = document.getElementById("password");
+    const icon = togglePassword.querySelector("i");
+
+    togglePassword.addEventListener("click", function () {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+
+        // Toggle icon
+        if (type === "text") {
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    });
+});
+</script>
 
 </body>
 </html>
