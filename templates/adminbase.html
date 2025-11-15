@@ -8,7 +8,7 @@
     {% block title %}{% endblock title %}
     
     <link rel="stylesheet" href="{% static 'css/admin_base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/breadcrumbs.css' %}">
+    <link rel="stylesheet" href="{% static 'css/breadcrumbs_admin.css' %}">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
@@ -88,6 +88,7 @@
                     </a>
                 </li>
             </ul>
+            
             <div class="sidebar-footer">
                 <a href="{% url 'admin_logout' %}">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
@@ -117,13 +118,14 @@
             
             
             <main class="content-area">
-                {% if breadcrumbs %}
-                <div class="container breadcrumbs-container">
-                    {% include "dynamic_breadcrumbs/breadcrumbs.html" with breadcrumbs=breadcrumbs|slice:"1:" %}
+                <div>
+                    {% if breadcrumbs %}
+                    <div class="container breadcrumbs-container">
+                        {% include "dynamic_breadcrumbs/breadcrumbs.html" with breadcrumbs=breadcrumbs|slice:"1:" %}
+                    </div>
+                    {% endif %}
                 </div>
-            {% endif %}
                 {% block content %}
-            
                 {% endblock content %}
             </main>
         </div>

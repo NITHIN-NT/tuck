@@ -31,6 +31,12 @@ from products.models import Product,Category,ProductVariant,ProductImage
 # Create your views here.
 @never_cache
 def admin_login(request):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect('admin_home')
+        else:
+            return redirect('Home_page_user')
+    
     if request.method == 'POST':
         form = AdminLoginForm(request.POST)
         if form.is_valid():
@@ -48,6 +54,12 @@ def admin_login(request):
     return render(request,'adminAuth/login.html',{'form' : form})
 
 def admin_forgot (request):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect('admin_home')
+        else:
+            return redirect('Home_page_user')
+        
     form = AdminForgotPasswordEmailForm()
     if request.method == 'POST':
         form = AdminForgotPasswordEmailForm(request.POST)
@@ -94,6 +106,12 @@ def admin_forgot (request):
     return render(request,'adminAuth/forgot-password.html',{'form':form})
 
 def admin_otp_verification (request):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect('admin_home')
+        else:
+            return redirect('Home_page_user')
+        
     if not request.session.get('reset_admin_email'):
         messages.error(request,'You are Not autherized to access this page.',extra_tags='admin')
         return redirect('admin_login')
@@ -129,6 +147,11 @@ def admin_otp_verification (request):
     return render(request,'adminAuth/otp-verification.html',{'form':form})
 
 def admin_reset(request):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect('admin_home')
+        else:
+            return redirect('Home_page_user')
     if not request.session.get('admin_reset_password_allowed') or not request.session.get('reset_admin_email'):
         messages.error(request,'You are not authorized to access this page. Please verify your OTP first.',extra_tags='admin')
         return redirect('admin_forgot_password')
