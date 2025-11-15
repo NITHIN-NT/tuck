@@ -24,8 +24,8 @@ urlpatterns = [
 
     path('category/',AdminCategoryView.as_view(),name='admin_category'),
     path('category/block/<int:id>',views.toggle_category_block,name='admin_category_block'),
-    path('category/add',views.admin_category_add,name='admin_category_add'),
-    path('category/edit/<int:id>',views.admin_category_edit,name='admin_category_edit'),
+    path('category/add',views.admin_category_management,name='admin_category_add'),
+    path('category/edit/<int:id>',views.admin_category_management,name='admin_category_edit'),
 
     path('stock/',StockManagementView.as_view(),name='stock_mangement')
 

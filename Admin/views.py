@@ -462,46 +462,34 @@ def toggle_category_block(request,id=None):
 @login_required
 @user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
 @transaction.atomic
-def admin_category_add(request):
+def admin_category_management(request,id=None):
     '''
         This is used to add new Categorys
     '''
+    category = get_object_or_404(Category,id=id) if id else None
     if request.method == 'POST':
-        form = CategoryForm(request.POST)
+        form = CategoryForm(request.POST,instance=category)
 
         if form.is_valid():
             category = form.save()
-            messages.success(request,f'{category.name} Category Added Successfuly',extra_tags='admin')
+            if id:
+                messages.success(request,f'{category.name} Category Updated Successfuly',extra_tags='admin')
+            else:
+                messages.success(request,f'{category.name} Category Added Successfully', extra_tags='admin')
             return redirect('admin_category')
-        else:
-            messages.error(request,"Please Fix the Errors",extra_tags='admin')
-            return render(request,'categorys/admin_category_form.html',{'form' : form})
-    form = CategoryForm()
-    return render(request,'categorys/admin_category_form.html',{'form' : form})
-
-@login_required
-@user_passes_test(lambda user: user.is_superuser,login_url='admin_login')
-@transaction.atomic
-def admin_category_edit(request,id=None):
-    category = get_object_or_404(Category,id=id)
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        description = request.POST.get('description')
-    
-        if Category.objects.filter(name=name).exclude(id=id).exists():
-            messages.error(request,'Category Already Exists',extra_tags='admin')
-            return redirect('admin_category_add')
         
-        category.name = name
-        category.description = description
-        category.save()
-        messages.success(request,f'{name} Category updated Successfuly',extra_tags='admin')
-        return redirect('admin_category')
+        messages.error(request,"Please Fix the Errors",extra_tags='admin')
+        return render(request,'categorys/admin_category_form.html',{'form' : form})
+    else:
+        form = CategoryForm(instance=category)
 
     context = {
+        'form' : form,
         'category' : category
     }
+    
     return render(request,'categorys/admin_category_form.html',context)
+
 @method_decorator([never_cache,superuser_required],name='dispatch')
 class StockManagementView(ListView):
     model = Product
