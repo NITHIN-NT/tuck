@@ -208,7 +208,7 @@ class SendOTPView(View):
                 msg = EmailMultiAlternatives(
                     body=plain_message,
                     subject='Your OTP Verification Code',
-                    from_email ='TuckInda@gmail.com',
+                    from_email ='SecondStrap@gmail.com',
                     to=[email],
                 )
                 msg.attach_alternative(html_message,"text/html")
