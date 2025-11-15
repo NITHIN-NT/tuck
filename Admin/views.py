@@ -20,7 +20,7 @@ from django.forms import inlineformset_factory
 from django.utils.decorators import method_decorator
 from django.shortcuts import render,redirect,get_object_or_404
 
-from .decorators import superuser_required
+from .decorators import superuser_required,redirect_if_authenticated
 from .forms import (AdminLoginForm,AdminForgotPasswordEmailForm,
                     AdminSetNewPassword,AdminVerifyOTPForm,VariantForm,ImageForm,
                     AdminProductAddForm,VariantFormSet,ImageFormSet , CategoryForm)
@@ -30,13 +30,8 @@ from products.models import Product,Category,ProductVariant,ProductImage
 
 # Create your views here.
 @never_cache
+@redirect_if_authenticated
 def admin_login(request):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return redirect('admin_home')
-        else:
-            return redirect('Home_page_user')
-    
     if request.method == 'POST':
         form = AdminLoginForm(request.POST)
         if form.is_valid():
@@ -53,13 +48,8 @@ def admin_login(request):
         form = AdminLoginForm()
     return render(request,'adminAuth/login.html',{'form' : form})
 
+@redirect_if_authenticated
 def admin_forgot (request):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return redirect('admin_home')
-        else:
-            return redirect('Home_page_user')
-        
     form = AdminForgotPasswordEmailForm()
     if request.method == 'POST':
         form = AdminForgotPasswordEmailForm(request.POST)
@@ -105,12 +95,8 @@ def admin_forgot (request):
                 return redirect('admin_forgot_password')
     return render(request,'adminAuth/forgot-password.html',{'form':form})
 
+@redirect_if_authenticated
 def admin_otp_verification (request):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return redirect('admin_home')
-        else:
-            return redirect('Home_page_user')
         
     if not request.session.get('reset_admin_email'):
         messages.error(request,'You are Not autherized to access this page.',extra_tags='admin')
@@ -146,12 +132,8 @@ def admin_otp_verification (request):
         form = AdminVerifyOTPForm()
     return render(request,'adminAuth/otp-verification.html',{'form':form})
 
+@redirect_if_authenticated
 def admin_reset(request):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return redirect('admin_home')
-        else:
-            return redirect('Home_page_user')
     if not request.session.get('admin_reset_password_allowed') or not request.session.get('reset_admin_email'):
         messages.error(request,'You are not authorized to access this page. Please verify your OTP first.',extra_tags='admin')
         return redirect('admin_forgot_password')
