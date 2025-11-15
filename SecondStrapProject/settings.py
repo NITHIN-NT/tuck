@@ -96,8 +96,8 @@ MIDDLEWARE = [
     URLS & WSGI 
 '''
 
-ROOT_URLCONF = 'TuckProject.urls'
-WSGI_APPLICATION = 'TuckProject.wsgi.application'
+ROOT_URLCONF = 'SecondStrapProject.urls'
+WSGI_APPLICATION = 'SecondStrapProject.wsgi.application'
 
 '''
     TEMPLATES
