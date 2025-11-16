@@ -1,11 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views.generic import TemplateView,DetailView,View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 # Create your views here.
+class LoggedInRedirectMixin:
+    """
+    A mixin to redirect authenticated users away from a page.
+    """
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('Home_page_user') 
+        return super().dispatch(request, *args, **kwargs)
 
+method_decorator(never_cache,name='dispatch')
 class ProfileView(LoginRequiredMixin,TemplateView):
     template_name = 'userprofile/profile.html'
     model = get_user_model()
