@@ -25,7 +25,7 @@ class Product(models.Model):
 
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     alt_text = models.CharField(max_length=255, blank=True, null=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products') 
 
     is_featured = models.BooleanField(default=False)
     is_selective = models.BooleanField(default=False)
