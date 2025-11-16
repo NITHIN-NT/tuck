@@ -24,7 +24,7 @@
             <div class="table-toolbar">
                 <div class="search-bar">
                     <i class="fa-solid fa-search"></i>
-                    <input type="text" name="search" placeholder="Search categories..." value={{search}}>
+                    <input type="text" name="search" placeholder="Search categories..." value="{{ search }}">
                 </div>
                 <div class="filters">
                     <select name="category_status" class='filter-dropdown'>
@@ -34,34 +34,36 @@
                     </select>
                 </div>
                 <a href="{% url "admin_category" %}" class="btn btn-secondary">Clear</a>
-                <button type.="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
 
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Category Name</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for category in  categorys%}
-                <tr>
-                    <td>{{category.name}}</td>
-                    <td>{{category.description}}</td>
-                    <td>
-                        <span class="status-badge status-{% if category.is_active %}active{% else %}blocked{% endif %}">{% if category.is_active %}Active{% else %}blocked{% endif %}</span>
-                    </td>
-                    <td class="action-buttons">
-                        <a href="{% url "admin_category_edit" category.id%}" class="btn-action btn-edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i> edit</a>
+       <div class="categories-grid">
+            
+            {% for category in categorys %}
+                {% cycle '#dfeafe' '#f1e2ff' '#e2f9e6' '#fff9d3' '#ffe2e8' '#ffe2f2' as card_color silent %}
+
+                <div class="cat-card" style="--bg: {{ card_color }};">
+                    <div class="icon-box"><i class="fa-regular fa-folder"></i></div>
+
+                    <h3>{{ category.name }}</h3>
+                    <p class="desc">{{ category.description }}</p>
+
+                    <p class="count">
+                        <strong>{{ category.count | default:0 }}</strong> 
+                        products
+                    </p>
+
+                    <div class="actions">
                         
+                        <a href="{% url "admin_category_edit" category.id %}" class="edit">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </a>
+
                         {% if category.is_active %}
-                            <form action="{% url 'admin_category_block' category.id %}" method="POST" style="display:inline;" id="block-form-{{ category.id }}">
+                            <form action="{% url 'admin_category_block' category.id %}" method="POST" style="display: contents;" id="block-form-{{ category.id }}">
                                 {% csrf_token %}
-                                <button type="submit" 
+                                <button type="button" 
                                         class="btn-action btn-block modal-trigger" 
                                         title="Block"
                                         data-form-id="block-form-{{ category.id }}">
@@ -69,9 +71,9 @@
                                 </button>
                             </form>
                         {% else %}
-                            <form action="{% url 'admin_category_block' category.id %}" method="POST" style="display:inline;" id="unblock-form-{{ category.id }}">
+                            <form action="{% url 'admin_category_block' category.id %}" method="POST" style="display: contents;" id="unblock-form-{{ category.id }}">
                                 {% csrf_token %}
-                                <button type="submit" 
+                                <button type="button" 
                                         class="btn-action btn-unblock modal-trigger" 
                                         title="Unblock"
                                         data-form-id="unblock-form-{{ category.id }}">
@@ -79,31 +81,25 @@
                                 </button>
                             </form>
                         {% endif %}
-                        
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td>No Data</td>
-                </tr>
-                {% endfor %}
-                
 
-            </tbody>
-        </table>
-    </div>
+                        {# View option removed as requested #}
+                    </div>
+                </div>
+            {% empty %}
+                <p>No categories found.</p>
+            {% endfor %}
+        </div>
+        </div>
 
 <section class='pagination-container'>
     <div class="pagination">
 
-        {% comment %} Previous Page Link {% endcomment %}
         {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}&{{ query_params }}">&lt;</a>
         {% else %}
             <span class="disabled">&lt;</span>
         {% endif %}
 
-        {% comment %} Page Number Links {% endcomment %}
         {% for i in custom_page_range %}
             {% if i == paginator.ELLIPSIS %}
                 <span class="ellipsis">{{ i }}</span>
@@ -114,7 +110,6 @@
             {% endif %}
         {% endfor %}
 
-        {% comment %} Next Page Link {% endcomment %}
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}&{{ query_params }}">&gt;</a>
         {% else %}
@@ -124,112 +119,71 @@
     </div>
 </section>
 
-<div class="modal-overlay" id="confirmation-modal-overlay">
-    <div class="modal-content" id="confirmation-modal">
-        <h2>Confirm Action</h2><br>
-        <p>Are you sure you want to perform this action?</p>
+<div class="modal-overlay" id="confirmation-modal-overlay" aria-hidden="true">
+    <div class="modal-content" id="confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="confirmation-modal-title">
+        <h2 id="confirmation-modal-title">Confirm Action</h2><br>
+        <p id="confirmation-modal-text">Are you sure you want to perform this action?</p>
         <div class="modal-actions">
             <button type="button" class="btn btn-secondary" id="modal-btn-cancel">Cancel</button>
             <button type="button" class="btn" id="modal-btn-confirm">Confirm</button>
         </div>
     </div>
 </div>
+
 {% endblock content %}
 
 {% block extraJs %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Get all the elements
+    // Confirmation modal elements
     const modalOverlay = document.getElementById('confirmation-modal-overlay');
-    if (!modalOverlay) return; // Stop if modal isn't on the page
-    
-    const modalTitle = modalOverlay.querySelector('h2');
-    const modalText = modalOverlay.querySelector('p');
-    // This is now a <button>, not an <a> tag
-    const confirmBtn = document.getElementById('modal-btn-confirm'); 
-    const cancelBtn = document.getElementById('modal-btn-cancel');
-    
-    // Find all buttons that trigger the modal
-    // This now targets the buttons inside the new forms
-    const triggerButtons = document.querySelectorAll('.modal-trigger');
+    if (modalOverlay) {
+        const modalTitle = modalOverlay.querySelector('h2');
+        const modalText = modalOverlay.querySelector('p');
+        const confirmBtn = document.getElementById('modal-btn-confirm');
+        const cancelBtn = document.getElementById('modal-btn-cancel');
+        const triggerButtons = document.querySelectorAll('.modal-trigger');
 
-    // Function to close the modal
-    function closeModal() {
-        modalOverlay.classList.remove('show');
-        // Clear formId from confirm button to be safe
+        function closeModal() {
+            modalOverlay.classList.remove('show');
+            if (confirmBtn) confirmBtn.dataset.formId = '';
+        }
+
+        triggerButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const action = this.title; // "Block" or "Unblock"
+                const formId = this.dataset.formId; // e.g., "block-form-1"
+                if (!formId) return;
+                modalTitle.textContent = `${action} Category`;
+                modalText.textContent = `Are you sure you want to ${action.toLowerCase()} this category?`;
+                confirmBtn.dataset.formId = formId;
+                confirmBtn.textContent = action;
+                confirmBtn.classList.remove('btn-danger', 'btn-success');
+                if (action === 'Block') confirmBtn.classList.add('btn-danger');
+                else if (action === 'Unblock') confirmBtn.classList.add('btn-success');
+                modalOverlay.classList.add('show');
+            });
+        });
+
         if (confirmBtn) {
-            confirmBtn.dataset.formId = ''; 
-        }
-    }
-
-    // Add click listener to all trigger buttons
-    triggerButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            // Stop the form from submitting immediately
-            e.preventDefault();
-
-            // Get info from the button's attributes
-            const action = this.title; // "Block" or "Unblock"
-            const formId = this.dataset.formId; // e.g., "block-form-1"
-
-            if (!formId) return; // Exit if no formId is found
-
-            // 1. Update modal text and title
-            modalTitle.textContent = `${action} Category`;
-            modalText.textContent = `Are you sure you want to ${action.toLowerCase()} this category?`;
-
-            // 2. Store the formId on the confirm button
-            confirmBtn.dataset.formId = formId;
-            
-            // 3. Update the confirm button's text and style
-            confirmBtn.textContent = action;
-            
-            // Clear old styles
-            confirmBtn.classList.remove('btn-danger', 'btn-success');
-
-            if (action === 'Block') {
-                confirmBtn.classList.add('btn-danger');
-            } else if (action === 'Unblock') {
-                confirmBtn.classList.add('btn-success');
-            }
-
-            // 4. Show the modal
-            modalOverlay.classList.add('show');
-        });
-    });
-
-    // --- NEW: Add click listener for the 'Confirm' <button> ---
-    if (confirmBtn) {
-        confirmBtn.addEventListener('click', function() {
-            const formId = this.dataset.formId;
-            if (formId) {
-                const formToSubmit = document.getElementById(formId);
-                if (formToSubmit) {
-                    formToSubmit.submit(); // Submit the form via POST
+            confirmBtn.addEventListener('click', function() {
+                const formId = this.dataset.formId;
+                if (formId) {
+                    const formToSubmit = document.getElementById(formId);
+                    if (formToSubmit) formToSubmit.submit();
                 }
-            }
+            });
+        }
+
+        if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('show')) closeModal();
         });
     }
-
-    // Add click listeners to close the modal
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', closeModal);
-    }
-    
-    modalOverlay.addEventListener('click', function(e) {
-        // Only close if the click is on the overlay background
-        if (e.target === modalOverlay) {
-            closeModal();
-        }
-    });
-
-    // Add 'Escape' key listener to close modal
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modalOverlay.classList.contains('show')) {
-            closeModal();
-        }
-    });
 
 });
 </script>

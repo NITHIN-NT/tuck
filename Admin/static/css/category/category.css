@@ -1,4 +1,5 @@
-/* --- General Page Header --- */
+/* ===== BASE CATEGORY PAGE STYLES ===== */
+
 .page-header-container {
     display: flex;
     justify-content: space-between;
@@ -19,67 +20,51 @@
     color: #718096;
 }
 
-/* --- Buttons --- */
-/* Base button style for all buttons and links styled as buttons */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    /* Centers text/icon */
     padding: 10px 16px;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 600;
     gap: 8px;
     border: 1px solid transparent;
-    /* Set base border */
     cursor: pointer;
-    font-family: 'Inter', sans-serif;
     font-size: 14px;
-    transition: all 0.2s ease;
-    line-height: 1.4;
-    /* Ensures consistent height */
+    transition: .2s ease;
 }
 
-/* Primary button (Purple) - Used for "Add Category" and "Search" */
 .btn-primary {
     background-color: #6b46c1;
-    /* Purple */
     color: #fff;
     border-color: #6b46c1;
 }
 
 .btn-primary:hover {
     background-color: #553c9a;
-    border-color: #553c9a;
 }
 
-/* Secondary button (Grey) - Used for "Clear" */
 .btn-secondary {
-    background-color: #fff;
+    background: #fff;
     color: #4a5568;
     border: 1px solid #cbd5e0;
-    /* Grey border */
 }
 
 .btn-secondary:hover {
     background-color: #f7fafc;
-    /* Lightest grey hover */
-    border-color: #adb5bd;
 }
 
+/* ===== CATEGORY GRID ===== */
 
-/* --- Main Content Card --- */
 .data-table-card {
-    background-color: #ffffff;
+    background: #fff;
     border-radius: 12px;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     padding: 24px;
-    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .05);
 }
 
-/* --- Toolbar (Search + Filters) --- */
 .table-toolbar {
     display: flex;
     justify-content: space-between;
@@ -95,17 +80,12 @@
     min-width: 250px;
 }
 
-.search-bar input[type="text"] {
+.search-bar input {
     width: 100%;
     padding: 10px 16px 10px 40px;
     border: 1px solid #cbd5e0;
     border-radius: 8px;
     font-size: 14px;
-    font-family: 'Inter', sans-serif;
-}
-
-.search-bar input[type="text"]::placeholder {
-    color: #a0aec0;
 }
 
 .search-bar .fa-search {
@@ -114,7 +94,6 @@
     top: 50%;
     transform: translateY(-50%);
     color: #a0aec0;
-    font-size: 14px;
 }
 
 .filters {
@@ -126,264 +105,243 @@
     padding: 10px 14px;
     border: 1px solid #cbd5e0;
     border-radius: 8px;
-    background-color: #fff;
+    background: #fff;
     color: #4a5568;
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
     cursor: pointer;
-}
-
-/* --- Data Table --- */
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
     font-size: 14px;
 }
 
-.data-table thead tr {
-    border-bottom: 1px solid #e2e8f0;
+.categories-grid {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
 }
 
-.data-table thead th {
-    padding: 12px 16px;
-    text-align: left;
-    font-weight: 600;
-    color: #718096;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-}
+/* === MODIFIED STYLES START HERE === */
 
-.data-table tbody tr {
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.data-table tbody tr:last-child {
-    border-bottom: none;
-}
-
-.data-table tbody td {
-    padding: 16px;
-    vertical-align: middle;
-    color: #2d3748;
-}
-
-/* --- Product Table Image --- */
-.product-table-image {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 8px;
+.cat-card {
+    background: #fff;
+    border-radius: 14px;
     border: 1px solid #e2e8f0;
+    /* Light border */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .05);
+    /* Softer shadow */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Crucial for rounded corners on children */
+    padding: 0;
+    /* Remove old padding */
+    transition: .3s ease;
+    /* min-height: 310px; <-- Removed to allow content to define height */
 }
 
-/* --- Status Pills --- */
-.status-badge {
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
+.cat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, .08);
 }
 
-.status-badge.status-active {
-    background-color: #e6f7f0;
-    /* Light green */
-    color: #0a875a;
-    /* Dark green */
-}
-
-.status-badge.status-blocked {
-    background-color: #fdeeee;
-    /* Light red */
-    color: #e53e3e;
-    /* Dark red */
-}
-
-.status-badge.status-low {
-    background-color: #fefcbf;
-    /* Light yellow */
-    color: #b7791f;
-    /* Dark yellow */
-}
-
-/* --- Action Buttons --- */
-.action-buttons {
+.icon-box {
+    /* This is now the light blue header section */
+    background-color: #f0f6ff;
+    /* Light blue from image */
+    padding: 30px 20px;
     display: flex;
     align-items: center;
-    gap: 20px;
+    justify-content: center;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e2e8f0;
+
+    /* Reset old styles */
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    
+    /* Set order to 0 (default, stays on top) */
+    order: 0; 
 }
 
-.btn-action {
+.icon-box i {
+    /* This is the white folder icon container */
+    background: #fff;
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    /* Icon size */
+    color: #1e293b;
+    /* Icon color */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .05);
+}
+
+.cat-card h3 {
+    font-size: 22px;
+    /* Larger title */
+    font-weight: 700;
+    margin-top: 24px;
+    /* Space from header */
+    margin-bottom: 6px;
+    color: #1a202c;
+    
+    /* Set order to 1 (after header) */
+    order: 1;
+}
+
+.cat-card .desc {
+    font-size: 15px;
+    color: #64748b;
+    /* Softer gray */
+    margin-bottom: 24px; /* <-- Swapped margin */
+    line-height: 1.5;
+    padding: 0 16px;
+    /* Prevent long text from touching edges */
+
+    /* Set order to 3 (after count) */
+    order: 3;
+}
+
+.cat-card .count {
     font-size: 16px;
+    /* "products" text */
+    color: #64748b;
+    margin-bottom: 20px; /* <-- Swapped margin */
+    
+    /* Set order to 2 (after title, before desc) */
+    order: 2;
+}
+
+.cat-card .count strong {
+    font-size: 40px;
+    /* "45" */
+    color: #1e293b;
+    font-weight: 700;
+    margin-right: 8px;
+    /* Space between number and text */
+    display: inline-block;
+    /* Aligns better */
+}
+
+.actions {
+    display: flex;
+    gap: 0;
+    /* No gap between buttons */
+    margin-top: auto;
+    /* Pushes buttons to the bottom */
+    
+    /* Set order to 4 (last item) */
+    order: 4;
+}
+
+/* Base style for both buttons */
+.actions button,
+.actions a {
+    flex: 1;
+    padding: 16px 10px;
+    /* Taller buttons */
+    border-radius: 0;
+    /* No rounded corners on buttons */
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: .2s ease;
+    border: none;
+    /* Remove default border */
+    border-top: 1px solid #e2e8f0;
+    /* Divider from content */
 }
 
-.btn-action.btn-edit {
-    color: #6b46c1;
-    /* Purple */
+.actions .edit {
+    /* "Edit" button style from image */
+    background: #0f172a;
+    /* Light gray */
+    color: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    /* Divider between buttons */
 }
 
-.btn-action.btn-edit:hover {
-    color: #553c9a;
+.actions .edit:hover {
+    background: #03226a;
 }
 
-/* --- UPDATED STYLE (Block = Red) --- */
-.btn-action.btn-block {
-    color: #e53e3e;
-    /* Red */
+/* This styles BOTH "Block" and "Unblock" to look like the dark "View Products" button */
+.actions .btn-block{
+    background: #B91C1C;
+    /* Dark blue/black from image */
+    color: #ffffff;
+}
+.actions .btn-unblock {
+    background: #0c7932;
+    /* Dark blue/black from image */
+    color: #ffffff;
 }
 
-.btn-action.btn-block:hover {
-    color: #c53030;
-    /* Dark Red */
+.actions .btn-block:hover {
+    background: #c50101;
 }
 
-/* --- END UPDATED STYLE --- */
-
-.btn-action.btn-unblock {
-    color: #0a875a;
-    /* Dark Green (to match active status) */
+.actions .btn-unblock:hover {
+    background: #067d2f;
+    /* Slightly lighter dark */
 }
 
-.btn-action.btn-unblock:hover {
-    color: #065f40;
-    /* Darker Green */
-}
+/* === MODIFIED STYLES END HERE === */
 
-.btn-action.btn-delete {
-    color: #e53e3e;
-    /* Red */
-}
-
-.btn-action.btn-delete:hover {
-    color: #c53030;
-}
-
-
-/* ==================== BUTTON-BASED PAGINATION ==================== */
+/* ===== PAGINATION ===== */
 
 .pagination-container {
     margin-top: 48px;
-    width: 100%;
 }
 
 .pagination {
     display: flex;
     justify-content: center;
-    align-items: center;
     gap: 8px;
-    /* This creates the space between the buttons */
 }
 
-/* Base style for ALL pagination buttons */
 .pagination a,
-.pagination .current,
-.pagination .disabled {
+.pagination span {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
     display: inline-flex;
-    /* Helps center the text/arrow perfectly */
     align-items: center;
     justify-content: center;
-    width: 40px;
-    /* Makes the button square */
-    height: 40px;
-    /* Makes the button square */
-    border: 1px solid #ddd;
-    /* The light grey border */
-    border-radius: 6px;
-    /* The rounded corners */
-    text-decoration: none;
-    color: #333;
     font-size: 16px;
-    font-weight: 500;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Ellipsis (...) */
-.pagination .ellipsis {
-    padding: 0 8px;
-    color: #aaa;
-}
-
-/* Style for the clickable links (<a>) on HOVER */
-.pagination a:hover {
-    background-color: #f5f5f5;
-    /* Light grey background on hover */
-    border-color: #bbb;
-}
-
-/* Style for the CURRENT page button */
 .pagination .current {
-    color: #000000;
-    border-color: #000000;
-    font-weight: 600;
-    cursor: default;
-    /* It's not clickable */
+    border-color: #000;
+    font-weight: bold;
 }
 
-/* Style for the DISABLED arrow buttons */
 .pagination .disabled {
     color: #aaa;
-    /* Faded grey text */
     border-color: #eee;
-    /* Faded grey border */
-    cursor: default;
 }
 
-/* --- Buttons (Additions for Modal) --- */
-.btn-danger {
-    background-color: #e53e3e;
-    /* Red */
-    color: #fff;
-    border-color: #e53e3e;
-}
+/* ===== CONFIRMATION MODAL ===== */
 
-.btn-danger:hover {
-    background-color: #c53030;
-    border-color: #c53030;
-}
-
-/* .btn-warning class removed as it's no longer used */
-
-.btn-success {
-    background-color: #0a875a;
-    /* Dark Green */
-    color: #fff;
-    border-color: #0a875a;
-}
-
-.btn-success:hover {
-    background-color: #065f40;
-    /* Darker Green */
-    border-color: #065f40;
-}
-
-
-/* --- Confirmation Modal --- */
 .modal-overlay {
-    display: none;
-    /* Hidden by default */
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 1000;
-    display: flex;
+    inset: 0;
+    background: rgba(0, 0, 0, .6);
+    display: none;
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
+    transition: .3s ease;
 }
 
 .modal-overlay.show {
     display: flex;
-    /* Show the modal */
     opacity: 1;
-    pointer-events: auto;
 }
 
 .modal-content {
@@ -392,30 +350,44 @@
     border-radius: 12px;
     width: 90%;
     max-width: 400px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: translateY(-20px);
-    transition: transform 0.3s ease;
-}
-
-.modal-overlay.show .modal-content {
-    transform: translateY(0);
-}
-
-.modal-content h2 {
-    margin-top: 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: #1a202c;
-}
-
-.modal-content p {
-    font-size: 16px;
-    color: #4a5568;
-    margin-bottom: 24px;
 }
 
 .modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
+}
+
+.btn-danger {
+    background: #e53e3e;
+    color: #fff;
+}
+
+.btn-success {
+    background: #0a875a;
+    color: #fff;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:1024px) {
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:640px) {
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .table-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters,
+    .filter-dropdown {
+        width: 100%;
+    }
 }

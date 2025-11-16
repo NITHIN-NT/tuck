@@ -374,7 +374,7 @@ class AdminCategoryView(ListView):
     model = Category
     template_name = 'categorys/category.html'
     context_object_name = 'categorys'
-    paginate_by = 10
+    paginate_by = 9
     ordering = ['-created_at']
 
     def get_queryset(self):
@@ -387,9 +387,9 @@ class AdminCategoryView(ListView):
             queryset = queryset.filter(is_active=False)
 
         if search:
-            queryset = queryset.filter(name__icontains=search)
+            queryset = queryset.filter(name__icontains=search)      
 
-        return queryset
+        return queryset.annotate(count = Count('products'))
     
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
