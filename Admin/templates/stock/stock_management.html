@@ -42,6 +42,7 @@
                 <th style="width: 2%;"></th> <th>Product Name</th>
                 <th>Size</th>
                 <th>Price</th>
+                <th>Offer Price</th>
                 <th>Stock</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -60,7 +61,7 @@
         <td>{{ product.variant_count }} size{{ product.variant_count|pluralize }}</td>
         
         <td>-</td>
-        
+        <td>-</td>
         <td><strong>{{ product.total_stock|default:0 }} total</strong></td>
         
         <td></td>
@@ -72,7 +73,8 @@
         <td></td>
         <td class="variant-name"><i class="bi bi-arrow-return-right"></i> {{ product.name }}</td>
         <td>{{ variant.size.size }}</td>
-        <td>₹{{ variant.price }}</td>
+        <td>₹{{ variant.base_price }}</td>
+        <td>₹{{ variant.offer_price }}</td>
         <td>{{ variant.stock }}</td>
         
         <td>

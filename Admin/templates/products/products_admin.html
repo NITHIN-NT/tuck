@@ -45,8 +45,6 @@
                     <th>Image</th>
                     <th>Product Name</th>
                     <th>Category</th>
-                    <th>Base Price</th>
-                    <th>Offer Price</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -61,8 +59,6 @@
                         </td>
                         <td>{{product.name}}</td>
                         <td>{{product.category}}</td>
-                        <td>₹{{product.base_price}}</td>
-                        <td>₹{{product.offer_price}}</td>
                         <td>
                             {% if product.is_active %}
                                 <span class="status-badge status-active">Listed</span>

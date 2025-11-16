@@ -20,8 +20,6 @@ class Product(models.Model):
     name = models.CharField(max_length=1024)
     slug = models.SlugField(max_length=1024, unique=True)
     description = models.TextField()
-    base_price = models.DecimalField(max_digits=10, decimal_places=2)
-    offer_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     alt_text = models.CharField(max_length=255, blank=True, null=True)
@@ -75,7 +73,8 @@ class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
     size = models.ForeignKey(Size, on_delete=models.CASCADE, related_name='variants')
     stock = models.PositiveIntegerField(default=0)
-
+    base_price = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    offer_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,default=0)
     class Meta:
         unique_together = ('product', 'size')
         indexes = [models.Index(fields=['product', 'size'])]

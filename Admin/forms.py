@@ -50,7 +50,8 @@ class AdminProductAddForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'name', 'category', 'base_price', 'image', 'offer_price',
+            'name', 'category',  'image', 
+            # 'offer_price','base_price',
             'description', 'is_featured', 'is_selective',
             'is_most_demanded', 'is_active',
         ]
@@ -59,8 +60,8 @@ class AdminProductAddForm(forms.ModelForm):
             'category': forms.Select(attrs={'id': 'category', 'required': True}),
             'image': forms.FileInput(attrs={'id': 'main_product_image', 'accept': 'image/*'}),
             'base_price': forms.NumberInput(attrs={'id': 'base_price', 'step': '0.01', 'required': True}),
-            'offer_price': forms.NumberInput(attrs={'id': 'offer_price', 'step': '0.01'}),
-            'description': forms.Textarea(attrs={'id': 'description', 'rows': 6}),
+            # 'offer_price': forms.NumberInput(attrs={'id': 'offer_price', 'step': '0.01'}),
+            # 'description': forms.Textarea(attrs={'id': 'description', 'rows': 6}),
             'is_featured': forms.CheckboxInput(attrs={'id': 'is_featured'}),
             'is_selective': forms.CheckboxInput(attrs={'id': 'is_selective'}),
             'is_most_demanded': forms.CheckboxInput(attrs={'id': 'is_most_demanded'}),
@@ -69,19 +70,19 @@ class AdminProductAddForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['offer_price'].required = False
+        # self.fields['offer_price'].required = False
         if self.instance and self.instance.pk:
             self.fields['image'].required = False
         else:
             self.fields['image'].required = True
 
-    def clean(self):
-        cleaned_data = super().clean()
-        base = cleaned_data.get('base_price')
-        offer = cleaned_data.get('offer_price')
-        if offer and base and offer >= base:
-            self.add_error('offer_price', "Offer price must be less than base price.")
-        return cleaned_data
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     base = cleaned_data.get('base_price')
+    #     offer = cleaned_data.get('offer_price')
+    #     if offer and base and offer >= base:
+    #         self.add_error('offer_price', "Offer price must be less than base price.")
+    #     return cleaned_data
 
 
 class VariantForm(forms.ModelForm):
