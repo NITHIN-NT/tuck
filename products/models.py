@@ -86,3 +86,5 @@ class ProductVariant(models.Model):
     @property
     def in_stock(self):
         return self.stock > 0
+    
+# fixed Model

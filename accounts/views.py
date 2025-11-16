@@ -355,3 +355,6 @@ class NewPasswordView(LoggedInRedirectMixin, View):
             return redirect('login')
 
         return render(request, 'accounts/new-password.html', {'form': form})
+    
+
+# Final fixed
